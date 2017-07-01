@@ -148,7 +148,9 @@ router.post('/authenticate', (req, res, next) => {
                 id: user._id,
                 firstname: user.firstname,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                active: user.active,
+                locked: user.locked
               },
               msg: successMsg
             });
@@ -207,7 +209,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
   res.json({user: req.user});
 });
 
-//Profile
+//Resend Activation New Link
 router.put('/resend', (req, res, next) => {
   const username = req.body.username;
   //Attempt to find the user in the database
@@ -267,8 +269,10 @@ router.put('/activate/:token', (req, res, next) => {
             //Send Activation Email
             var emailUser = utils.getEmailTemplateUser(user);
             emailer.sendActivationEmail(emailUser);
+            //Create a user object for data display
+            var sentUser = { username: user.username, firstname: user.firstname, email: user.email };
             var successMsg = `[${utils.getDateTimeNow()}] Account ${user.username} sucessfully activated at ${user.activatedon}!`;
-            res.json({ success: true, msg: successMsg});
+            res.json({ success: true, msg: successMsg, user: sentUser});
             console.log(successMsg);
           }
         });
@@ -380,7 +384,7 @@ router.post('/resetpassword', (req, res, next) => {
 });
 
 //Reset Password
-router.get('/resetpassword/:token', (req, res, next) => {
+router.put('/resetpassword/:token', (req, res, next) => {
   const token = req.params.token;
 
   User.getUserByResetToken(token, (err, user) => {
