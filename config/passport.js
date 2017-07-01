@@ -11,13 +11,11 @@ module.exports = function(passport)
   opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
   opts.secretOrKey = constants.jwtSecretKey;
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
-    User.getUserById(jwt_payload.sub, (err, user) => {
+    User.getUserById(jwt_payload.id, (err, user) => {
       if(err) {
         return done(err, false);
       }
       if(user) {
-        //Strip password before returning
-        user.password = null;
         return done(null, user);
       }
       else {

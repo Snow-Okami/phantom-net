@@ -55,49 +55,49 @@ router.post('/register', (req, res, next) => {
 
   //Strip ip of prefix
   var cleanedIp = utils.cleanIp(req.connection.remoteAddress);
-
-  //Validate captcha
-  // var passedCaptcha = auth.validateCaptcha(cleanedIp, req.body.recaptchaResponse);
-  // if(!passedCaptcha) {
-  //   var errorMsg = `Failed to register ${incomingUser}! - Failed the Captcha Test!`;
-  //   console.log(errorMsg);
-  //   return res.json({success: false, msg: errorMsg});
-  // }
-
-  //Create a new user using our schema
-  let newUser = new User({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    bmonth: req.body.bmonth,
-    bday: req.body.bday,
-    byear: req.body.byear,
-    email: req.body.email,
-    username: req.body.username,
-    password: req.body.password,
-    secretone: req.body.secretone,
-    secretoneanswer: req.body.secretoneanswer,
-    country: req.body.country,
-    createdon: utils.getDateTimeNow(),
-    lastactive: utils.getDateTimeNow(),
-    lastip: cleanedIp,
-    temporarytoken: jwt.sign({ username: req.body.username, email: req.body.email }, constants.jwtSecretKey, { expiresIn: constants.verificationTokenExpireTimeInHours })
-  });
-
-  //Add user
-  User.addUser(newUser, (err, user) => {
-    if(err) {
-      var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Error: ${err}`;
+  console.log(cleanedIp + ' ' + req.connection.remoteAddress)
+  //Validate captcha - we must wait for a response back from google before proceeding, so because of this we continue account creation ONLY afterwords passing it as a callback
+  auth.validateCaptcha(cleanedIp, req.body.captchaResponse, (passedCaptcha) => {
+    if(!passedCaptcha) {
+      var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Failed the Captcha Test!`;
       console.log(errorMsg);
       return res.json({success: false, msg: errorMsg});
     }
-    else {
-      var successMsg = `[${utils.getDateTimeNow()}] Registered ${incomingUser}!`;
-      //Send Verification Email
-      var emailUser = utils.getEmailTemplateUser(user);
-      emailer.sendVerificationEmail(emailUser);
-      console.log(successMsg);
-      return res.json({success: true, msg: successMsg});
-    }
+    //Create a new user using our schema
+    let newUser = new User({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      bmonth: req.body.bmonth,
+      bday: req.body.bday,
+      byear: req.body.byear,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      secretone: req.body.secretone,
+      secretoneanswer: req.body.secretoneanswer,
+      country: req.body.country,
+      createdon: utils.getDateTimeNow(),
+      lastactive: utils.getDateTimeNow(),
+      lastip: cleanedIp,
+      temporarytoken: jwt.sign({ username: req.body.username, email: req.body.email }, constants.jwtSecretKey, { expiresIn: constants.verificationTokenExpireTimeInHours })
+    });
+
+    //Add user
+    User.addUser(newUser, (err, user) => {
+      if(err) {
+        var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Error: ${err}`;
+        console.log(errorMsg);
+        return res.json({success: false, msg: errorMsg});
+      }
+      else {
+        var successMsg = `[${utils.getDateTimeNow()}] Registered ${incomingUser}!`;
+        //Send Verification Email
+        var emailUser = utils.getEmailTemplateUser(user);
+        emailer.sendVerificationEmail(emailUser);
+        console.log(successMsg);
+        return res.json({success: true, msg: successMsg});
+      }
+    });
   });
 });
 
@@ -127,7 +127,7 @@ router.post('/authenticate', (req, res, next) => {
         //We do this to prevent the users password from being exposed even as a bcrypt hash
         //This can allow an attacker the possibility to brute force the password from the token offline
         //Make a new user to sign with (so password is not included)
-        var strippedUser = { username: user.username, email: user.email };
+        var strippedUser = { id: user._id, firstname: user.firstname, username: user.username, email: user.email };
         //Sign new token
         const token = jwt.sign(strippedUser, constants.jwtSecretKey, {
           expiresIn: constants.tokenExpireTime

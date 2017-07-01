@@ -29,5 +29,6 @@ module.exports = {
   emailNameProvider : 'Rotten Visions',
 
 }
+
 //Export this here as it is not set to a value or actual constant
 module.exports.tokenExpireTime = this.timeOfOneWeekInSeconds;

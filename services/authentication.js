@@ -1,15 +1,19 @@
 const simpleRecaptcha = require('simple-recaptcha-new');
 const constants = require('../utilities/constants');
 
-var validateCaptcha = function(ip, recaptchaResponse) {
-  var privateKey = constants.googleInvisCaptchaAPIKey; // your private key here
-
+var validateCaptcha = function(ip, recaptchaResponse, callback) {
+  var privateKey = constants.googleInvisCaptchaAPIKey;
+  //Keeps track of passing captcha or not
+  var passed = false;
+  //Call for catcha test from Google
   simpleRecaptcha(privateKey, ip, recaptchaResponse, function(err) {
     if (err)  {
       console.log(err.message);
       return false;
+    } else {
+      passed = true;
     }
-    return true;
+    callback(passed);
   });
 };
 
