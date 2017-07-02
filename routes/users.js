@@ -404,8 +404,10 @@ router.put('/resetpassword/:token', (req, res, next) => {
           console.log(failureMsg);
           return res.json({success: false, msg: failureMsg});
         } else {
+          //Send some user data back for knowing more about the user whose request was accepted
+          var sendUser = { firstname: user.firstname, username: user.username, email: user.email }
           var successMsg = `[${utils.getDateTimeNow()}] Account ${user.username} sucessfully verified for password reset!`;
-          res.json({ success: true, msg: successMsg});
+          res.json({ success: true, msg: successMsg, user: sendUser });
           console.log(successMsg);
         }
       });
@@ -417,6 +419,7 @@ router.put('/resetpassword/:token', (req, res, next) => {
 router.put('/savepassword', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
+  const passwordConfirm = req.body.passwordConfirm;
 
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
@@ -431,6 +434,10 @@ router.put('/savepassword', (req, res, next) => {
       //Catch the user changing passwords without active token
     } else if(user.resettoken === 'false' || user.resettoken === 'never' || user.resettoken === 'undefined') {
       var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password. User ${user.username} has no active reset token!`;
+      console.log(failureMsg);
+      return res.json({success: false, msg: failureMsg});
+    } else if(!auth.validateSameValues(password, passwordConfirm)) {
+      var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password for ${user.username}. Passwords do not match!!`;
       console.log(failureMsg);
       return res.json({success: false, msg: failureMsg});
     } else {
