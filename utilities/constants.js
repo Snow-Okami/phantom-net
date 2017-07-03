@@ -28,6 +28,15 @@ module.exports = {
   emailProvider : 'noreply@rottenvisions.com',
   emailNameProvider : 'Rotten Visions',
 
+  usernameLengthMin : 3,
+  usernameLengthMax : 15,
+
+  emailLengthMin : 5,
+  emailLengthMax : 30,
+
+  passwordLengthMin : 8,
+  passwordLengthMax : 35,
+
 }
 
 //Export this here as it is not set to a value or actual constant

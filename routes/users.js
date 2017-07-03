@@ -20,16 +20,16 @@ router.post('/register', (req, res, next) => {
   //Validate Emails
   var emailsMatch = auth.validateSameValues(req.body.email, req.body.emailConfirm);
   if(!emailsMatch) {
-    var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Emails do not match!`;
-    console.log(errorMsg);
+    var errorMsg = `Failed to register ${incomingUser}! - Emails do not match!`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
     return res.json({success: false, msg: errorMsg});
   }
 
   //Validate Passwords
   var passwordsMatch = auth.validateSameValues(req.body.password, req.body.passwordConfirm);
   if(!passwordsMatch) {
-    var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Passwords do not match!`;
-    console.log(errorMsg);
+    var errorMsg = `Failed to register ${incomingUser}! - Passwords do not match!`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
     return res.json({success: false, msg: errorMsg});
   }
 
@@ -38,8 +38,8 @@ router.post('/register', (req, res, next) => {
   var reason = { msg: undefined };
   var birthdayValid = auth.validateBirthday(req.body.bmonth, req.body.bday, req.body.byear, reason);
   if(!birthdayValid) {
-    var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Birthday is invalid: ${reason.msg}!`;
-    console.log(errorMsg);
+    var errorMsg = `Failed to register ${incomingUser}! - Birthday is invalid: ${reason.msg}!`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
     return res.json({success: false, msg: errorMsg});
   }
 
@@ -48,8 +48,8 @@ router.post('/register', (req, res, next) => {
   var currentAge = { msg: undefined };
   var ageValid = auth.validateAge(req.body.bmonth, req.body.bday, req.body.byear, constants.ageRestriction, currentAge);
   if(!ageValid) {
-    var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Age ${currentAge.msg} is too young!`;
-    console.log(errorMsg);
+    var errorMsg = `Failed to register ${incomingUser}! - Age ${currentAge.msg} is too young!`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
     return res.json({success: false, msg: errorMsg});
   }
 
@@ -59,8 +59,8 @@ router.post('/register', (req, res, next) => {
   //Validate captcha - we must wait for a response back from google before proceeding, so because of this we continue account creation ONLY afterwords passing it as a callback
   auth.validateCaptcha(cleanedIp, req.body.captchaResponse, (passedCaptcha) => {
     if(!passedCaptcha) {
-      var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Failed the Captcha Test!`;
-      console.log(errorMsg);
+      var errorMsg = `Failed to register ${incomingUser}! - Failed the Captcha Test!`;
+      console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
       return res.json({success: false, msg: errorMsg});
     }
     //Create a new user using our schema
@@ -85,16 +85,54 @@ router.post('/register', (req, res, next) => {
     //Add user
     User.addUser(newUser, (err, user) => {
       if(err) {
-        var errorMsg = `[${utils.getDateTimeNow()}] Failed to register ${incomingUser}! - Error: ${err}`;
-        console.log(errorMsg);
+        var errorMsg = `Failed to register ${incomingUser}! - Error: ${err}`;
+        console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
         return res.json({success: false, msg: errorMsg});
+
+        if (err.code === 11000) {
+          var errorMsg = `Username or e-mail already exists`;
+          console.log(`[${utils.getDateTimeNow()}] ${errorMsg} : ${err}`);
+          return res.json({ success: false, msg: errorMsg }); // Return error
+        } else {
+          // Check if error is a validation rror
+          if (err.errors) {
+            // Check if validation error is in the email field
+            if (err.errors.email) {
+              var errorMsg = err.errors.email.msg;
+              console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+              return res.json({ success: false, msg: errorMsg }); // Return error
+            } else {
+              // Check if validation error is in the username field
+              if (err.errors.username) {
+                var errorMsg = err.errors.username.msg;
+                console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+                return res.json({ success: false, msg: errorMsg }); // Return error
+              } else {
+                // Check if validation error is in the password field
+                if (err.errors.password) {
+                  var errorMsg = err.errors.password.msg;
+                  console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+                  return res.json({ success: false, msg: errorMsg }); // Return error
+                } else {
+                  var errorMsg = err;
+                  console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+                  return res.json({ success: false, msg: err }); // Return any other error not already covered
+                }
+              }
+            }
+          } else {
+            var errorMsg = 'Could not save user. Error: ';
+            console.log(`[${utils.getDateTimeNow()}] ${errorMsg} : ${err}`);
+            res.json({ success: false, msg: errorMsg, err }); // Return error if not related to validation
+          }
+        }
       }
       else {
-        var successMsg = `[${utils.getDateTimeNow()}] Registered ${incomingUser}!`;
+        var successMsg = `Registered ${incomingUser}!`;
         //Send Verification Email
         var emailUser = utils.getEmailTemplateUser(user);
         emailer.sendVerificationEmail(emailUser);
-        console.log(successMsg);
+        console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
         return res.json({success: true, msg: successMsg});
       }
     });
@@ -109,14 +147,14 @@ router.post('/authenticate', (req, res, next) => {
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
     if(!user) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to authenticate. User ${username} not found!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to authenticate. User ${username} not found!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     }
     //Prevent locked accounts from trying to authenticate
     if(user.locked) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to authenticate. User ${username} account is locked!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to authenticate. User ${username} account is locked!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     }
 
@@ -139,8 +177,8 @@ router.post('/authenticate', (req, res, next) => {
           if(err) { console.log(err); throw err; }
           else {
             //Setup success msg
-            var successMsg = `[${utils.getDateTimeNow()}] Successfully authenticated user ${username}!`;
-            console.log(successMsg);
+            var successMsg = `Successfully authenticated user ${username}!`;
+            console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
             return res.json({
               success: true,
               token: `JWT ${token}`,
@@ -182,8 +220,8 @@ router.post('/authenticate', (req, res, next) => {
           user.save((err) => {
             if(err)  { console.log(err); throw err; }
             else {
-              var failureMsg = `[${utils.getDateTimeNow()}] Too many failed login attempts in under ${constants.failedLoginTimeThreshold} seconds. Atttempts: ${heldAttempts} User ${username} - ACCOUNT LOCKED!`;
-              console.log(failureMsg);
+              var failureMsg = `Too many failed login attempts in under ${constants.failedLoginTimeThreshold} seconds. Atttempts: ${heldAttempts} User ${username} - ACCOUNT LOCKED!`;
+              console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
               return res.json({success: false, msg: failureMsg });
             }
           });
@@ -193,8 +231,8 @@ router.post('/authenticate', (req, res, next) => {
           user.save((err) => {
             if(err)  { console.log(err); throw err; }
             else {
-              var failureMsg = `[${utils.getDateTimeNow()}] Wrong password: ${password} for user ${username}!`;
-              console.log(failureMsg);
+              var failureMsg = `Wrong password: ${password} for user ${username}!`;
+              console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
               return res.json({success: false, msg: failureMsg });
             }
           });
@@ -222,11 +260,11 @@ router.put('/resend', (req, res, next) => {
       user.save((err) => {
         if(err) { console.log(err); }
         else {
-          var successMsg = `[${utils.getDateTimeNow()}] Re-sent new activation link to ${username}!`;
+          var successMsg = `Re-sent new activation link to ${username}!`;
           //Send Verification Email
           var emailUser = utils.getEmailTemplateUser(user);
           emailer.sendVerificationEmail(emailUser);
-          console.log(successMsg);
+          console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
           return res.json({success: true, msg: successMsg});
         }
       });
@@ -249,14 +287,14 @@ router.put('/activate/:token', (req, res, next) => {
     jwt.verify(token, constants.jwtSecretKey, (err, decoded) => {
       if(err) {
         //Failure
-        var failureMsg = `[${utils.getDateTimeNow()}] Account ${user.username} activation link has expired!`;
-        res.json({ success: false, msg: 'Activation link has expired'});
-        console.log(failureMsg);
+        var failureMsg = `Account ${user.username} activation link has expired!`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        return res.json({ success: false, msg: 'Activation link has expired'});
         //Activation link clicked twice
       } else if(!user) {
-        var failureMsg = `[${utils.getDateTimeNow()}] Account activation link: ${req.params.token} has expired! User already activated or doesn't exist!`;
-        res.json({ success: false, msg: failureMsg});
-        console.log(failureMsg);
+        var failureMsg = `Account activation link: ${req.params.token} has expired! User already activated or doesn't exist!`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        return res.json({ success: false, msg: failureMsg});
       } else {
         //Disable token, activate account
         user.temporarytoken = false;
@@ -271,9 +309,9 @@ router.put('/activate/:token', (req, res, next) => {
             emailer.sendActivationEmail(emailUser);
             //Create a user object for data display
             var sentUser = { username: user.username, firstname: user.firstname, email: user.email };
-            var successMsg = `[${utils.getDateTimeNow()}] Account ${user.username} sucessfully activated at ${user.activatedon}!`;
-            res.json({ success: true, msg: successMsg, user: sentUser});
-            console.log(successMsg);
+            var successMsg = `Account ${user.username} sucessfully activated at ${user.activatedon}!`;
+            console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
+            return res.json({ success: true, msg: successMsg, user: sentUser});
           }
         });
       }
@@ -288,8 +326,8 @@ router.post('/unlock', (req, res, next) => {
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
     if(!user) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to unlock. User ${username} not found!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to unlock. User ${username} not found!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else {
       //Unlock
@@ -304,8 +342,8 @@ router.post('/unlock', (req, res, next) => {
           //Send Forgotten Username Email
           var emailUser = utils.getEmailTemplateUser(user);
           emailer.sendUnlockEmail(emailUser);
-          var successMsg = `[${utils.getDateTimeNow()}] Account ${user.email} sucessfully unlocked!`;
-          console.log(successMsg);
+          var successMsg = `Account ${user.email} sucessfully unlocked!`;
+          console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
           return res.json({ success: true, msg: successMsg});
         }
       });
@@ -320,8 +358,8 @@ router.post('/forgotusername', (req, res, next) => {
   User.getUserByEmail(email, (err, user) => {
     if(err) throw err;
     if(!user) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to send forgotten Username request. Email ${email} not found!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to send forgotten Username request. Email ${email} not found!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
       //Re-activate this if we somehow want to restrict forgotten username requests from non-active accounts
     // } else if(!user.active) {
@@ -332,15 +370,15 @@ router.post('/forgotusername', (req, res, next) => {
       user.lastforgotusername = utils.getDateTimeNow();
       user.save((err) => {
         if(err)  {
-          console.log(err);
+          console.log(`[${utils.getDateTimeNow()}] ${err}`);
           res.json({ success: false, msg: err });
           throw err; }
         else {
           //Send Forgotten Username Email
           var emailUser = utils.getEmailTemplateUser(user);
           emailer.sendForgotUsernameEmail(emailUser);
-          var successMsg = `[${utils.getDateTimeNow()}] Account ${user.email} sucessfully sent their forgotten username!`;
-          console.log(successMsg);
+          var successMsg = `Account ${user.email} sucessfully sent their forgotten username!`;
+          console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
           return res.json({ success: true, msg: successMsg});
         }
       });
@@ -355,27 +393,27 @@ router.post('/resetpassword', (req, res, next) => {
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
     if(!user) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to send reset password request. User ${username} not found!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to send reset password request. User ${username} not found!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else if(!user.active) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to send reset password request. User ${user.username} is not activated yet!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to send reset password request. User ${user.username} is not activated yet!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else {
       user.lastresettoken = utils.getDateTimeNow();
       user.resettoken = jwt.sign({ username: user.username, email: user.email }, constants.jwtSecretKey, { expiresIn: constants.resetPasswordTokenExpireTimeInHours });
       user.save((err) => {
         if(err)  {
-          console.log(err);
+          console.log(`[${utils.getDateTimeNow()}] ${err}`);
           res.json({ success: false, msg: err });
           throw err; }
         else {
           //Send Reset Password Email
           var emailUser = utils.getEmailTemplateUser(user);
           emailer.sendResetPasswordEmail(emailUser);
-          var successMsg = `[${utils.getDateTimeNow()}] Account ${user.username} sucessfully sent a password reset link!`;
-          console.log(successMsg);
+          var successMsg = `Account ${user.username} sucessfully sent a password reset link!`;
+          console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
           return res.json({ success: true, msg: successMsg});
         }
       });
@@ -390,25 +428,25 @@ router.put('/resetpassword/:token', (req, res, next) => {
   User.getUserByResetToken(token, (err, user) => {
     if(err) throw err;
     if(!user) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to reset password. User ${username} not found!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to reset password. User ${username} not found!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else if(!user.active) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to reset password. User ${user.username} is not activated yet!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to reset password. User ${user.username} is not activated yet!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else {
       jwt.verify(token, constants.jwtSecretKey, (err, decoded) => {
         if(err) {
-          var failureMsg = `[${utils.getDateTimeNow()}] Failed to continue password reset. User ${user.username} has an invalid token! ` + 'err';
-          console.log(failureMsg);
+          var failureMsg = `Failed to continue password reset. User ${user.username} has an invalid token! ` + 'err';
+          console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
           return res.json({success: false, msg: failureMsg});
         } else {
           //Send some user data back for knowing more about the user whose request was accepted
           var sendUser = { firstname: user.firstname, username: user.username, email: user.email }
-          var successMsg = `[${utils.getDateTimeNow()}] Account ${user.username} sucessfully verified for password reset!`;
-          res.json({ success: true, msg: successMsg, user: sendUser });
-          console.log(successMsg);
+          var successMsg = `Account ${user.username} sucessfully verified for password reset!`;
+          console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
+          return res.json({ success: true, msg: successMsg, user: sendUser });
         }
       });
     }
@@ -424,21 +462,21 @@ router.put('/savepassword', (req, res, next) => {
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
     if(!user) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password. User ${username} not found!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to save new password. User ${username} not found!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else if(!user.active) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password. User ${user.username} is not activated yet!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to save new password. User ${user.username} is not activated yet!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
       //Catch the user changing passwords without active token
     } else if(user.resettoken === 'false' || user.resettoken === 'never' || user.resettoken === 'undefined') {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password. User ${user.username} has no active reset token!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to save new password. User ${user.username} has no active reset token!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else if(!auth.validateSameValues(password, passwordConfirm)) {
-      var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password for ${user.username}. Passwords do not match!!`;
-      console.log(failureMsg);
+      var failureMsg = `Failed to save new password for ${user.username}. Passwords do not match!!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else {
       //Update user vars for saving
@@ -452,21 +490,66 @@ router.put('/savepassword', (req, res, next) => {
           throw err; }
         else {
           if(!user) {
-            var failureMsg = `[${utils.getDateTimeNow()}] Failed to save new password. User ${user.username} not found during save user password routine!`;
-            console.log(failureMsg);
+            var failureMsg = `Failed to save new password. User ${user.username} not found during save user password routine!`;
+            console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
             return res.json({success: false, msg: failureMsg});
           } else {
             //Send New Password Email
             var emailUser = utils.getEmailTemplateUser(user);
             emailer.sendNewPasswordEmail(emailUser);
-            var successMsg = `[${utils.getDateTimeNow()}] Account ${user.username} sucessfully sent a saved new password confirmation!`;
-            console.log(successMsg);
+            var successMsg = `Account ${user.username} sucessfully sent a saved new password confirmation!`;
+            console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
             return res.json({ success: true, msg: successMsg});
           }
         }
       });
     }
   });
+});
+
+//Reactive Email Check
+router.get('/checkemail/:email', (req, res) => {
+  // Check if email was provided in paramaters
+  if (!req.params.email) {
+    res.json({ success: false, msg: 'E-mail was not provided' }); // Return error
+  } else {
+    // Search for user's e-mail in database;
+    User.findOne({ email: req.params.email }, (err, user) => {
+      if (err) {
+        res.json({ success: false, msg: err }); // Return connection error
+      } else {
+        // Check if user's e-mail is taken
+        if (user) {
+          res.json({ success: false, msg: 'E-mail is already taken' }); // Return as taken e-mail
+        } else {
+          res.json({ success: true, msg: 'E-mail is available' }); // Return as available e-mail
+        }
+      }
+    });
+  }
+});
+
+//Reactive Username Check
+router.get('/checkusername/:username', (req, res) => {
+  // Check if username was provided in paramaters
+  if (!req.params.username) {
+    res.json({ success: false, msg: 'Username was not provided' }); // Return error
+  } else {
+    // Look for username in database
+    User.findOne({ username: req.params.username }, (err, user) => {
+      // Check if connection error was found
+      if (err) {
+        res.json({ success: false, msg: err }); // Return connection error
+      } else {
+        // Check if user's username was found
+        if (user) {
+          res.json({ success: false, msg: 'Username is already taken' }); // Return as taken username
+        } else {
+          res.json({ success: true, msg: 'Username is available' }); // Return as vailable username
+        }
+      }
+    });
+  }
 });
 
 //Validate
