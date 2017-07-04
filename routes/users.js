@@ -53,6 +53,54 @@ router.post('/register', (req, res, next) => {
     return res.json({success: false, msg: errorMsg});
   }
 
+  //Validate Email
+  var emailValid = auth.validateEmail(req.body.email);
+  if(!emailValid) {
+    var errorMsg = `Failed to register ${incomingUser}! - Must be a valid E-mail!`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+    return res.json({success: false, msg: errorMsg});
+  }
+
+  //Validate Email Length
+  var emailValidLength = auth.validateEmailLength(req.body.email);
+  if(!emailValidLength) {
+    var errorMsg = `Failed to register ${incomingUser}! - E-mail must be at least ${constants.emailLengthMin} characters but no more than ${constants.emailLengthMax}`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+    return res.json({success: false, msg: errorMsg});
+  }
+
+  //Validate Username
+  var usernameValid = auth.validateUsername(req.body.username);
+  if(!usernameValid) {
+    var errorMsg = `Failed to register ${incomingUser}! - Username must not have any special characters`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+    return res.json({success: false, msg: errorMsg});
+  }
+
+  //Validate Username Length
+  var usernameValidLength = auth.validateUsernameLength(req.body.username);
+  if(!usernameValidLength) {
+    var errorMsg = `Failed to register ${incomingUser}! - Username must be at least ${constants.usernameLengthMin} characters but no more than ${constants.usernameLengthMax}`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+    return res.json({success: false, msg: errorMsg});
+  }
+
+  //Validate Password
+  var passwordValid = auth.validatePassword(req.body.password);
+  if(!passwordValid) {
+    var errorMsg = `Failed to register ${incomingUser}! - Must have at least one uppercase, lowercase, special character, and number`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+    return res.json({success: false, msg: errorMsg});
+  }
+
+  //Validate Password Length
+  var passwordValidLength = auth.validatePasswordLength(req.body.password);
+  if(!passwordValidLength) {
+    var errorMsg = `Failed to register ${incomingUser}! - Password must be at least ${constants.passwordLengthMin} characters but no more than ${constants.passwordLengthMax}`;
+    console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
+    return res.json({success: false, msg: errorMsg});
+  }
+
   //Strip ip of prefix
   var cleanedIp = utils.cleanIp(req.connection.remoteAddress);
   console.log(cleanedIp + ' ' + req.connection.remoteAddress)
@@ -198,7 +246,7 @@ router.post('/authenticate', (req, res, next) => {
       else {
         //FIRST FAILED LOGIN
         //First time for failed login or the first new session since our old initial failed login was caught
-        if(user.failedloginsessionstart == 'none' || utils.getTimeSinceInSeconds(user.failedloginsessionstart) >= constants.failedLoginTimeThreshold) {
+        if(user.failedloginsessionstart === 'never' || utils.getTimeSinceInSeconds(user.failedloginsessionstart) >= constants.failedLoginTimeThreshold) {
           user.failedloginsessionstart = utils.getDateTimeNow();
           user.failedloginattempts = 0;
         }
@@ -231,7 +279,7 @@ router.post('/authenticate', (req, res, next) => {
           user.save((err) => {
             if(err)  { console.log(err); throw err; }
             else {
-              var failureMsg = `Wrong password: ${password} for user ${username}!`;
+              var failureMsg = `Wrong password: ${password} for user ${username} - Attempts: ${user.failedloginattempts} Max: ${constants.failedLoginAttemptsThreshold}!`;
               console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
               return res.json({success: false, msg: failureMsg });
             }
@@ -289,10 +337,11 @@ router.put('/activate/:token', (req, res, next) => {
         //Failure
         var failureMsg = `Account ${user.username} activation link has expired!`;
         console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
-        return res.json({ success: false, msg: 'Activation link has expired'});
+        return res.json({ success: false, msg: failureMsg});
         //Activation link clicked twice
       } else if(!user) {
-        var failureMsg = `Account activation link: ${req.params.token} has expired! User already activated or doesn't exist!`;
+        //We truncate the token here as the end user does not need it and its too long to fit properly
+        var failureMsg = `Account activation link: [${req.params.token.substring(0,15)}...] has expired! User already activated or doesn't exist!`;
         console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
         return res.json({ success: false, msg: failureMsg});
       } else {

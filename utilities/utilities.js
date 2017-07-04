@@ -23,6 +23,7 @@ module.exports = {
 
   //This function must be fed a time comparison that is UTC or else it will give invalid results
   getTimeSinceInSeconds : function(date) {
+    console.log(date)
     //Split the date into two parts [Time, Date]
     var dateTime = date.split(' ');
     //Split the time part into 3 parts [Hours, Minutes, Seconds]

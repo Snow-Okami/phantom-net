@@ -16,174 +16,169 @@ const resetPasswordEmailDir = path.join(__dirname, '..', 'templates', 'resetpass
 const newPasswordEmailDir = path.join(__dirname, '..', 'templates', 'newpassword');
 const forgotUsernameEmailDir = path.join(__dirname, '..', 'templates', 'forgotusername');
 
-var client = elasticemail.createClient({
-  username: constants.elasticUser,
-  apiKey: constants.elasticMailAPIKey
-});
-
-var sendVerificationEmail = function(user)
-{
-    this.client;
-    //Render our HTML template using EJS
-    var verification = new EmailTemplate(verificationEmailDir);
-    verification.render(user, function (err, result) {
-      if (err) {
-        console.log(err);
-        return false;
-      }
-      var msg = {
-        from: constants.emailProvider,
-        from_name: constants.emailNameProvider,
-        to: user.email,
-        subject: 'Account Verification',
-        body_html: result.html,
-        body_text: result.text
-      };
-
-    client.mailer.send(msg, function(err, result) {
-      if (err) {
-        return console.error(err);
-        return false;
-      }
-      console.log(`[${utils.getDateTimeNow()}] Verification Email sent to ${user.username} @ ${user.email} on ${user.createdon} Result: ${result}`);
-      return true;
-    });
+const client = elasticemail.createClient({
+    username: constants.elasticUser,
+    apiKey: constants.elasticMailAPIKey
   });
-}
 
-var sendActivationEmail = function(user)
-{
-    this.client;
+module.exports = {
 
-    var activation = new EmailTemplate(activationEmailDir);
-    activation.render(user, function (err, result) {
-      if (err) {
-        console.log(err);
-        return false;
-      }
-      var msg = {
-        from: constants.emailProvider,
-        from_name: constants.emailNameProvider,
-        to: user.email,
-        subject: 'Account Activated!',
-        body_html: result.html,
-        body_text: result.text
-      };
+  sendVerificationEmail : function(user)
+  {
+      this.client;
+      //Render our HTML template using EJS
+      var verification = new EmailTemplate(verificationEmailDir);
+      verification.render(user, function (err, result) {
+        if (err) {
+          console.log(err);
+          return false;
+        }
+        var msg = {
+          from: constants.emailProvider,
+          from_name: constants.emailNameProvider,
+          to: user.email,
+          subject: 'Account Verification',
+          body_html: result.html,
+          body_text: result.text
+        };
 
-    client.mailer.send(msg, function(err, result) {
-      if (err) {
-        return console.error(err);
-        return false;
-      }
-
-      console.log(`[${utils.getDateTimeNow()}] Activated Email sent to ${user.username} @ ${user.email} Result: ${result}`);
-      return true;
+      client.mailer.send(msg, function(err, result) {
+        if (err) {
+          return console.error(err);
+          return false;
+        }
+        console.log(`[${utils.getDateTimeNow()}] Verification Email sent to ${user.username} @ ${user.email} on ${user.createdon} Result: ${result}`);
+        return true;
+      });
     });
-  });
-}
+  },
 
-var sendResetPasswordEmail = function(user)
-{
-    this.client;
+  sendActivationEmail : function(user)
+  {
+      this.client;
 
-    var resetPass = new EmailTemplate(resetPasswordEmailDir);
-    resetPass.render(user, function (err, result) {
-      if (err) {
-        console.log(err);
-        return false;
-      }
-      var msg = {
-        from: constants.emailProvider,
-        from_name: constants.emailNameProvider,
-        to: user.email,
-        subject: 'Password Reset Link',
-        body_html: result.html,
-        body_text: result.text
-      };
+      var activation = new EmailTemplate(activationEmailDir);
+      activation.render(user, function (err, result) {
+        if (err) {
+          console.log(err);
+          return false;
+        }
+        var msg = {
+          from: constants.emailProvider,
+          from_name: constants.emailNameProvider,
+          to: user.email,
+          subject: 'Account Activated!',
+          body_html: result.html,
+          body_text: result.text
+        };
 
-    client.mailer.send(msg, function(err, result) {
-      if (err) {
-        return console.error(err);
-        return false;
-      }
+      client.mailer.send(msg, function(err, result) {
+        if (err) {
+          return console.error(err);
+          return false;
+        }
 
-      console.log(`[${utils.getDateTimeNow()}] Reset Password Email sent to ${user.username} @ ${user.email} Result: ${result}`);
-      return true;
+        console.log(`[${utils.getDateTimeNow()}] Activated Email sent to ${user.username} @ ${user.email} Result: ${result}`);
+        return true;
+      });
     });
-  });
-}
+  },
 
-var sendForgotUsernameEmail = function(user)
-{
-    this.client;
+  sendResetPasswordEmail : function(user)
+  {
+      this.client;
 
-    var forgotUsername = new EmailTemplate(forgotUsernameEmailDir);
-    forgotUsername.render(user, function (err, result) {
-      if (err) {
-        console.log(err);
-        return false;
-      }
-      var msg = {
-        from: constants.emailProvider,
-        from_name: constants.emailNameProvider,
-        to: user.email,
-        subject: 'Forgotten Username',
-        body_html: result.html,
-        body_text: result.text
-      };
+      var resetPass = new EmailTemplate(resetPasswordEmailDir);
+      resetPass.render(user, function (err, result) {
+        if (err) {
+          console.log(err);
+          return false;
+        }
+        var msg = {
+          from: constants.emailProvider,
+          from_name: constants.emailNameProvider,
+          to: user.email,
+          subject: 'Password Reset Link',
+          body_html: result.html,
+          body_text: result.text
+        };
 
-    client.mailer.send(msg, function(err, result) {
-      if (err) {
-        return console.error(err);
-        return false;
-      }
+      client.mailer.send(msg, function(err, result) {
+        if (err) {
+          return console.error(err);
+          return false;
+        }
 
-      console.log(`[${utils.getDateTimeNow()}] Forgotten Username Email sent to ${user.username} @ ${user.email} Result: ${result}`);
-      return true;
+        console.log(`[${utils.getDateTimeNow()}] Reset Password Email sent to ${user.username} @ ${user.email} Result: ${result}`);
+        return true;
+      });
     });
-  });
-}
+  },
 
-var sendNewPasswordEmail = function(user)
-{
-    this.client;
+  sendForgotUsernameEmail : function(user)
+  {
+      this.client;
 
-    var newPassword = new EmailTemplate(newPasswordEmailDir);
-    newPassword.render(user, function (err, result) {
-      if (err) {
-        console.log(err);
-        return false;
-      }
-      var msg = {
-        from: constants.emailProvider,
-        from_name: constants.emailNameProvider,
-        to: user.email,
-        subject: 'New Password Confirmation',
-        body_html: result.html,
-        body_text: result.text
-      };
+      var forgotUsername = new EmailTemplate(forgotUsernameEmailDir);
+      forgotUsername.render(user, function (err, result) {
+        if (err) {
+          console.log(err);
+          return false;
+        }
+        var msg = {
+          from: constants.emailProvider,
+          from_name: constants.emailNameProvider,
+          to: user.email,
+          subject: 'Forgotten Username',
+          body_html: result.html,
+          body_text: result.text
+        };
 
-    client.mailer.send(msg, function(err, result) {
-      if (err) {
-        return console.error(err);
-        return false;
-      }
+      client.mailer.send(msg, function(err, result) {
+        if (err) {
+          return console.error(err);
+          return false;
+        }
 
-      console.log(`[${utils.getDateTimeNow()}] New Password Confirmation sent to ${user.username} @ ${user.email} Result: ${result}`);
-      return true;
+        console.log(`[${utils.getDateTimeNow()}] Forgotten Username Email sent to ${user.username} @ ${user.email} Result: ${result}`);
+        return true;
+      });
     });
-  });
-}
+  },
 
-var getEmailTemplate = function(template)
-{
-  return fs.readFileSync(template, 'utf8');
-}
+  sendNewPasswordEmail : function(user)
+  {
+      this.client;
 
-module.exports.client = client;
-module.exports.sendVerificationEmail = sendVerificationEmail;
-module.exports.sendActivationEmail = sendActivationEmail;
-module.exports.sendResetPasswordEmail = sendResetPasswordEmail;
-module.exports.sendForgotUsernameEmail = sendForgotUsernameEmail;
-module.exports.sendNewPasswordEmail = sendNewPasswordEmail;
-module.exports.getEmailTemplate = getEmailTemplate;
+      var newPassword = new EmailTemplate(newPasswordEmailDir);
+      newPassword.render(user, function (err, result) {
+        if (err) {
+          console.log(err);
+          return false;
+        }
+        var msg = {
+          from: constants.emailProvider,
+          from_name: constants.emailNameProvider,
+          to: user.email,
+          subject: 'New Password Confirmation',
+          body_html: result.html,
+          body_text: result.text
+        };
+
+      client.mailer.send(msg, function(err, result) {
+        if (err) {
+          return console.error(err);
+          return false;
+        }
+
+        console.log(`[${utils.getDateTimeNow()}] New Password Confirmation sent to ${user.username} @ ${user.email} Result: ${result}`);
+        return true;
+      });
+    });
+  },
+
+  getEmailTemplate : function(template)
+  {
+    return fs.readFileSync(template, 'utf8');
+  },
+}
