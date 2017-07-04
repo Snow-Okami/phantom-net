@@ -54,7 +54,8 @@ const UserSchema = mongoose.Schema({
   },
   temporarytoken: {
     type: String,
-    required: true
+    required: true,
+    default: false
   },
   lasttemporarytoken: {
     type: String,
@@ -66,6 +67,14 @@ const UserSchema = mongoose.Schema({
   lastresettoken: {
     type: String,
     default: 'never'
+  },
+  passwordresets: {
+    type: Number,
+    default: 0
+  },
+  passwordresetrequests: {
+    type: Number,
+    default: 0
   },
   active: {
     type: Boolean,
@@ -90,6 +99,10 @@ const UserSchema = mongoose.Schema({
   lastforgotusername: {
     type: String,
     default: 'never'
+  },
+  logins: {
+    type: Number,
+    default: 0
   },
   failedlogins: {
     type: Number,

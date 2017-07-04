@@ -141,48 +141,19 @@ router.post('/register', (req, res, next) => {
           var errorMsg = `Username or e-mail already exists`;
           console.log(`[${utils.getDateTimeNow()}] ${errorMsg} : ${err}`);
           return res.json({ success: false, msg: errorMsg }); // Return error
-        } else {
-          // Check if error is a validation rror
-          if (err.errors) {
-            // Check if validation error is in the email field
-            if (err.errors.email) {
-              var errorMsg = err.errors.email.msg;
-              console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
-              return res.json({ success: false, msg: errorMsg }); // Return error
-            } else {
-              // Check if validation error is in the username field
-              if (err.errors.username) {
-                var errorMsg = err.errors.username.msg;
-                console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
-                return res.json({ success: false, msg: errorMsg }); // Return error
-              } else {
-                // Check if validation error is in the password field
-                if (err.errors.password) {
-                  var errorMsg = err.errors.password.msg;
-                  console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
-                  return res.json({ success: false, msg: errorMsg }); // Return error
-                } else {
-                  var errorMsg = err;
-                  console.log(`[${utils.getDateTimeNow()}] ${errorMsg}`);
-                  return res.json({ success: false, msg: err }); // Return any other error not already covered
-                }
-              }
-            }
           } else {
             var errorMsg = 'Could not save user. Error: ';
             console.log(`[${utils.getDateTimeNow()}] ${errorMsg} : ${err}`);
             res.json({ success: false, msg: errorMsg, err }); // Return error if not related to validation
           }
-        }
-      }
-      else {
-        var successMsg = `Registered ${incomingUser}!`;
-        //Send Verification Email
-        var emailUser = utils.getEmailTemplateUser(user);
-        emailer.sendVerificationEmail(emailUser);
-        console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
-        return res.json({success: true, msg: successMsg});
-      }
+        } else {
+            var successMsg = `Registered ${incomingUser}!`;
+            //Send Verification Email
+            var emailUser = utils.getEmailTemplateUser(user);
+            emailer.sendVerificationEmail(emailUser);
+            console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
+            return res.json({success: true, msg: successMsg});
+          }
     });
   });
 });
@@ -220,6 +191,8 @@ router.post('/authenticate', (req, res, next) => {
         });
         //Set last active
         user.lastactive = utils.getDateTimeNow();
+        //Increment logins
+        user.logins++;
         //Save changes to database
         user.save((err) => {
           if(err) { console.log(err); throw err; }
@@ -295,7 +268,7 @@ router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res
   res.json({user: req.user});
 });
 
-//Resend Activation New Link
+//Resend New Activation Link
 router.put('/resend', (req, res, next) => {
   const username = req.body.username;
   //Attempt to find the user in the database
@@ -303,6 +276,12 @@ router.put('/resend', (req, res, next) => {
     if(err) throw err;
     //User found!
     if(user) {
+      //Prevent links from being sent to users who are already active
+      if(user.active) {
+        var failureMsg = `Failed to re-send new activation link - Username: ${username} is already active!`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        return res.json({success: false, msg: failureMsg});
+      }
       user.lastactive = utils.getDateTimeNow();
       user.temporarytoken = jwt.sign({ username: user.username, email: user.email }, constants.jwtSecretKey, { expiresIn: constants.verificationTokenExpireTimeInHours });
       user.save((err) => {
@@ -318,9 +297,9 @@ router.put('/resend', (req, res, next) => {
       });
     //User NOT found
     } else {
-      var failedMsg = `[${utils.getDateTimeNow()}] Failed to re-send new activation link - Username: ${username} does not exist!`;
-      console.log(failedMsg);
-      return res.json({success: false, msg: failedMsg});
+      var failureMsg = `Failed to re-send new activation link - Username: ${username} does not exist!`;
+      console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+      return res.json({success: false, msg: failureMsg});
     }
   });
 });
@@ -441,17 +420,25 @@ router.post('/resetpassword', (req, res, next) => {
 
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
+    //No user found
     if(!user) {
       var failureMsg = `Failed to send reset password request. User ${username} not found!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
+    //User is not active
     } else if(!user.active) {
       var failureMsg = `Failed to send reset password request. User ${user.username} is not activated yet!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
+    //All checks passed!
     } else {
+      //Cache the last time a reset token was sent
       user.lastresettoken = utils.getDateTimeNow();
+      //Increment password reset requests
+      user.passwordresetrequests++;
+      //Create Password Reset Token
       user.resettoken = jwt.sign({ username: user.username, email: user.email }, constants.jwtSecretKey, { expiresIn: constants.resetPasswordTokenExpireTimeInHours });
+      //Save User
       user.save((err) => {
         if(err)  {
           console.log(`[${utils.getDateTimeNow()}] ${err}`);
@@ -473,23 +460,29 @@ router.post('/resetpassword', (req, res, next) => {
 //Reset Password
 router.put('/resetpassword/:token', (req, res, next) => {
   const token = req.params.token;
-
+  //Get user by the reset token presented
   User.getUserByResetToken(token, (err, user) => {
     if(err) throw err;
+    //No user found
     if(!user) {
       var failureMsg = `Failed to reset password. User ${username} not found!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
+    //User is not activated yet
     } else if(!user.active) {
       var failureMsg = `Failed to reset password. User ${user.username} is not activated yet!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
+    //All checks passed!
     } else {
+      //Verify the token
       jwt.verify(token, constants.jwtSecretKey, (err, decoded) => {
+        //Error occured
         if(err) {
           var failureMsg = `Failed to continue password reset. User ${user.username} has an invalid token! ` + 'err';
           console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
           return res.json({success: false, msg: failureMsg});
+        //Verification passed!
         } else {
           //Send some user data back for knowing more about the user whose request was accepted
           var sendUser = { firstname: user.firstname, username: user.username, email: user.email }
@@ -510,27 +503,33 @@ router.put('/savepassword', (req, res, next) => {
 
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
+    //No valid user found
     if(!user) {
       var failureMsg = `Failed to save new password. User ${username} not found!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
+    //Catch non active user
     } else if(!user.active) {
       var failureMsg = `Failed to save new password. User ${user.username} is not activated yet!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
-      //Catch the user changing passwords without active token
+    //Catch the user changing passwords without active token
     } else if(user.resettoken === 'false' || user.resettoken === 'never' || user.resettoken === 'undefined') {
       var failureMsg = `Failed to save new password. User ${user.username} has no active reset token!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
+    //Catch different passwords
     } else if(!auth.validateSameValues(password, passwordConfirm)) {
       var failureMsg = `Failed to save new password for ${user.username}. Passwords do not match!!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     } else {
       //Update user vars for saving
+      //Change password and reset reset token to no more - 'false'
       user.password = password;
       user.resettoken = false;
+      //Increment password resets
+      user.passwordresets++;
       //Save and hash the password
       User.saveUserPassword(user, (err, user) => {
         if(err)  {
