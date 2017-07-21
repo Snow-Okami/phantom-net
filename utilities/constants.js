@@ -1,6 +1,9 @@
 module.exports = {
   database: 'mongodb://localhost/phantomnet',
 
+  expressPort : 3000,
+  socketioPort : 3001,
+
   timeOfOneWeekInSeconds : 604800,
   timeOfThirtyMinutes : 1800,
 
@@ -37,6 +40,8 @@ module.exports = {
   passwordLengthMin : 8,
   passwordLengthMax : 35,
 
+  COMMAND_SEPARATOR : '%',
+  ARGUMENT_SEPARATOR : ':',
 }
 
 //Export this here as it is not set to a value or actual constant

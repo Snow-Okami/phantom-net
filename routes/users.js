@@ -241,7 +241,11 @@ router.post('/authenticate', (req, res, next) => {
           user.save((err) => {
             if(err)  { console.log(err); throw err; }
             else {
-              var failureMsg = `Too many failed login attempts in under ${constants.failedLoginTimeThreshold} seconds. Atttempts: ${heldAttempts} User ${username} - ACCOUNT LOCKED!`;
+              //Send Locked Account Email
+              var emailUser = utils.getEmailTemplateUser(user);
+              emailer.sendAccountLockedEmail(emailUser);
+              //var failureMsgOld = `Too many failed login attempts in under ${constants.failedLoginTimeThreshold} seconds. Atttempts: ${heldAttempts} User ${username} - ACCOUNT LOCKED!`;
+              var failureMsg = `Too many failed login attempts. User ${username} - ACCOUNT LOCKED!`;
               console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
               return res.json({success: false, msg: failureMsg });
             }
@@ -252,7 +256,9 @@ router.post('/authenticate', (req, res, next) => {
           user.save((err) => {
             if(err)  { console.log(err); throw err; }
             else {
-              var failureMsg = `Wrong password: ${password} for user ${username} - Attempts: ${user.failedloginattempts} Max: ${constants.failedLoginAttemptsThreshold}!`;
+              //Old msg, this exposes too much information
+              //var failureMsgOld = `Wrong password: ${password} for user ${username} - Attempts: ${user.failedloginattempts} Max: ${constants.failedLoginAttemptsThreshold}!`;
+              var failureMsg = `Wrong password for user ${username}! - Failed Logins: ${user.failedloginattempts}!`;
               console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
               return res.json({success: false, msg: failureMsg });
             }
@@ -465,7 +471,7 @@ router.put('/resetpassword/:token', (req, res, next) => {
     if(err) throw err;
     //No user found
     if(!user) {
-      var failureMsg = `Failed to reset password. User ${username} not found!`;
+      var failureMsg = `Failed to reset password. User with the token: [${req.params.token.substring(0,15)}] not found!`;
       console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
       return res.json({success: false, msg: failureMsg});
     //User is not activated yet

@@ -15,6 +15,7 @@ const activationEmailDir = path.join(__dirname, '..', 'templates', 'activation')
 const resetPasswordEmailDir = path.join(__dirname, '..', 'templates', 'resetpassword');
 const newPasswordEmailDir = path.join(__dirname, '..', 'templates', 'newpassword');
 const forgotUsernameEmailDir = path.join(__dirname, '..', 'templates', 'forgotusername');
+const lockedEmailDir = path.join(__dirname, '..', 'templates', 'locked');
 
 const client = elasticemail.createClient({
     username: constants.elasticUser,
@@ -172,6 +173,37 @@ module.exports = {
         }
 
         console.log(`[${utils.getDateTimeNow()}] New Password Confirmation sent to ${user.username} @ ${user.email} Result: ${result}`);
+        return true;
+      });
+    });
+  },
+
+  sendAccountLockedEmail : function(user)
+  {
+      this.client;
+
+      var locked = new EmailTemplate(lockedEmailDir);
+      locked.render(user, function (err, result) {
+        if (err) {
+          console.log(err);
+          return false;
+        }
+        var msg = {
+          from: constants.emailProvider,
+          from_name: constants.emailNameProvider,
+          to: user.email,
+          subject: 'Account Locked',
+          body_html: result.html,
+          body_text: result.text
+        };
+
+      client.mailer.send(msg, function(err, result) {
+        if (err) {
+          return console.error(err);
+          return false;
+        }
+
+        console.log(`[${utils.getDateTimeNow()}] Account Locked Email sent to ${user.username} @ ${user.email} Result: ${result}`);
         return true;
       });
     });
