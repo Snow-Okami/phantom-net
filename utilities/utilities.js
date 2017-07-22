@@ -68,4 +68,23 @@ module.exports = {
   cleanIp: function(ip) {
     return ip.replace(/^.*:/, '');
   },
+
+  keyValuePair: function() {
+    obj = new Object();
+    this.add=function(key,value){
+        obj[""+key+""]=value;
+    }
+    this.obj = obj
+  },
+
+  getKeyFromObj: function(obj, keyPosition = 0) {
+    return Object.keys(obj)[keyPosition];
+  },
+
+  getValueFromKey: function(obj, keyPosition = 0) {
+    var key = Object.keys(obj)[keyPosition];
+    //Without the index of zero, it returns a single array with the key in it (in the first position)
+    var objKeysMap = Object.keys(obj).map((key) => obj[key])[0];
+    return objKeysMap;
+  },
 }

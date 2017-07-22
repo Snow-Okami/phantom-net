@@ -16,7 +16,8 @@ const WebSocket = require('ws');
 const constants = require('./utilities/constants');
 const utils = require('./utilities/utilities');
 const users = require('./routes/users');
-const socketengine = require('./services/socketengine')
+const socketengine = require('./services/socketengine');
+const user = require('./models/user');
 
 const passportConfig = require('./config/passport');
 
@@ -24,7 +25,54 @@ const passportConfig = require('./config/passport');
 mongoose.Promise = global.Promise;
 
 //Connect to MongoDB
-mongoose.connect(constants.database);
+mongoose.connect(constants.database, { useMongoClient: false });
+// var mongoDB = mongoose.connect(constants.database, {
+//     useMongoClient: false,
+//     promiseLibrary: global.Promise
+// });
+//
+// mongoDB
+//     .then(function (db) {
+//         console.log(`[${utils.getDateTimeNow()}] Connected to Database ${constants.database}`);
+//     })
+//     .catch(function (err) {
+//         console.log(`[${utils.getDateTimeNow()}] Failed to connect to Database ${constants.database} - Error: ${err}`);
+//     });
+//
+// module.exports = mongoDB;
+
+// const mongoConnection = mongoose.createConnection(constants.database, {
+//     useMongoClient: true,
+//     promiseLibrary: global.Promise
+//   }).then( () => {
+//     var mongoDB = mongoose.connect(constants.database, {
+//         useMongoClient: true,
+//         promiseLibrary: global.Promise
+//     });
+//     //Connection Event
+//     mongoose.connection.on('connected', () => {
+//       console.log(`[${utils.getDateTimeNow()}] Connected to Database ${constants.database}`);
+//     });
+//
+//     //Connection Failure Event
+//     mongoose.connection.on('error', (err) => {
+//       console.log(`[${utils.getDateTimeNow()}] Failed to connect to Database ${constants.database} - Error: ${err}`);
+//     });
+//
+//
+// });
+//
+// mongoConnection.then( () => {
+//
+//   mongoConnection.model('User', user.UserSchema);
+// }).catch( ()=> {
+//
+// });
+
+//user.createModel(mongodb);
+
+//const conn = mongoose.createConnection(constants.database);
+//mongoose.connect(constants.database);
 
 //Connection Event
 mongoose.connection.on('connected', () => {
@@ -70,7 +118,7 @@ wss.on('connection', function connection(ws, req) {
   ws.send('something');
 });
 server.listen(8080, function listening() {
-  console.log('Listening on %d', server.address().port);
+  console.log(`[${utils.getDateTimeNow()}] WebSocket started on port: ${server.address().port} - Listening...`);
 });
 
 //Setup uWebsockets
@@ -115,7 +163,7 @@ app.use('/users', users);
 
 //Begin our Web Service on the port that was chosen
 app.listen(port, () => {
-  console.log(`[${utils.getDateTimeNow()}] Server started on port: ${port} - Listening...`);
+  console.log(`[${utils.getDateTimeNow()}] NodeJS Server started on port: ${port} - Listening...`);
 });
 
 //Index Route
@@ -128,3 +176,5 @@ app.get('/', (req, res) => {
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'public/index/html'));
 // });
+
+//module.exports = conn;

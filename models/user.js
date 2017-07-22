@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 //CUSTOM
+const app = require('../app');
 const constants = require('../utilities/constants');
 
 //Schema Setup
