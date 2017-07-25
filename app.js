@@ -9,6 +9,13 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketio = require('socket.io');
 const url = require('url');
+const busboy = require('connect-busboy');
+const gridfs = require('gridfs-stream');
+//LOGGING
+const morgan  = require('morgan');
+//FILES
+var fs = require('fs');
+var rfs = require('rotating-file-stream');
 //Original Websockets library
 const WebSocket = require('ws');
 //const WebSocket = require('uws');
@@ -90,6 +97,30 @@ const app = express();
 //Setup Port to be environment port (on whatever service we are using) or fallback to 3000
 const port = process.env.PORT || constants.expressPort;
 
+//Handle Logging to a file
+const logDirectory = path.join(__dirname, 'access.log');
+//Set log directory
+//Make it if it doesn't exist
+fs.access(logDirectory, function (err) {
+    if (err && err.code === 'ENOENT') {
+        fs.mkdir(logDirectory);
+    }
+});
+const accessLogStream = rfs('access.log', {
+    interval: '1d', // rotate daily
+    size:     '10M', // rotate every 10 MegaBytes written
+    compress: 'gzip', // compress rotated files
+    path: logDirectory
+});
+
+app.use(busboy());
+
+//This tells express to log via morgan
+//and morgan to log in the "combined" pre-defined format
+app.use(morgan('combined', { stream: accessLogStream }));
+//That's it. Everything in your snippet after this are just
+//other variations your might want to use
+
 //Setup Socket.io
 // const server = http.createServer(express);
 // const io = socketio(server);
@@ -170,6 +201,11 @@ app.listen(port, () => {
 //Register
 app.get('/', (req, res) => {
   res.send('Invalid Endpoint');
+});
+
+app.get('/avatars/:username', (req, res) => {
+  console.log(path.join(__dirname, 'uploads/images/avatars/') + req.params.username + '.png');
+  res.sendFile(path.join(__dirname, 'uploads/images/avatars/') + req.params.username + '.png');
 });
 
 //Force all other requests to home

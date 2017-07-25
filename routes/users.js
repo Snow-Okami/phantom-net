@@ -4,13 +4,54 @@ const router = express.Router();
 //MODULES
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-
+//FILE UPLOAD
+const mongoose = require('mongoose');
+const busboy = require('connect-busboy');
+const gridfs = require('gridfs-stream');
+var gfs = undefined;
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+const mkdirp = require('mkdirp');
 //CUSTOM
 const constants = require('../utilities/constants');
 const utils = require('../utilities/utilities');
 const auth = require('../services/authentication');
 const emailer = require('../services/emailer');
 const User = require('../models/user');
+
+//OTHERS
+const avatarUploadPath = './uploads/images/avatars';
+
+//DISK
+const avatarStorage = multer.diskStorage({
+  destination: function (req, file, cb){
+    cb(null, avatarUploadPath)
+  },
+  filename: function (req, file, cb) {
+    if(!file.originalname.match(/\.(png|jpg|jpeg|gif)$/)) {
+      var err = new Error();
+      err.code = 'filetype';
+      return cb(err);
+    }
+    //Resolve extension for file received
+    var extension = utils.getFileExtension(file.originalname);
+    //Original way of saving data
+    var originalFileDate = Date.now() + '-' + file.originalname;
+    //Custom avatar way of saving data
+    var avatarUserFile = req.body.username + '.' + extension;
+    cb(null, avatarUserFile);
+  }
+});
+//Create avatar upload path if not exists
+mkdirp.sync(avatarUploadPath);
+//Set up multer saving options
+const uploadAvatar = multer({ storage: avatarStorage, limits: { fileSize: 1000000 } }).single('avatarfile');
+
+mongoose.connection.on('connected', () => {
+  gfs = new gridfs(mongoose.connection.db, mongoose.mongo);
+  console.log(`[${utils.getDateTimeNow()}] GridFS Available and Ready!`);
+});
 
 //Register
 router.post('/register', (req, res, next) => {
@@ -267,11 +308,6 @@ router.post('/authenticate', (req, res, next) => {
       }
     });
   });
-});
-
-//Profile
-router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res, next) => {
-  res.json({user: req.user});
 });
 
 //Resend New Activation Link
@@ -604,6 +640,194 @@ router.get('/checkusername/:username', (req, res) => {
       }
     });
   }
+});
+
+//Profile
+router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  res.json({user: req.user});
+});
+
+//Settings
+router.get('/settings', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  res.json({user: req.user});
+});
+
+router.post('/uploadAvatarGFS', function(req, res, next){
+  //var busboy = new busboy({ headers: req.headers });
+  var fileId = new mongoose.Types.ObjectId();
+  var username;
+  req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    console.log('got file', filename, mimetype, encoding);
+    console.log(fileId)
+    username = fieldname;
+    gfs.findOne({_id: fieldname}, (err, file) => {
+      gfs.db.collection(fieldname + '.chunks').remove({_id: fieldname}, function(err) { console.log(err); });
+    });
+    var writeStream = gfs.createWriteStream({
+      _id: fieldname,
+      filename: filename,
+      mode: 'w',
+      content_type: mimetype,
+      metadata:
+      {
+        origId: fileId,
+        uploadedBy: fieldname,
+        encoding: encoding,
+      }
+    });
+    file.pipe(writeStream);
+  }).on('finish', function() {
+    // show a link to the uploaded file
+    res.writeHead(200, {'content-type': 'text/html'});
+    res.end('/avatar/' + username.toString());
+  });
+
+  req.pipe(req.busboy);
+});
+
+router.get('/avatarGFS/:username', function(req, res) {
+  gfs.findOne({ _id: req.params.username }, function (err, file) {
+    if (err) return res.status(400).send(err);
+    if (!file) return res.status(404).send('');
+
+    res.set('Content-Type', file.contentType);
+    res.set('Content-Disposition', 'attachment; filename="' + file.filename + '"');
+
+    var readstream = gfs.createReadStream({
+      _id: file._id
+    });
+
+    readstream.on("error", function(err) {
+      console.log("Got error while processing stream " + err.message);
+      res.end();
+    });
+
+    readstream.pipe(res);
+  });
+});
+
+router.get('/image/:id',function(req,res){
+
+    var id = req.params.id;
+    var ObjectId = require('mongodb').ObjectID;
+    var outPutFromDbFile = __dirname + '/public/uploads/' + id + '.png';
+    var writeStream = fs.createWriteStream(outPutFromDbFile);
+
+   // var BSON = require('mongodb').BSONPure;
+   // var o_id = BSON.ObjectID.createFromHexString(id);
+
+    var o_id = ObjectID(id);
+
+    var gridStore = new GridStore(db,o_id,"r");
+    gridStore.open(function (err,gridStore){
+        if(err)
+        {
+            console.log('error' + err);
+        }
+
+        var readStream = gridStore.stream(true);
+        readStream.on("end",function(){
+           console.log('close was called');
+            res.sendFile(outPutFromDbFile);
+        });
+        readStream.pipe(writeStream);
+    });
+
+});
+
+router.post('/uploadAvatar', passport.authenticate('jwt', {session: false}), function(req, res) {
+  //First find and delete any possible past avatars stored
+  //Wildcard to delete ALL other avatars this user has uploaded (username.*) - any extension)
+  var wildcard = new RegExp(req.body.username + '.*');
+  utils.deleteAllWildcards(fs, avatarUploadPath, wildcard);
+  //Upload will intercept at the first file it finds
+  //Because of this we should make sure we send ALL fields before the file, not after
+  uploadAvatar(req, res, function(err) {
+    //Const here can't be before due to the multer method we are inside of now
+    const username = req.body.username;
+    if(err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        var failureMsg = `Failed to upload avatar for user ${username}. File size was too big!`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        res.json({ success: false, msg: failureMsg});
+      } else if (err.code === 'filetype') {
+        var failureMsg = `Failed to upload avatar for user ${username}. File type is invalid. Must be png / jpg / jpeg / gif`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        res.json({ success: false, msg: failureMsg});
+      } else {
+        var failureMsg = `Failed to upload avatar for user ${username} ${err}`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        res.json({ success: false, msg: failureMsg});
+      }
+    } else {
+      if(!req.file) {
+        var failureMsg = `Failed to upload avatar for user ${username} No file was selected!`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        res.json({ success: false, msg: failureMsg});
+      } else {
+        //Construct lookup of the user's avatar image
+        var fileExt = utils.getFileExtension(req.file.filename);
+        var userAvatarFile = username + '.' + fileExt;
+        //Note the above is the same as req.file.filename -> but we leave it this way in case of future changes
+        User.getUserByUsername(username, (err, user) => {
+          if(err) console.log(`[${utils.getDateTimeNow()}] ${err}`);
+          else {
+            user.avatar = userAvatarFile;
+            user.save((err) => {
+              if(err) { console.log(err); }
+              else {
+                var successMsg = `Avatar was uploaded for ${username}!`;
+                console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
+                res.json({ success: true, msg: successMsg});
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+});
+
+//Validate
+router.get('/avatarlink/:username', (req, res) => {
+  const username = req.params.username;
+  User.getUserByUsername(username, (err, user) => {
+      console.log('ah!')
+    if(err) console.log(`[${utils.getDateTimeNow()}] ${err}`);
+    else {
+      if(!user) {
+        return res.send('https://thebenclark.files.wordpress.com/2014/03/facebook-default-no-profile-pic.jpg');
+      }
+      if(user.avatar == undefined || user.avatar === 'none')
+      {
+        return res.send('https://thebenclark.files.wordpress.com/2014/03/facebook-default-no-profile-pic.jpg');
+      }
+      //Load avatar using the path saved
+      return res.send(path.join(__dirname, '..', avatarUploadPath) + '/' + user.avatar);
+    }
+  });
+});
+
+router.get('/avatar/:username', (req, res) => {
+  const username = req.params.username;
+  User.getUserByUsername(username, (err, user) => {
+    if(err) console.log(`[${utils.getDateTimeNow()}] ${err}`);
+    else {
+      if(!user) {
+        var failureMsg = `Failed to get Avatar. User not found: ${username}!`;
+        //Send Unknown Avatar
+        return res.sendFile(path.join(__dirname, '..', avatarUploadPath) + '/' + 'unknown.png');
+      }
+      if(user.avatar == undefined || user.avatar === 'none')
+      {
+        var failureMsg = `Failed to get Avatar. User ${username} has none!`;
+        //Send blank Avatar
+        return res.sendFile(path.join(__dirname, '..', avatarUploadPath) + '/' + 'blank.png');
+      }
+      //Load avatar using the path saved
+      return res.sendFile(path.join(__dirname, '..', avatarUploadPath) + '/' + user.avatar);
+    }
+  });
 });
 
 //Validate

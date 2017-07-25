@@ -87,4 +87,29 @@ module.exports = {
     var objKeysMap = Object.keys(obj).map((key) => obj[key])[0];
     return objKeysMap;
   },
+
+  getFileExtension: function(filename)
+  {
+    var ext = /^.+\.([^.]+)$/.exec(filename);
+    return ext == null ? "" : ext[1];
+  },
+
+  getFileExtension2: function(filename)
+  {
+    return fname.slice((fname.lastIndexOf(".") - 1 >>> 0) + 2);
+  },
+
+  deleteAllWildcards: function(fs, dir, wildcard) {
+    if(!fs) return false;
+    fs.readdir(dir, (err, files) => {
+      if(err) { console.log(err); }
+     for (var i = 0; i < files.length; i++) {
+       //Match Wildcard
+        var match = files[i].match(wildcard);
+        if(match !== null)
+          //We must include the full directory and slash
+            fs.unlink(dir + '/' + files[i]);
+     }
+   });
+  }
 }

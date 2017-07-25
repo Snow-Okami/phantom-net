@@ -129,6 +129,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: 'never'
   },
+  avatar: {
+    type: String,
+    default: 'none'
+  },
   devpoints: {
     type: Number,
     default: 0
