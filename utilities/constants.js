@@ -43,6 +43,8 @@ module.exports = {
   COMMAND_SEPARATOR : '%',
   ARGUMENT_SEPARATOR : '|',
   ARGUMENT_VALUE_SEPARATOR : ':',
+
+  KEEP_ALIVE_HEARTBEAT_INTERVAL : 30000, //In miliseconds
 }
 
 //Export this here as it is not set to a value or actual constant

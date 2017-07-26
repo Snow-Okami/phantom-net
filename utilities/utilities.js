@@ -111,5 +111,5 @@ module.exports = {
             fs.unlink(dir + '/' + files[i]);
      }
    });
-  }
+ },
 }

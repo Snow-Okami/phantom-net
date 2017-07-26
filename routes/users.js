@@ -17,6 +17,8 @@ const mkdirp = require('mkdirp');
 const constants = require('../utilities/constants');
 const utils = require('../utilities/utilities');
 const auth = require('../services/authentication');
+const socketengine = require('../services/socketengine');
+const msgengine = require('../services/messagingengine');
 const emailer = require('../services/emailer');
 const User = require('../models/user');
 
@@ -792,7 +794,6 @@ router.post('/uploadAvatar', passport.authenticate('jwt', {session: false}), fun
 router.get('/avatarlink/:username', (req, res) => {
   const username = req.params.username;
   User.getUserByUsername(username, (err, user) => {
-      console.log('ah!')
     if(err) console.log(`[${utils.getDateTimeNow()}] ${err}`);
     else {
       if(!user) {
@@ -833,6 +834,59 @@ router.get('/avatar/:username', (req, res) => {
 //Validate
 router.get('/validate', (req, res, next) => {
   res.send('VALIDATE');
+});
+
+//Kafka Testing
+router.get('/kafka/:message', (req, res, next) => {
+  const msg = req.params.message;
+
+  msgengine.sendMsgToKafka(msg);
+
+  res.send(`SENT MSG: ${msg}`);
+});
+
+//Redis Testing
+router.get('/redis/set/:key/:value', (req, res, next) => {
+  const key = req.params.key;
+  const value = req.params.value;
+
+  msgengine.setRedisKeyValue(key, value);
+
+  res.send(`SET REDIS - KEY: ${key} | VALUE: ${value}`);
+});
+
+//Redis Testing
+router.get('/redis/get/:key', (req, res, next) => {
+  const key = req.params.key;
+
+  //Setup callback
+  var cb = function(value) {
+    res.send(`GET REDIS - KEY: ${key} | VALUE: ${value}`);
+  };
+
+  //Get the value async, and send the result back to the callback passed in
+  msgengine.getRedisKeyValue(key, cb);
+});
+
+//Websocket Testing
+router.get('/ws/send/:username/:msg', (req, res, next) => {
+  const username = req.params.username;
+  const msg = req.params.msg;
+
+  var sent = socketengine.sendToUser(username, msg);
+  if(sent)
+    res.send(`SENT TO CLIENT: ${username} - MSG: ${msg}`);
+  else {
+    res.send(`FAILED TO SEND TO: ${username} - MSG: ${msg}`);
+  }
+});
+
+//Websocket Testing
+router.get('/ws/sendall/:msg', (req, res, next) => {
+  const msg = req.params.msg;
+
+  socketengine.sendAllClients(msg);
+  res.send(`SENT ALL CLIENTS - MSG: ${msg}`);
 });
 
 router.post('/test', (req, res, next) => {

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const http = require('http');
 const socketio = require('socket.io');
 const url = require('url');
@@ -24,6 +25,7 @@ const constants = require('./utilities/constants');
 const utils = require('./utilities/utilities');
 const users = require('./routes/users');
 const socketengine = require('./services/socketengine');
+const msgengine = require('./services/messagingengine');
 const user = require('./models/user');
 
 const passportConfig = require('./config/passport');
@@ -106,6 +108,7 @@ fs.access(logDirectory, function (err) {
         fs.mkdir(logDirectory);
     }
 });
+//Set up log stream
 const accessLogStream = rfs('access.log', {
     interval: '1d', // rotate daily
     size:     '10M', // rotate every 10 MegaBytes written
@@ -134,23 +137,64 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 //Setup Websockets
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
+const wss = new WebSocket.Server({
+  server,
+  verifyClient: function (info, cb) {
+    var signedtoken = info.req.headers.token;
+    var token = signedtoken.substring(4); //Remove the added 'JWT '
+    if (!token)
+        cb(false, 401, 'Unauthorized');
+    else {
+        jwt.verify(token, constants.jwtSecretKey, function (err, decoded) {
+            if (err) {
+                var failureMsg = `Failed to auth a WS user: ${err}!`;
+                console.log(failureMsg);
+                cb(false, 401, 'Unauthorized: ' + err);
+            } else {
+                info.req.user = decoded; //[1]
+                cb(true);
+            }
+        });
+    }
+  }
+});
 wss.on('connection', function connection(ws, req) {
   const location = url.parse(req.url, true);
+  const ip = req.connection.remoteAddress;
+  const user = req.user;
+
   // You might use location.query.access_token to authenticate or share sessions
   // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
-  ws.on('message', function incoming(message) {
-    socketengine.parseCommandRequest(ws, message);
-    console.log('received: %s', message);
+  //OPEN
+  socketengine.openWs(ws, user.username);
+  console.log(`Opened WS: ${ip}!`);
+  //Begin detecting broken connections
+  socketengine.pong(ws);
+  socketengine.ping();
+
+  ws.on('close', function (message) {
+    socketengine.closeWs(ws);
+    console.log(`Closed WS: ${ip}!`);
   });
 
-  ws.send('something');
+  ws.on('error', function (err) {
+    console.log(`WS: ${err}!`);
+  });
+
+  ws.on('message', function incoming(message) {
+    socketengine.parseCommandRequest(ws, message);
+    console.log(`Received WS Msg: ${message} from ${ip}`);
+  });
 });
+
 server.listen(8080, function listening() {
   console.log(`[${utils.getDateTimeNow()}] WebSocket started on port: ${server.address().port} - Listening...`);
 });
+
+//Kafka
+msgengine.initKafkaProducer();
+msgengine.initKafkaConsumer();
 
 //Setup uWebsockets
 // const requestHandler = (request, response) =>{
