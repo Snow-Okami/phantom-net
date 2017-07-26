@@ -151,7 +151,7 @@ const wss = new WebSocket.Server({
                 console.log(failureMsg);
                 cb(false, 401, 'Unauthorized: ' + err);
             } else {
-                info.req.user = decoded; //[1]
+                info.req.user = decoded; //the decoded user that was signed in the JWT
                 cb(true);
             }
         });
@@ -159,19 +159,22 @@ const wss = new WebSocket.Server({
   }
 });
 wss.on('connection', function connection(ws, req) {
+  // You might use location.query.access_token to authenticate or share sessions
+  // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
   const location = url.parse(req.url, true);
   const ip = req.connection.remoteAddress;
   const user = req.user;
 
-  // You might use location.query.access_token to authenticate or share sessions
-  // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
   //OPEN
-  socketengine.openWs(ws, user.username);
-  console.log(`Opened WS: ${ip}!`);
-  //Begin detecting broken connections
-  socketengine.pong(ws);
-  socketengine.ping();
+  const open = () => {
+    socketengine.openWs(ws, user.username);
+    console.log(`Opened WS: ${ip}!`);
+    //Begin detecting broken connections
+    socketengine.pong(ws);
+    socketengine.ping();
+  };
+  //This has been done this way for the sake of fashion-> LOL (the code lines up better now)
+  open();
 
   ws.on('close', function (message) {
     socketengine.closeWs(ws);
@@ -192,7 +195,7 @@ server.listen(8080, function listening() {
   console.log(`[${utils.getDateTimeNow()}] WebSocket started on port: ${server.address().port} - Listening...`);
 });
 
-//Kafka
+//Setup Kafka
 msgengine.initKafkaProducer();
 msgengine.initKafkaConsumer();
 
@@ -245,11 +248,6 @@ app.listen(port, () => {
 //Register
 app.get('/', (req, res) => {
   res.send('Invalid Endpoint');
-});
-
-app.get('/avatars/:username', (req, res) => {
-  console.log(path.join(__dirname, 'uploads/images/avatars/') + req.params.username + '.png');
-  res.sendFile(path.join(__dirname, 'uploads/images/avatars/') + req.params.username + '.png');
 });
 
 //Force all other requests to home
