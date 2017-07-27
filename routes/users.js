@@ -19,7 +19,9 @@ const utils = require('../utilities/utilities');
 const auth = require('../services/authentication');
 const socketengine = require('../services/socketengine');
 const msgengine = require('../services/messagingengine');
+const chatengine = require('../services/chatengine');
 const emailer = require('../services/emailer');
+const Chat = require('../models/chat');
 const User = require('../models/user');
 
 //OTHERS
@@ -41,7 +43,7 @@ const avatarStorage = multer.diskStorage({
     //Original way of saving data
     var originalFileDate = Date.now() + '-' + file.originalname;
     //Custom avatar way of saving data
-    var avatarUserFile = req.body.username + '.' + extension;
+    var avatarUserFile = req.header('username') + '.' + extension;
     cb(null, avatarUserFile);
   }
 });
@@ -739,14 +741,12 @@ router.get('/image/:id',function(req,res){
 
 router.post('/uploadAvatar', passport.authenticate('jwt', {session: false}), function(req, res) {
   //First find and delete any possible past avatars stored
-  //Wildcard to delete ALL other avatars this user has uploaded (username.*) - any extension)
-  var wildcard = new RegExp(req.body.username + '.*');
-  utils.deleteAllWildcards(fs, avatarUploadPath, wildcard);
+
   //Upload will intercept at the first file it finds
   //Because of this we should make sure we send ALL fields before the file, not after
   uploadAvatar(req, res, function(err) {
     //Const here can't be before due to the multer method we are inside of now
-    const username = req.body.username;
+    const username = req.header('username');
     if(err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         var failureMsg = `Failed to upload avatar for user ${username}. File size was too big!`;
@@ -774,7 +774,16 @@ router.post('/uploadAvatar', passport.authenticate('jwt', {session: false}), fun
         User.getUserByUsername(username, (err, user) => {
           if(err) console.log(`[${utils.getDateTimeNow()}] ${err}`);
           else {
+            //Wildcard to delete ALL other avatars this user has uploaded (username.*) - any extension)
+            //var wildcard = new RegExp(req.header('username') + '.*');
+            //Wildcard delete all EXCEPT the image just saved this this new file extension - this is a tricky
+            //Race condition as we are deleting inside of a saving function
+            var wildcard = new RegExp(req.header('username') + '\.(?!(' + fileExt + ')$)([^.]+$)');
+            //Delete the wildcards
+            utils.deleteAllWildcards(fs, avatarUploadPath, wildcard);
+            //Save avatar
             user.avatar = userAvatarFile;
+            //Save user
             user.save((err) => {
               if(err) { console.log(err); }
               else {
@@ -887,6 +896,32 @@ router.get('/ws/sendall/:msg', (req, res, next) => {
 
   socketengine.sendAllClients(msg);
   res.send(`SENT ALL CLIENTS - MSG: ${msg}`);
+});
+
+//Chat Testing
+router.get('/chat/create/:username', (req, res, next) => {
+  const username = req.params.username;
+  chatengine.createChat(username, (newCreatedChat) => {
+    //console.log(newCreatedChat)
+    if(newCreatedChat) {
+        res.send(`CREATED NEW CHAT ${newCreatedChat.uuid} - OWNER: ${username}`);
+    } else {
+        res.send(`FAILED TO CREATE CHAT FOR ${username}`);
+    }
+  });
+});
+
+router.get('/chat/adduser/:username/:uuid', (req, res, next) => {
+  const username = req.params.username;
+  const uuid = req.params.uuid;
+
+  chatengine.addUserToChat(uuid, username, (success) => {
+    if(success) {
+        res.send(`ADDED ${username} TO CHAT: ${uuid}`);
+    } else {
+        res.send(`FAILED TO ADD ${username} TO CHAT ${uuid}`);
+    }
+  });
 });
 
 router.post('/test', (req, res, next) => {

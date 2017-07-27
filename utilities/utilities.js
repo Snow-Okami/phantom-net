@@ -99,17 +99,32 @@ module.exports = {
     return fname.slice((fname.lastIndexOf(".") - 1 >>> 0) + 2);
   },
 
-  deleteAllWildcards: function(fs, dir, wildcard) {
-    if(!fs) return false;
-    fs.readdir(dir, (err, files) => {
+  deleteAllWildcards: function(fs, dir, wildcard, cb) {
+      if(!fs) return false;
+      fs.readdir(dir, (err, files) => {
       if(err) { console.log(err); }
-     for (var i = 0; i < files.length; i++) {
-       //Match Wildcard
-        var match = files[i].match(wildcard);
-        if(match !== null)
-          //We must include the full directory and slash
-            fs.unlink(dir + '/' + files[i]);
-     }
+       for (var i = 0; i < files.length; i++) {
+         //Match Wildcard
+          var match = files[i].match(wildcard);
+          if(match !== null) {
+            //We must include the full directory and slash
+              fs.unlink(dir + '/' + files[i]);
+            }
+       }
+       cb();
    });
  },
+
+ deleteAllWildcardsSync: function(fs, dir, wildcard) {
+    if(!fs) return false;
+    files = fs.readdirSync(dir);
+    for (var i = 0; i < files.length; i++) {
+      //Match Wildcard
+       var match = files[i].match(wildcard);
+       if(match !== null) {
+         //We must include the full directory and slash
+           fs.unlink(dir + '/' + files[i]);
+         }
+    }
+  },
 }

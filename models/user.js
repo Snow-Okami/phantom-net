@@ -4,6 +4,13 @@ const bcrypt = require('bcryptjs');
 const app = require('../app');
 const constants = require('../utilities/constants');
 
+const ChatsSchema = mongoose.Schema({
+  uuid: {
+    type: String,
+    required: true
+  },
+});
+
 //Schema Setup
 const UserSchema = mongoose.Schema({
   country: {
@@ -133,6 +140,8 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: 'none'
   },
+  chats:
+  [ ChatsSchema ],
   devpoints: {
     type: Number,
     default: 0

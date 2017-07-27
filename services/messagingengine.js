@@ -67,7 +67,5 @@ module.exports = {
       //Use a callback here because getting this is async
       cb(result);
     });
-  }
+  },
 }
-
-return

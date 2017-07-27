@@ -225,6 +225,9 @@ app.use(cors());
 
 //Set up Body Parser Middleware (Parse incoming request bodies in a middleware before your handlers, available under the req.body)
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 //Passport Middleware (User Authentication)
 app.use(passport.initialize());
