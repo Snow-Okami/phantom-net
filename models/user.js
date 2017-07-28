@@ -142,6 +142,8 @@ const UserSchema = mongoose.Schema({
   },
   chats:
   [ ChatsSchema ],
+  participatedchats:
+  [ ChatsSchema ],
   devpoints: {
     type: Number,
     default: 0

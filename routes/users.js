@@ -172,7 +172,9 @@ router.post('/register', (req, res, next) => {
       createdon: utils.getDateTimeNow(),
       lastactive: utils.getDateTimeNow(),
       lastip: cleanedIp,
-      temporarytoken: jwt.sign({ username: req.body.username, email: req.body.email }, constants.jwtSecretKey, { expiresIn: constants.verificationTokenExpireTimeInHours })
+      temporarytoken: jwt.sign({ username: req.body.username, email: req.body.email }, constants.jwtSecretKey, { expiresIn: constants.verificationTokenExpireTimeInHours }),
+      chats: [],
+      participatedchats: []
     });
 
     //Add user

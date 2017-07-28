@@ -17,17 +17,39 @@ const UsersSchema = mongoose.Schema({
   },
 });
 
+const MsgsSchema = mongoose.Schema({
+  createdon: {
+    type: Date,
+    default: Date.now
+  },
+  owner: {
+    type: String,
+    default: 0,
+    required: true
+  },
+  text: {
+    type: String,
+    default: '',
+    required: true
+  },
+});
+
 //Schema Setup
 const ChatSchema = mongoose.Schema({
   uuid: {
     type: String,
     required: true
   },
-  users: [ UsersSchema ],
-  msgs: {
-    type: Number,
-    default: 0
+  creator: {
+    type: String,
+    required: true
   },
+  createdon: {
+    type: Date,
+    default: Date.now
+  },
+  users: [ UsersSchema ],
+  msgs: [ MsgsSchema ]
 });
 
 //Model Setup
@@ -64,8 +86,10 @@ module.exports.addChat = function (creatingUser, callback) {
         //Set UUID
         let newChat = new Chat({
           uuid: uuid,
+          creator: creatingUser,
+          createdon: Date.now(),
           users: [{username: creatingUser, msgs: 0}],
-          msgs: 0
+          msgs: []
         });
         //Save chat
         newChat.save(callback);
