@@ -17,6 +17,8 @@ module.exports = {
   openWs : function(ws, username) {
     CLIENTS.push({ws: ws, username: username});
     CLIENTS_NUM++;
+    //Set status of user online
+    User.setStatus('online');
   },
 
   closeWs : function(ws) {
@@ -24,6 +26,8 @@ module.exports = {
     if (client > -1) {
       CLIENTS.splice(client, 1);
       CLIENTS_NUM--;
+      //Set status of user offline
+      User.setStatus('offline', username);
     }
   },
 
@@ -119,6 +123,20 @@ module.exports = {
       case 'login':
         module.exports.onLoginRequest({websocket: ws, username: utils.getKeyFromObj(argPairs[0]), password: utils.getValueFromKey(argPairs[0])});
         break;
+      case 'sendpm':
+        break;
+      case 'sendchatinvite':
+          break;
+      case 'sendchatmsg':
+          break;
+      case 'frienduser':
+          break;
+      case 'blockuser':
+          break;
+      case 'unfrienduser':
+          break;
+      case 'unblockuser':
+          break;
     }
   },
 
@@ -128,47 +146,22 @@ module.exports = {
       const ws = user.websocket;
       const type = 'Login';
 
-      User.getUserByUsername(username, (err, user) => {
-        if(err) throw err;
-        if(!user) {
-          var failureMsg = `Failed to authenticate. User ${username} not found!`;
-          console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
-          return module.exports.createResponse(type, {websocket: ws, success: false, msg: failureMsg});
-        }
-        //Prevent locked accounts from trying to authenticate
-        if(user.locked) {
-          var failureMsg = `Failed to authenticate. User ${username} account is locked!`;
-          console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
-          return module.exports.createResponse(type, {websocket: ws, success: false, msg: failureMsg});
-        }
+      return module.exports.createResponse(type, {websocket: ws, success: false, msg: failureMsg});
 
-      User.comparePassword(password, user.password, (err, isMatch) => {
-        if(err) throw err;
-        if(isMatch) {
-          user.save((err) => {
-            if(err) { console.log(err); throw err; }
-            else {
-              //Setup success msg
-              var successMsg = `Successfully authenticated user ${username}!`;
-              console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
-              return module.exports.createResponse(type, {websocket: ws, success: true, msg: successMsg});
-            }
-          });
-        }
-        else {
-          //Save User
-          user.save((err) => {
-            if(err)  { console.log(err); throw err; }
-            else {
-              var failureMsg = `Wrong password for user ${username}! - Failed Logins: ${user.failedloginattempts}!`;
-              console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
-              return module.exports.createResponse(type, {websocket: ws, success: false, msg: failureMsg});
-            }
-          });
-        }
-      });
-    });
   },
+
+  onPmRequest : function(fromuser, touser) {
+      // const username = user.username;
+      // const password = user.password;
+      // const ws = user.websocket;
+      // const type = 'Login';
+      //
+      // return module.exports.createResponse(type, {websocket: ws, success: false, msg: failureMsg});
+
+      // User.find({ users: { "$in" : ["sushi"]} }
+      // User.findOne({ users: { }{ $all: [fromuser, touser] }});
+  },
+
   createResponse : function(command, response) {
     var ws = response.websocket;
     if(ws) {

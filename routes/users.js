@@ -901,9 +901,11 @@ router.get('/ws/sendall/:msg', (req, res, next) => {
 });
 
 //Chat Testing
-router.get('/chat/create/:username', (req, res, next) => {
+router.get('/chat/create/:username/:createdtype', (req, res, next) => {
   const username = req.params.username;
-  chatengine.createChat(username, (newCreatedChat) => {
+  const createdtype = req.params.createdtype;
+
+  chatengine.createChat(username, createdtype, (newCreatedChat) => {
     //console.log(newCreatedChat)
     if(newCreatedChat) {
         res.send(`CREATED NEW CHAT ${newCreatedChat.uuid} - OWNER: ${username}`);
@@ -922,6 +924,33 @@ router.get('/chat/adduser/:username/:uuid', (req, res, next) => {
         res.send(`ADDED ${username} TO CHAT: ${uuid}`);
     } else {
         res.send(`FAILED TO ADD ${username} TO CHAT ${uuid}`);
+    }
+  });
+});
+
+router.get('/chat/removeuser/:username/:uuid', (req, res, next) => {
+  const username = req.params.username;
+  const uuid = req.params.uuid;
+
+  chatengine.removeUserFromChat(uuid, username, (success) => {
+    if(success) {
+        res.send(`REMOVED ${username} FROM CHAT: ${uuid}`);
+    } else {
+        res.send(`FAILED TO REMOVE ${username} FROM CHAT ${uuid}`);
+    }
+  });
+});
+
+router.get('/chat/send/:username/:uuid/:msg', (req, res, next) => {
+  const username = req.params.username;
+  const uuid = req.params.uuid;
+  const msg = req.params.msg;
+
+  chatengine.sendChatMsg(username, uuid, msg, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY SENT ${username}:${msg} TO CHAT: ${uuid}`);
+    } else {
+        res.send(`FAILED TO SEND ${username}:${msg} TO CHAT: ${uuid}`);
     }
   });
 });

@@ -11,6 +11,20 @@ const ChatsSchema = mongoose.Schema({
   },
 });
 
+const FriendsSchema = mongoose.Schema({
+  username: {
+    type: String,
+    required: true
+  },
+});
+
+const BlockedSchema = mongoose.Schema({
+  username: {
+    type: String,
+    required: true
+  },
+});
+
 //Schema Setup
 const UserSchema = mongoose.Schema({
   country: {
@@ -140,6 +154,14 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: 'none'
   },
+  onlinestatus: {
+    type: String,
+    default: 'offline'
+  },
+  friends:
+  [ FriendsSchema ],
+  blocked:
+  [ BlockedSchema ],
   chats:
   [ ChatsSchema ],
   participatedchats:
