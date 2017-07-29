@@ -3,6 +3,9 @@ const url = require('url');
 const WebSocket = require('ws');
 //const WebSocket = require('uws');
 
+//ENGINES
+const socialengine = require('../services/socialengine');
+
 //CUSTOM
 const constants = require('../utilities/constants');
 const utils = require('../utilities/utilities');
@@ -18,21 +21,33 @@ module.exports = {
     CLIENTS.push({ws: ws, username: username});
     CLIENTS_NUM++;
     //Set status of user online
-    User.setStatus('online');
+    socialengine.setStatus(username, 'online', () => {});
   },
 
   closeWs : function(ws) {
+    //Hold the username before we remove the socket from the list!
+    var wsclient = module.exports.getWsClientUsername(ws);
+    //Socket removed from list here
     var client = CLIENTS.map(function(x) {return x.ws; }).indexOf(ws);
     if (client > -1) {
       CLIENTS.splice(client, 1);
       CLIENTS_NUM--;
       //Set status of user offline
-      User.setStatus('offline', username);
+      socialengine.setStatus(wsclient.username, 'offline', () => {});
     }
   },
 
-  getUserWs : function(username) {
+  getUserWsClient : function(username) {
     var foundPos = CLIENTS.map(function(x) {return x.username; }).indexOf(username);
+    if(foundPos > -1) {
+        var client = CLIENTS[foundPos];
+        return client;
+    }
+    else return -1;
+  },
+
+  getWsClientUsername : function(ws) {
+    var foundPos = CLIENTS.map(function(x) {return x.ws; }).indexOf(ws);
     if(foundPos > -1) {
         var client = CLIENTS[foundPos];
         return client;
@@ -97,7 +112,40 @@ module.exports = {
     }, constants.KEEP_ALIVE_HEARTBEAT_INTERVAL);
   },
 
-  parseCommandRequest : function(ws, request) {
+  parseCommandRequest : function(requestObj) {
+    //Gets the recipient from the input string
+    var recip = utils.getFrontValueFromString(requestObj.message, constants.RECIPIENT_SEPARATOR);
+    //Pop off the recipient from the string
+    var cmdAndArgs = utils.popOffFrontValueFromString(requestObj.message, constants.RECIPIENT_SEPARATOR);
+    //Gets the command from the input string
+    var cmd = utils.getFrontValueFromString(cmdAndArgs, constants.COMMAND_SEPARATOR);
+    //Gets the input string without the command
+    var reqArgs = utils.popOffFrontValueFromString(cmdAndArgs, constants.COMMAND_SEPARATOR);
+    //Gets arguments using argument seperators, in the form of KEY:VALUE in a object
+    var args = utils.parseDelimitedString(reqArgs, constants.ARGUMENT_SEPARATOR, constants.ARGUMENT_VALUE_SEPARATOR);
+    //Get websocket client
+    var client = module.exports.getUserWsClient(recip);
+
+    switch(cmd) {
+      case 'sendpm':
+        break;
+      case 'sendchatinvite':
+          break;
+      case 'sendchatmsg':
+          break;
+      case 'frienduser':
+      module.exports.onAddFriendRequest({client: client, username: recip, args: args});
+          break;
+      case 'blockuser':
+          break;
+      case 'unfrienduser':
+          break;
+      case 'unblockuser':
+          break;
+    }
+  },
+
+  parseCommandRequestOld : function(ws, request) {
     //Gets the command from the input string
     var cmd = request.split(constants.COMMAND_SEPARATOR)[0];
     //Gets the input string without the command
@@ -150,6 +198,24 @@ module.exports = {
 
   },
 
+  onAddFriendRequest : function(user) {
+    const username = user.username;
+    const friend = user.args.friend;
+    const type = 'frienduser';
+
+    socialengine.addFriend(username, friend, (success) => {
+      if(success) {
+        var successMsg = `SUCCESSFULLY ADDED ${friend} TO ${username}'s FRIENDS LIST`
+        console.log(successMsg);
+        return module.exports.createResponse(type, user.client, { success: true, msg: successMsg });
+      } else {
+        var failureMsg = `FAILED TO ADD ${friend} TO ${username}'s TO FRIENDS LIST`
+        console.log(failureMsg);
+        return module.exports.createResponse(type, user.client , { success: false, msg: failureMsg });
+      }
+    });
+  },
+
   onPmRequest : function(fromuser, touser) {
       // const username = user.username;
       // const password = user.password;
@@ -162,11 +228,11 @@ module.exports = {
       // User.findOne({ users: { }{ $all: [fromuser, touser] }});
   },
 
-  createResponse : function(command, response) {
-    var ws = response.websocket;
-    if(ws) {
-      var finalResponse = `${command}${constants.COMMAND_SEPARATOR}success${constants.ARGUMENT_VALUE_SEPARATOR}${response.success}${constants.ARGUMENT_SEPARATOR}msg${constants.ARGUMENT_VALUE_SEPARATOR}${response.msg}`;
-      ws.send(finalResponse);
+  createResponse : function(cmd, client, responseObj) {
+    if(client.ws) {
+      var responseCommands = utils.createDelimitedString(responseObj, constants.ARGUMENT_SEPARATOR, constants.ARGUMENT_VALUE_SEPARATOR);
+      var finalResponse = `${cmd}${constants.COMMAND_SEPARATOR}${responseCommands}`;
+      client.ws.send(finalResponse);
       MESSAGES++;
     }
   },

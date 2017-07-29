@@ -1,6 +1,10 @@
 //REQUIRES
 const kafka = require('no-kafka');
 const redis = require('ioredis');
+//ENGINES
+const socketengine = require('../services/socketengine');
+// const chatengine = require('../services/chatengine');
+// const socialengine = require('../services/socialengine');
 //OTHERS
 const utils = require('../utilities/utilities');
 //SETUP
@@ -16,6 +20,7 @@ const redisdb = new redis({
 
 
 module.exports = {
+
   initKafkaProducer : function() {
     producer.init().then(function(){
 
@@ -27,12 +32,21 @@ module.exports = {
     });
   },
 
+  lum : function() {
+    var kafkaObj = { topic: 'hehe', partition: 'part', offset: 1, message: 'hi' };
+    console.log(socketengine)
+    //socketengine.parseCommandRequest(kafkaObj)
+  },
+
   initKafkaConsumer : function() {
     // data handler function can return a Promise
     var dataHandler = function (messageSet, topic, partition) {
         messageSet.forEach(function (m) {
-            console.log(topic, partition, m.offset, m.message.value.toString('utf8'));
+          var kafkaObj = { topic: topic, partition: partition, offset: m.offset, message: m.message.value.toString('utf8') };
+          socketengine.parseCommandRequest(kafkaObj);
+          console.log(topic, partition, m.offset, m.message.value.toString('utf8'));
         });
+        //return Promise.delay(1000);
     };
 
     consumer.init().then(function () {

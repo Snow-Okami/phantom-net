@@ -41,6 +41,7 @@ module.exports = {
   passwordLengthMax : 35,
 
   COMMAND_SEPARATOR : '%',
+  RECIPIENT_SEPARATOR : '#',
   ARGUMENT_SEPARATOR : '|',
   ARGUMENT_VALUE_SEPARATOR : ':',
 

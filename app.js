@@ -186,7 +186,8 @@ wss.on('connection', function connection(ws, req) {
   });
 
   ws.on('message', function incoming(message) {
-    socketengine.parseCommandRequest(ws, message);
+    var finalMsg = utils.addToFrontOfString(message, user.username, constants.RECIPIENT_SEPARATOR);
+    msgengine.sendMsgToKafka(finalMsg);
     console.log(`Received WS Msg: ${message} from ${ip}`);
   });
 });

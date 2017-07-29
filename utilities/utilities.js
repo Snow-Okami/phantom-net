@@ -77,6 +77,54 @@ module.exports = {
     this.obj = obj
   },
 
+  getFrontValueFromString: function(str, sep) {
+    var cmd = str.split(sep)[0];
+    return cmd;
+  },
+
+  popOffFrontValueFromString: function(str, sep) {
+    var reqArgs = str.split(sep).pop();
+    return reqArgs;
+  },
+
+  parseDelimitedString: function(str, pairSep, valueSep) {
+    var result = {};
+    str.split(pairSep).forEach(function(x){
+        var arr = x.split(valueSep);
+        arr[1] && (result[arr[0]] = arr[1]);
+    });
+    return result;
+  },
+
+  parseDelimitedArray: function(arr) {
+    // var arr = ["title: x_one", " description: 1", " value: 4"]
+    var result = {};
+    for (var i = 0; i < arr.length; i++) {
+        var split = arr[i].split(':');
+        result[split[0].trim()] = split[1].trim();
+    }
+    return result;
+  },
+
+  createDelimitedString: function(obj, pairSep, valueSep) {
+    var key;
+    var concat = '';
+
+    concat += pairSep;
+
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) {
+            concat += key + valueSep + obj[key] + pairSep;
+        }
+    }
+
+    return concat;
+  },
+
+  addToFrontOfString: function(string, value, sep) {
+    return `${value}${sep}${string}`
+  },
+
   getKeyFromObj: function(obj, keyPosition = 0) {
     return Object.keys(obj)[keyPosition];
   },

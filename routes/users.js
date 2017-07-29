@@ -20,6 +20,7 @@ const auth = require('../services/authentication');
 const socketengine = require('../services/socketengine');
 const msgengine = require('../services/messagingengine');
 const chatengine = require('../services/chatengine');
+const socialengine = require('../services/socialengine');
 const emailer = require('../services/emailer');
 const Chat = require('../models/chat');
 const User = require('../models/user');
@@ -900,7 +901,8 @@ router.get('/ws/sendall/:msg', (req, res, next) => {
   res.send(`SENT ALL CLIENTS - MSG: ${msg}`);
 });
 
-//Chat Testing
+//CHAT
+//CREATE CHAT
 router.get('/chat/create/:username/:createdtype', (req, res, next) => {
   const username = req.params.username;
   const createdtype = req.params.createdtype;
@@ -914,7 +916,7 @@ router.get('/chat/create/:username/:createdtype', (req, res, next) => {
     }
   });
 });
-
+//ADD USER TO CHAT
 router.get('/chat/adduser/:username/:uuid', (req, res, next) => {
   const username = req.params.username;
   const uuid = req.params.uuid;
@@ -927,7 +929,7 @@ router.get('/chat/adduser/:username/:uuid', (req, res, next) => {
     }
   });
 });
-
+//REMOVE USER FROM CHAT
 router.get('/chat/removeuser/:username/:uuid', (req, res, next) => {
   const username = req.params.username;
   const uuid = req.params.uuid;
@@ -940,7 +942,7 @@ router.get('/chat/removeuser/:username/:uuid', (req, res, next) => {
     }
   });
 });
-
+//SEND MSG TO CHAT
 router.get('/chat/send/:username/:uuid/:msg', (req, res, next) => {
   const username = req.params.username;
   const uuid = req.params.uuid;
@@ -954,6 +956,135 @@ router.get('/chat/send/:username/:uuid/:msg', (req, res, next) => {
     }
   });
 });
+//PRIVATE MESSAGES
+//GET PM
+router.get('/chat/getpm/:fromuser/:touser/', (req, res, next) => {
+  const fromuser = req.params.fromuser;
+  const touser = req.params.touser;
+
+  socialengine.getPm(fromuser, touser, (uuid) => {
+    if(uuid) {
+        res.send(`SUCCESSFULLY GOT ${uuid} TO PM BETWEEN ${fromuser} AND ${touser}`);
+    } else {
+        res.send(`FAILED TO GET A UUID FOR A PM BETWEEN ${fromuser} AND ${touser}`);
+    }
+  });
+});
+//SEND PM
+router.get('/chat/pm/:fromuser/:touser/:msg', (req, res, next) => {
+  const fromuser = req.params.fromuser;
+  const uuid = req.params.uuid;
+  const msg = req.params.msg;
+
+  chatengine.sendChatMsg(fromuser, touser, msg, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY SENT ${username}:${msg} TO CHAT: ${uuid}`);
+    } else {
+        res.send(`FAILED TO SEND ${username}:${msg} TO CHAT: ${uuid}`);
+    }
+  });
+});
+//FRIENDS
+//ADD FRIEND
+router.get('/friend/add/:username/:friend', (req, res, next) => {
+  const username = req.params.username;
+  const friend = req.params.friend;
+
+  socialengine.addFriend(username, friend, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY ADDED ${friend} TO ${username}'s FRIENDS LIST`);
+    } else {
+        res.send(`FAILED TO ADD ${friend} TO ${username}'s TO FRIENDS LIST`);
+    }
+  });
+});
+//REMOVE FRIEND
+router.get('/friend/remove/:username/:friend', (req, res, next) => {
+  const username = req.params.username;
+  const friend = req.params.friend;
+
+  socialengine.removeFriend(username, friend, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY REMOVED ${friend} FROM ${username}'s FRIENDS LIST`);
+    } else {
+        res.send(`FAILED TO REMOVE ${friend} FROM ${username}'s FRIEND LIST`);
+    }
+  });
+});
+//BLOCKED USERS
+//ADD BLOCKED
+router.get('/blocked/add/:username/:block', (req, res, next) => {
+  const username = req.params.username;
+  const block = req.params.block;
+
+  socialengine.addBlocked(username, block, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY ADDED ${block} TO ${username}'s BLOCKED LIST`);
+    } else {
+        res.send(`FAILED TO ADD ${block} TO ${username} TO BLOCKED LIST`);
+    }
+  });
+});
+//REMOVE BLOCKED
+router.get('/blocked/remove/:username/:block', (req, res, next) => {
+  const username = req.params.username;
+  const block = req.params.block;
+
+  socialengine.removeBlocked(username, block, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY REMOVED ${block} FROM ${username}'s BLOCKED LIST`);
+    } else {
+        res.send(`FAILED TO REMOVE ${block} FROM ${username}'s BLOCKED LIST`);
+    }
+  });
+});
+
+router.get('/status/set/:username/:userstatus', (req, res, next) => {
+  const username = req.params.username;
+  const userstatus = req.params.userstatus;
+
+  socialengine.setStatus(username, userstatus, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY SET ${userstatus} STATUS FOR ${username}`);
+    } else {
+        res.send(`FAILED TO SET ${userstatus} STATUS FOR ${username}`);
+    }
+  });
+});
+
+router.get('/parser/:parsedstring', (req, res, next) => {
+  //const parsedstring = req.params.parsedstring;
+  var parsedstring = 'addfriend%|username:madonna|password:bebe1234|panda:lee|';
+  var parsedstring = 'frienduser%friend:goon'
+
+  var cmd = utils.getCommand(parsedstring, constants.COMMAND_SEPARATOR);
+
+  var cmdArgs = utils.getCommandArgs(parsedstring, constants.COMMAND_SEPARATOR);
+
+  var cmdObj = utils.parseDelimitedString(cmdArgs, constants.ARGUMENT_SEPARATOR, constants.ARGUMENT_VALUE_SEPARATOR);
+
+  var concat = utils.createDelimitedString(cmdObj, constants.ARGUMENT_SEPARATOR, constants.ARGUMENT_VALUE_SEPARATOR);
+
+  console.log(concat);
+
+  console.log(cmd)
+  console.log(cmdArgs)
+  console.log(cmdObj);
+
+  console.log(cmdObj.username)
+  console.log(cmdObj.password)
+  console.log(cmdObj.panda)
+
+  res.send(`Parsed ${parsedstring} - CMD: ${cmd} - CMD ARGS: ${cmdArgs}`);
+});
+
+router.get('/lum', (req, res, next) => {
+  msgengine.lum();
+
+  res.send('LUM');
+});
+
+
 
 router.post('/test', (req, res, next) => {
   const username = req.body.username;
