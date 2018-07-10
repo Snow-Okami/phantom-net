@@ -6,18 +6,19 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const expressSession = require('express-session');
+const redis = require('redis');
+const connectRedis = require('connect-redis');
 const jwt = require('jsonwebtoken');
 const http = require('http');
-const socketio = require('socket.io');
 const url = require('url');
-const busboy = require('connect-busboy');
-const gridfs = require('gridfs-stream');
 //LOGGING
 const morgan  = require('morgan');
 //FILES
 var fs = require('fs');
 var rfs = require('rotating-file-stream');
-//Original Websockets library
+//SOCKETS
 const WebSocket = require('ws');
 //const WebSocket = require('uws');
 //CUSTOM
@@ -27,8 +28,11 @@ const users = require('./routes/users');
 const socketengine = require('./services/socketengine');
 const msgengine = require('./services/messagingengine');
 const user = require('./models/user');
-
 const passportConfig = require('./config/passport');
+//Redis
+const redisclient = redis.createClient();
+const redisStore = connectRedis(expressSession);
+const redisSessionStore = new redisStore({client: redisclient});
 
 //Set Mongo Promise
 mongoose.Promise = global.Promise;
@@ -116,31 +120,36 @@ const accessLogStream = rfs('access.log', {
     path: logDirectory
 });
 
-app.use(busboy());
-
 //This tells express to log via morgan
-//and morgan to log in the "combined" pre-defined format
+//and morgan to log using rotated file stream
 app.use(morgan('combined', { stream: accessLogStream }));
-//That's it. Everything in your snippet after this are just
-//other variations your might want to use
-
-//Setup Socket.io
-// const server = http.createServer(express);
-// const io = socketio(server);
-// //Start
-// io.on('connection', function(){
-//   socket.on('reply', function(){
-//    console.log('reply received');
-//  }); // listen to the event
-// });
-// server.listen(constants.socketioPort);
 
 //Setup Websockets
 const server = http.createServer(app);
+//Set up authentication for connecting to websocket
 const wss = new WebSocket.Server({
   server,
   verifyClient: function (info, cb) {
     var signedtoken = info.req.headers.token;
+    //console.log(info.req)
+    //console.log(info.req.headers);
+    console.log(info.req.headers.cookie);
+    signedtoken = info.req.headers.cookie;
+    signedtoken = signedtoken.substring(6)
+    console.log(signedtoken)
+    //Safe guard to prevent the app from crashing because it cannot handle
+    //a case of a missing token (we must return instead of just using cb)
+    // if(!signedtoken) {
+    //     cb(false, 401, 'No Token Received');
+    //     return false;
+    // }
+    //Safe guard to prevent the app from crashing because it cannot handle
+    //a case of a missing token (we must return instead of just using cb)
+    if(signedtoken.length < 4) {
+      cb(false, 401, 'Token invalid length:' + signedtoken);
+      console.log(signedtoken)
+      return false;
+    }
     var token = signedtoken.substring(4); //Remove the added 'JWT '
     if (!token)
         cb(false, 401, 'Unauthorized');
@@ -158,13 +167,16 @@ const wss = new WebSocket.Server({
     }
   }
 });
+
 wss.on('connection', function connection(ws, req) {
   // You might use location.query.access_token to authenticate or share sessions
   // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
   const location = url.parse(req.url, true);
   const ip = req.connection.remoteAddress;
+  const proxyIp = req.headers['x-forwarded-for'].split(/\s*,\s*/)[0];
   const user = req.user;
-
+  console.log(ip)
+  console.log(proxyIp)
   //OPEN
   const open = () => {
     socketengine.openWs(ws, user.username);
@@ -186,8 +198,13 @@ wss.on('connection', function connection(ws, req) {
   });
 
   ws.on('message', function incoming(message) {
+    //Create final message for parsing
     var finalMsg = utils.addToFrontOfString(message, user.username, constants.RECIPIENT_SEPARATOR);
-    msgengine.sendMsgToKafka(finalMsg);
+    //Send message to Kafka for logging (commiting) TODO: Kafka is disabled until it is fixed for windows!
+    //msgengine.sendMsgToKafka(finalMsg);
+    //Send message to Redis for relaying
+    msgengine.sendMsgToRedis(finalMsg);
+    console.log(finalMsg)
     console.log(`Received WS Msg: ${message} from ${ip}`);
   });
 });
@@ -196,9 +213,11 @@ server.listen(8080, function listening() {
   console.log(`[${utils.getDateTimeNow()}] WebSocket started on port: ${server.address().port} - Listening...`);
 });
 
-//Setup Kafka
-msgengine.initKafkaProducer();
-msgengine.initKafkaConsumer();
+//Setup Kafka TODO: Kafka is disabled until it is fixed for windows!
+// msgengine.initKafkaProducer();
+// msgengine.initKafkaConsumer();
+//Setup Redis
+msgengine.initRedis();
 
 //Setup uWebsockets
 // const requestHandler = (request, response) =>{
@@ -221,6 +240,41 @@ msgengine.initKafkaConsumer();
 //     console.log(`HTTP Server is listening on ${port}`)
 // });
 
+//Create express session
+var sessionMiddleware = expressSession({
+  store: redisSessionStore,
+  key: constants.expressSessionId,
+  secret: constants.expressSessionSecret,
+  resave: true,
+  saveUninitialized: true
+});
+//Use session
+app.use(sessionMiddleware);
+//Retry session if lost
+app.use(function (req, res, next) {
+  var tries = 3;
+
+  function lookupSession(error) {
+    if (error) {
+      return next(error);
+    }
+
+    tries -= 1
+
+    if (req.session !== undefined) {
+      return next();
+    }
+
+    if (tries < 0) {
+      return next(new Error('oh no'));
+    }
+
+    sessionMiddleware(req, res, lookupSession);
+  }
+
+  lookupSession();
+});
+
 //Setup CORS (Cross-Origin Resource Sharing)
 app.use(cors());
 
@@ -229,6 +283,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+//Setup Cookie Parser Middleware
+//app.use(cookieParser);
 
 //Passport Middleware (User Authentication)
 app.use(passport.initialize());

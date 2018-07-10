@@ -355,4 +355,118 @@ module.exports = {
 
     getPm(cb);
   },
+
+  joinServer : function(username, serverObj, cb) {
+    var success = false;
+
+    function findRequestingUser(cb) {
+      User.getUserByUsername(username, (err, user) => {
+        if(err) {
+          var failureMsg = `Join Server failed: ${err}`;
+          console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+          cb(success);
+          return false;
+        } else {
+          if(!user) {
+            var failureMsg = `Join Server failed: User ${username} not found!`;
+            console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+            cb(success);
+            return false;
+          } else {
+            processJoinServer(user, cb);
+          }
+        }
+      });
+    };
+
+    function processJoinServer(requestinguser, cb) {
+      User.db.collections.users.update(
+      //Updates the chat array using addToSet, and upset to insert if doesn't exist (may not be needed)
+       { username: requestinguser.username },
+       { $set: { currentserver: { 'ipaddress': serverObj.ip, 'alias': serverObj.alias } } },
+       { upsert: true },
+       //Function to call AFTER the update is complete
+       (err, numAffected) => {
+         //If we modify, we have added a friend
+         if(numAffected.result.nModified === 1) {
+           success = true;
+           var successMsg = `Successfully joined ${serverObj.alias}|${serverObj.ip} for ${requestinguser.username}!`;
+           console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
+           cb(success);
+           //We can also check numAffected.result.nModified > 1 for multiple adds, which should NEVER happen
+           //If we don't modify we haven't joined a server
+         } else {
+           success = false;
+           var failureMsg = `Failed to join ${serverObj.alias}|${serverObj.ip}. ${requestinguser.username} is already set to server!`;
+           console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+           cb(success);
+         }
+       });
+    };
+
+    findRequestingUser(cb);
+  },
+
+  leaveServer : function(username, cb) {
+    var success = false;
+
+    function findRequestingUser(cb) {
+      User.getUserByUsername(username, (err, user) => {
+        if(err) {
+          var failureMsg = `Leave Server failed: ${err}`;
+          console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+          cb(success);
+          return false;
+        } else {
+          if(!user) {
+            var failureMsg = `Leave Server failed: User ${username} not found!`;
+            console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+            cb(success);
+            return false;
+          } else {
+            processJoinServer(user, cb);
+          }
+        }
+      });
+    };
+
+    function processJoinServer(requestinguser, cb) {
+      var severObj = { alias: '', ip: '' };
+      //If we have a current server set...
+      if(requestinguser.currentserver.alias && requestinguser.currentserver.ipaddress) {
+        severObj.alias = requestinguser.currentserver.alias;
+        severObj.ip = requestinguser.currentserver.ipaddress;
+      } else {
+        success = false;
+        var failureMsg = `Failed to leave server. ${requestinguser.username} has no server set!`;
+        console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+        cb(success);
+      }
+      //requestinguser.currentserver
+      User.db.collections.users.update(
+      //Updates the chat array using addToSet, and upset to insert if doesn't exist (may not be needed)
+       { username: requestinguser.username },
+       { $pull: { currentserver: {alias: '', ipaddress: '' } } },
+       //Function to call AFTER the update is complete
+       (err, numAffected) => {
+         console.log(numAffected)
+         //If we modify, we have added a friend
+         if(numAffected.result.nModified === 1) {
+           success = true;
+           var successMsg = `Successfully joined ${serverObj.alias}|${serverObj.ip} for ${requestinguser.username}!`;
+           console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
+           cb(severObj);
+           //We can also check numAffected.result.nModified > 1 for multiple adds, which should NEVER happen
+           //If we don't modify we haven't joined a server
+         } else {
+           success = false;
+           var failureMsg = `Failed to join ${serverObj.alias}|${serverObj.ip}. ${requestinguser.username} is already set to server!`;
+           console.log(`[${utils.getDateTimeNow()}] ${failureMsg}`);
+           cb(success);
+         }
+       });
+    };
+
+    findRequestingUser(cb);
+  },
 }

@@ -2,9 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 //MODULES
-const elastic = require("elastic-email");
 const elasticemail = require('elasticemail');
-const nodemailer = require('nodemailer');
 //CUSTOM
 const constants = require('../utilities/constants');
 const utils = require('../utilities/utilities');

@@ -25,6 +25,16 @@ const BlockedSchema = mongoose.Schema({
   },
 });
 
+const ServerSchema = mongoose.Schema({
+  ipaddress: {
+    type: String,
+    required: true
+  },
+  alias: {
+    type: String
+  },
+});
+
 //Schema Setup
 const UserSchema = mongoose.Schema({
   country: {
@@ -158,6 +168,7 @@ const UserSchema = mongoose.Schema({
     type: String,
     default: 'offline'
   },
+  currentserver: ServerSchema,
   friends:
   [ FriendsSchema ],
   blocked:
@@ -254,6 +265,7 @@ module.exports.saveUserPassword = function(user, callback) {
   });
 }
 
+//Compare two passwords
 module.exports.comparePassword = function(candidatePassword, hash, callback){
   //Compares password
   bcrypt.compare(candidatePassword, hash, (err, isMatch) => {

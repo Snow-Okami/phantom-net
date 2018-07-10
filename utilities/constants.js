@@ -26,6 +26,11 @@ module.exports = {
   elasticUser : 'ghosthowl@rottenvisions.com',
   elasticMailAPIKey : '3bbda3b3-ea76-4bff-b36c-006fcc440a38',
 
+  expressSessionId : 'jsessionid',
+  expressSessionSecret : '7K.[N3K=$Dsoj1KHT<hBNAt"bdZFb$^+||T?|KJ/Ouh]^;OshOj.?7&f<Lw^BtK',
+
+  redisSessionSecret : 'ED!6qTV+pr&cw=+E|Up{]mG#GzZWgX6Zez..DyO:Pt0W;bF7%W1!!6:vs]su-A+',
+
   emailHost : "http://rottenvisions.com",
 
   emailProvider : 'noreply@rottenvisions.com',

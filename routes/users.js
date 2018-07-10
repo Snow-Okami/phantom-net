@@ -4,11 +4,8 @@ const router = express.Router();
 //MODULES
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-//FILE UPLOAD
 const mongoose = require('mongoose');
-const busboy = require('connect-busboy');
-const gridfs = require('gridfs-stream');
-var gfs = undefined;
+//FILE UPLOAD
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -52,11 +49,6 @@ const avatarStorage = multer.diskStorage({
 mkdirp.sync(avatarUploadPath);
 //Set up multer saving options
 const uploadAvatar = multer({ storage: avatarStorage, limits: { fileSize: 1000000 } }).single('avatarfile');
-
-mongoose.connection.on('connected', () => {
-  gfs = new gridfs(mongoose.connection.db, mongoose.mongo);
-  console.log(`[${utils.getDateTimeNow()}] GridFS Available and Ready!`);
-});
 
 //Register
 router.post('/register', (req, res, next) => {
@@ -250,6 +242,8 @@ router.post('/authenticate', (req, res, next) => {
             console.log(`[${utils.getDateTimeNow()}] ${successMsg}`);
             return res.json({
               success: true,
+              //We append 'JWT ' to give the correct format to passport, however, for angular4+ JWT plugin, we must
+              //remove this
               token: `JWT ${token}`,
               user: {
                 id: user._id,
@@ -659,89 +653,6 @@ router.get('/settings', passport.authenticate('jwt', {session: false}), (req, re
   res.json({user: req.user});
 });
 
-router.post('/uploadAvatarGFS', function(req, res, next){
-  //var busboy = new busboy({ headers: req.headers });
-  var fileId = new mongoose.Types.ObjectId();
-  var username;
-  req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-    console.log('got file', filename, mimetype, encoding);
-    console.log(fileId)
-    username = fieldname;
-    gfs.findOne({_id: fieldname}, (err, file) => {
-      gfs.db.collection(fieldname + '.chunks').remove({_id: fieldname}, function(err) { console.log(err); });
-    });
-    var writeStream = gfs.createWriteStream({
-      _id: fieldname,
-      filename: filename,
-      mode: 'w',
-      content_type: mimetype,
-      metadata:
-      {
-        origId: fileId,
-        uploadedBy: fieldname,
-        encoding: encoding,
-      }
-    });
-    file.pipe(writeStream);
-  }).on('finish', function() {
-    // show a link to the uploaded file
-    res.writeHead(200, {'content-type': 'text/html'});
-    res.end('/avatar/' + username.toString());
-  });
-
-  req.pipe(req.busboy);
-});
-
-router.get('/avatarGFS/:username', function(req, res) {
-  gfs.findOne({ _id: req.params.username }, function (err, file) {
-    if (err) return res.status(400).send(err);
-    if (!file) return res.status(404).send('');
-
-    res.set('Content-Type', file.contentType);
-    res.set('Content-Disposition', 'attachment; filename="' + file.filename + '"');
-
-    var readstream = gfs.createReadStream({
-      _id: file._id
-    });
-
-    readstream.on("error", function(err) {
-      console.log("Got error while processing stream " + err.message);
-      res.end();
-    });
-
-    readstream.pipe(res);
-  });
-});
-
-router.get('/image/:id',function(req,res){
-
-    var id = req.params.id;
-    var ObjectId = require('mongodb').ObjectID;
-    var outPutFromDbFile = __dirname + '/public/uploads/' + id + '.png';
-    var writeStream = fs.createWriteStream(outPutFromDbFile);
-
-   // var BSON = require('mongodb').BSONPure;
-   // var o_id = BSON.ObjectID.createFromHexString(id);
-
-    var o_id = ObjectID(id);
-
-    var gridStore = new GridStore(db,o_id,"r");
-    gridStore.open(function (err,gridStore){
-        if(err)
-        {
-            console.log('error' + err);
-        }
-
-        var readStream = gridStore.stream(true);
-        readStream.on("end",function(){
-           console.log('close was called');
-            res.sendFile(outPutFromDbFile);
-        });
-        readStream.pipe(writeStream);
-    });
-
-});
-
 router.post('/uploadAvatar', passport.authenticate('jwt', {session: false}), function(req, res) {
   //First find and delete any possible past avatars stored
 
@@ -798,25 +709,6 @@ router.post('/uploadAvatar', passport.authenticate('jwt', {session: false}), fun
           }
         });
       }
-    }
-  });
-});
-
-//Validate
-router.get('/avatarlink/:username', (req, res) => {
-  const username = req.params.username;
-  User.getUserByUsername(username, (err, user) => {
-    if(err) console.log(`[${utils.getDateTimeNow()}] ${err}`);
-    else {
-      if(!user) {
-        return res.send('https://thebenclark.files.wordpress.com/2014/03/facebook-default-no-profile-pic.jpg');
-      }
-      if(user.avatar == undefined || user.avatar === 'none')
-      {
-        return res.send('https://thebenclark.files.wordpress.com/2014/03/facebook-default-no-profile-pic.jpg');
-      }
-      //Load avatar using the path saved
-      return res.send(path.join(__dirname, '..', avatarUploadPath) + '/' + user.avatar);
     }
   });
 });
@@ -878,6 +770,16 @@ router.get('/redis/get/:key', (req, res, next) => {
 
   //Get the value async, and send the result back to the callback passed in
   msgengine.getRedisKeyValue(key, cb);
+});
+
+router.get('/redis/send/:redischan/:redisdata', (req, res, next) => {
+  const channel = req.params.redischan;
+  const senddata = req.params.redisdata;
+  console.log(channel + ' ' + senddata);
+
+  msgengine.sendMsgToRedis(channel, senddata);
+
+  res.send(`SENT - CHANNEL: ${channel} | DATA: ${senddata}`);
 });
 
 //Websocket Testing
@@ -1038,7 +940,8 @@ router.get('/blocked/remove/:username/:block', (req, res, next) => {
     }
   });
 });
-
+//STATUS
+//SET
 router.get('/status/set/:username/:userstatus', (req, res, next) => {
   const username = req.params.username;
   const userstatus = req.params.userstatus;
@@ -1048,6 +951,34 @@ router.get('/status/set/:username/:userstatus', (req, res, next) => {
         res.send(`SUCCESSFULLY SET ${userstatus} STATUS FOR ${username}`);
     } else {
         res.send(`FAILED TO SET ${userstatus} STATUS FOR ${username}`);
+    }
+  });
+});
+
+router.get('/server/join/:username/:alias/:ip', (req, res, next) => {
+  const username = req.params.username;
+  const alias = req.params.alias;
+  const ip = req.params.ip;
+
+  var serverObj = { ip: ip, alias: alias };
+
+  socialengine.joinServer(username, serverObj, (success) => {
+    if(success) {
+        res.send(`SUCCESSFULLY JOINED ${alias}|${ip} FOR ${username}`);
+    } else {
+        res.send(`FAILED TO JOIN ${alias}|${ip} FOR ${username}`);
+    }
+  });
+});
+
+router.get('/server/leave/:username', (req, res, next) => {
+  const username = req.params.username;
+
+  socialengine.leaveServer(username, (serverObj) => {
+    if(serverObj) {
+        res.send(`SUCCESSFULLY LEFT ${serverObj.alias}|${serverObj.ip} FOR ${username}`);
+    } else {
+        res.send(`FAILED TO LEAVE CURRENT SERVER FOR ${username}`);
     }
   });
 });
@@ -1077,14 +1008,6 @@ router.get('/parser/:parsedstring', (req, res, next) => {
 
   res.send(`Parsed ${parsedstring} - CMD: ${cmd} - CMD ARGS: ${cmdArgs}`);
 });
-
-router.get('/lum', (req, res, next) => {
-  msgengine.lum();
-
-  res.send('LUM');
-});
-
-
 
 router.post('/test', (req, res, next) => {
   const username = req.body.username;

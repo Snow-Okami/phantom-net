@@ -125,7 +125,7 @@ module.exports = {
     var args = utils.parseDelimitedString(reqArgs, constants.ARGUMENT_SEPARATOR, constants.ARGUMENT_VALUE_SEPARATOR);
     //Get websocket client
     var client = module.exports.getUserWsClient(recip);
-
+    //Figure out the command requested
     switch(cmd) {
       case 'sendpm':
         break;
@@ -141,6 +141,12 @@ module.exports = {
       case 'unfrienduser':
           break;
       case 'unblockuser':
+          break;
+      case 'joinfriend':
+          break;
+      case 'joinserver':
+          break;
+      case 'leaveserver':
           break;
     }
   },
@@ -205,11 +211,11 @@ module.exports = {
 
     socialengine.addFriend(username, friend, (success) => {
       if(success) {
-        var successMsg = `SUCCESSFULLY ADDED ${friend} TO ${username}'s FRIENDS LIST`
+        var successMsg = `SUCCESSFULLY ADDED ${friend} TO ${username}'s FRIENDS LIST`;
         console.log(successMsg);
         return module.exports.createResponse(type, user.client, { success: true, msg: successMsg });
       } else {
-        var failureMsg = `FAILED TO ADD ${friend} TO ${username}'s TO FRIENDS LIST`
+        var failureMsg = `FAILED TO ADD ${friend} TO ${username}'s TO FRIENDS LIST`;
         console.log(failureMsg);
         return module.exports.createResponse(type, user.client , { success: false, msg: failureMsg });
       }

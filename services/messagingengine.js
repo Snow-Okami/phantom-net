@@ -3,13 +3,14 @@ const kafka = require('no-kafka');
 const redis = require('ioredis');
 //ENGINES
 const socketengine = require('../services/socketengine');
-// const chatengine = require('../services/chatengine');
-// const socialengine = require('../services/socialengine');
 //OTHERS
 const utils = require('../utilities/utilities');
 //SETUP
-const producer = new kafka.Producer();
-const consumer = new kafka.SimpleConsumer();
+const kProducer = new kafka.Producer();
+const kConsumer = new kafka.SimpleConsumer();
+const rSubscriber = redis.createClient();
+const rPublisher = redis.createClient();
+
 const redisdb = new redis({
   port: 6379,          // Redis port
   host: '127.0.0.1',   // Redis host
@@ -22,7 +23,7 @@ const redisdb = new redis({
 module.exports = {
 
   initKafkaProducer : function() {
-    producer.init().then(function(){
+    kProducer.init().then(function(){
 
     })
     .then(function (result) {
@@ -30,12 +31,6 @@ module.exports = {
       [ { topic: 'kafka-test-topic', partition: 0, offset: 353 } ]
       */
     });
-  },
-
-  lum : function() {
-    var kafkaObj = { topic: 'hehe', partition: 'part', offset: 1, message: 'hi' };
-    console.log(socketengine)
-    //socketengine.parseCommandRequest(kafkaObj)
   },
 
   initKafkaConsumer : function() {
@@ -49,14 +44,14 @@ module.exports = {
         //return Promise.delay(1000);
     };
 
-    consumer.init().then(function () {
+    kConsumer.init().then(function () {
         // Subscribe partitons 0 and 1 in a topic:
-        return consumer.subscribe('phantomnet', [0], dataHandler);
+        return kConsumer.subscribe('phantomnet', [0], dataHandler);
     });
   },
 
   sendMsgToKafka : function(msg) {
-    producer.send({
+    kProducer.send({
         topic: 'phantomnet',
         partition: 0,
         message: {
@@ -66,7 +61,19 @@ module.exports = {
   },
 
   initRedis : function() {
+    //Subscribe to all redis global channel events
+    rSubscriber.subscribe('phantomnet');
+    //Use Redis' 'sub' (subscriber) client to listen to any message from Redis to server.
+    rSubscriber.on('message', function (channel, message) {
+      //Msgs received here
+      var redisObj = { channel: channel, message: message };
+      socketengine.parseCommandRequest(redisObj);
+      console.log(`got msg ${message} from ${channel}`);
+    });
+  },
 
+  sendMsgToRedis : function(channel, data) {
+    rPublisher.publish(channel, data);
   },
 
   setRedisKeyValue : function(key, value) {
@@ -82,4 +89,6 @@ module.exports = {
       cb(result);
     });
   },
+
+
 }
