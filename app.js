@@ -1,5 +1,6 @@
 //REQUIRES
 //MAIN
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -10,6 +11,7 @@ const bodyParser = require('body-parser');
 const constants = require('./utilities/constants');
 const utils = require('./utilities/utilities');
 const users = require('./routes/users');
+const admin = require('./routes/admin/api');
 
 const passportConfig = require('./config/passport');
 
@@ -19,6 +21,7 @@ mongoose.Promise = global.Promise;
 //Connect to MongoDB
 mongoose.connect(constants.database);
 
+/*
 //Connection Event
 mongoose.connection.on('connected', () => {
   console.log(`[${utils.getDateTimeNow()}] Connected to Database ${constants.database}`);
@@ -28,12 +31,13 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', (err) => {
   console.log(`[${utils.getDateTimeNow()}] Failed to connect to Database ${constants.database} - Error: ${err}`);
 });
+*/
 
 //Start our app using Express Middleware (web framework)
 const app = express();
 
 //Setup Port to be environment port (on whatever service we are using) or fallback to 3000
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 //Setup CORS (Cross-Origin Resource Sharing)
 app.use(cors());
@@ -53,16 +57,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Use the users routes
 app.use('/users', users);
+//All router for admin
+app.use('/admin', admin);
+
+//Index Route
+// For testing purpous 
+app.get('/', (req, res) => {
+  res.status(200).send({
+  	meta : {
+  		code: 200,
+  		status : 'ok'
+  	},
+  	data : {
+  		msg : 'Invalid Endpoint'
+  	}
+  });
+});
+
 
 //Begin our Web Service on the port that was chosen
 app.listen(port, () => {
   console.log(`[${utils.getDateTimeNow()}] Server started on port: ${port} - Listening...`);
-});
-
-//Index Route
-//Register
-app.get('/', (req, res) => {
-  res.send('Invalid Endpoint');
 });
 
 //Force all other requests to home
