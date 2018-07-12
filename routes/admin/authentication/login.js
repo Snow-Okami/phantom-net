@@ -3,7 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 //CUSTOM UTILITIES
-const token = require('../../../utilities/athentication/token');
+const token = require('../../../utilities/authentication/token');
 const utils = require('../../../utilities/utils');
 
 /*

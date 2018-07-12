@@ -16,10 +16,10 @@ const admin = require('./routes/admin/api');
 const passportConfig = require('./config/passport');
 
 //Set Mongo Promise
-mongoose.Promise = global.Promise;
+//mongoose.Promise = global.Promise;
 
 //Connect to MongoDB
-mongoose.connect(constants.database);
+//mongoose.connect(constants.database);
 
 /*
 //Connection Event
