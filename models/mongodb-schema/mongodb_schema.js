@@ -59,12 +59,17 @@ module.exports = {
 			tag_id : String
 		})
 
+		var adminSession = new mongoose.Schema({
+			sessionToken : String
+		})
+
 		switch(collection) {
-			case 'posts' : return mongoose.model('posts', postsSchema); break;
+			case 'posts' 	: return mongoose.model('posts', postsSchema); break;
 			case 'comments' : return mongoose.model('comments', commentsSchema); break;
-			case 'replies' : return mongoose.model('replies', repliesSchema); break;
-			case 'tags' : return mongoose.model('tags', tagsSchema); break;
+			case 'replies' 	: return mongoose.model('replies', repliesSchema); break;
+			case 'tags' 	: return mongoose.model('tags', tagsSchema); break;
 			case 'tagsPost' : return mongoose.model('post-tags', tagsPostSchema); break;
+			case 'session' 	: return mongoose.model('user_session', adminSession); break;
 		}
 	}
 }

@@ -10,12 +10,19 @@ module.exports = (req, res, next) => {
 		//When there is something is defined on request header
 		
 		token.verifyToken(auth_key, process.env.TOKEN_KEY).then( (verifiedToken) => {
-			res.send({
-				status : verifiedToken
-			})
+			//When token generated successfully!
+			next();
 		}).catch( err => {
-			res.send({
-				meta:
+			res.status(400).send({
+				meta: {
+					code : 400,
+					status : 'token_error',
+					session : false,
+					valid_token : false
+				},
+				data : {
+					msg : 'Got error while verifying jwt token!'
+				}
 			})
 		})
 	}else {
