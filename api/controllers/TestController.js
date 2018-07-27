@@ -1,3 +1,5 @@
+const models = require('../models/');
+
 const API = {
   find: (req, res) => {
     res.status(200)
