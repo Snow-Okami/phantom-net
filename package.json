@@ -1,0 +1,31 @@
+{
+  "name": "phantomnet",
+  "private": true,
+  "version": "1.0.1",
+  "description": "Phantom Net NodeJS API Server",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Snow-Okami/phantom-net.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "phantom",
+    "net",
+    "app"
+  ],
+  "author": "Rotten Visions",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.5",
+    "nodemon": "^1.18.3"
+  }
+}
