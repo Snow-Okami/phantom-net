@@ -28,8 +28,6 @@ const models = {
         name: { type: String }
       });
       Post = mongoose.model('Post', schema);
-
-      const post = await Post.create({ name: 'Feeling Luckey' });
     }
   },
 
