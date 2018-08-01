@@ -1,4 +1,5 @@
 node_modules
+upload
 .DS_STORE
 .env
 .tmp
