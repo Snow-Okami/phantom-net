@@ -1,4 +1,6 @@
 const express       = require('express');
+const multer        = require('multer');
+const upload        = multer({ dest: './upload/image/' });
 const api           = express.Router();
 
 const policies      = require('../api/policies/');
@@ -17,6 +19,7 @@ const routes = () => {
   api.delete('/user/:name', policies.track, User.delete);
 
   api.get('/post', policies.track, Post.find);
+  api.post('/post', policies.track, upload.single('image'), Post.create);
 
   return api;
 };

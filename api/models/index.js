@@ -25,7 +25,12 @@ const models = {
 
     post: async function() {
       let schema = new mongoose.Schema({
-        name: { type: String }
+        title: { type: String },
+        createdAt: { type: Date },
+        createdBy: { type: String },
+        description: { type: String },
+        published: { type: Boolean },
+        filename: { type: String },
       });
       Post = mongoose.model('Post', schema);
     }
@@ -55,8 +60,8 @@ const models = {
       const r = await Post.find({ name: 'Feeling Luckey' });
       return r;
     },
-    create: async function(param) {
-      const r = await Post.create({ name: 'Feeling Luckey' });
+    create: async function(req) {
+      const r = await Post.create(Object.assign(req.body, { 'filename': req.file.filename }));
       return r;
     },
     update: async function(param) {

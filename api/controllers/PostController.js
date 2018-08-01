@@ -9,14 +9,14 @@ const API = {
   },
 
   create: async (req, res) => {
-    const post = await models.user.create(req.body);
+    const post = await models.post.create(req);
 
     res.status(200).set('Content-Type', 'application/json')
     .send(post);
   },
 
   delete: async (req, res) => {
-    const post = await models.user.delete(req.params);
+    const post = await models.post.delete(req.params);
 
     res.status(200).set('Content-Type', 'application/json')
     .send(post);

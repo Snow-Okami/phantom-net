@@ -2,8 +2,8 @@ require('dotenv').config();
 const express       = require('express');
 const bodyParser    = require('body-parser');
 const http          = require('http');
-const config        = require('./config/');
 const cors          = require('cors');
+const config        = require('./config/');
 const app           = express();
 
 app.set('hostname', '127.0.0.1');
