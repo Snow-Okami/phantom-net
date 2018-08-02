@@ -57,7 +57,7 @@ const models = {
 
   post: {
     find: async function(param) {
-      const r = await Post.find({ name: 'Feeling Luckey' });
+      const r = await Post.find();
       return r;
     },
     create: async function(req) {

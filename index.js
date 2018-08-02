@@ -10,6 +10,7 @@ app.set('hostname', '127.0.0.1');
 app.set('port', 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
 app.use(cors());
 app.use('/api', config);
 

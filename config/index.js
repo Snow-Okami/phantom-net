@@ -1,6 +1,8 @@
 const express       = require('express');
 const multer        = require('multer');
-const upload        = multer({ dest: './upload/image/' });
+const helpers       = require('../api/helpers/');
+const storage       = multer.diskStorage({ destination: './public/upload/image/', filename: helpers.file.getName });
+const upload        = multer({ storage: storage, fileFilter: helpers.file.filter });
 const api           = express.Router();
 
 const policies      = require('../api/policies/');
