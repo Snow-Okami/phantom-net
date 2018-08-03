@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-var User, Post;
+var Admin, User, Post;
 
 const models = {
   connect: async function() {
@@ -10,27 +10,46 @@ const models = {
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
       console.log('MongoDB is available at mongodb://' + process.env.dbhostname + ':' + process.env.dbport + '/' + process.env.db);
+      models.create.admin();
       models.create.user();
       models.create.post();
     });
   },
 
   create: {
+    admin: async function() {
+      let schema = new mongoose.Schema({
+        fname: { type: String },
+        lname: { type: String },
+        email: { type: String, required: true },
+        createdAt: { type: Date },
+        jwtValidatedAt: { type: Date },
+      });
+      Admin = mongoose.model('Admin', schema);
+    },
+
     user: async function() {
       let schema = new mongoose.Schema({
-        name: { type: String }
+        fname: { type: String },
+        lname: { type: String },
+        username: { type: String },
+        email: { type: String, required: true },
+        password: { type: String },
+        createdAt: { type: Date },
+        jwtValidatedAt: { type: Date },
+        emailValidated: { type: Boolean, required: true },
       });
       User = mongoose.model('User', schema);
     },
 
     post: async function() {
       let schema = new mongoose.Schema({
-        title: { type: String },
+        title: { type: String, required: true },
         createdAt: { type: Date },
         createdBy: { type: String },
-        description: { type: String },
-        published: { type: Boolean },
-        filename: { type: String },
+        description: { type: String, required: true },
+        published: { type: Boolean, required: true },
+        filename: { type: String, required: true },
       });
       Post = mongoose.model('Post', schema);
     }
