@@ -9,12 +9,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailer = {
-  sendMail: async function(username) {
+  sendLoginOTPMail: async function(username) {
     const options = {
       from: process.env.emailuser,
       to: username,
       subject: 'Node.js Test Mail',
-      text: 'Please ignore this Node.js test mail!'
+      html: '<p>Testing nodemailer using HTML template.</p>'
     };
 
     let r = await transporter.sendMail(options);
