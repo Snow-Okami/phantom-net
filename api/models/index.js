@@ -4,12 +4,12 @@ var User, Post;
 
 const models = {
   connect: async function() {
-    let mongoUrl = 'mongodb://' + process.env.hostname + ':' + process.env.port + '/' + process.env.db;
+    let mongoUrl = 'mongodb://' + process.env.dbhostname + ':' + process.env.dbport + '/' + process.env.db;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
-      console.log('MongoDB is available at mongodb://' + process.env.hostname + ':' + process.env.port + '/' + process.env.db);
+      console.log('MongoDB is available at mongodb://' + process.env.dbhostname + ':' + process.env.dbport + '/' + process.env.db);
       models.create.user();
       models.create.post();
     });

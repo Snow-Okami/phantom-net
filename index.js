@@ -6,8 +6,8 @@ const cors          = require('cors');
 const config        = require('./config/');
 const app           = express();
 
-app.set('hostname', '127.0.0.1');
-app.set('port', 3000);
+app.set('hostname', process.env.serverhostname);
+app.set('port', process.env.serverport);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
@@ -18,5 +18,5 @@ const server = http.createServer(app);
 
 server.listen(app.get('port'), app.get('hostname'), function() {
   console.log('Welcome to NodeJS server application!');
-  console.log('Server running at http://127.0.0.1:3000/api');
+  console.log('Server running at http://' + process.env.serverhostname + ':' + process.env.serverport + '/api');
 });

@@ -1,8 +1,10 @@
 const file = require('./file');
+const mailer = require('./mailer');
 
 const helpers = {
 
-  file: file
+  file: file,
+  mailer: mailer
 
 };
 
