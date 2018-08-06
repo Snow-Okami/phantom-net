@@ -1,4 +1,6 @@
+console.clear();
 console.log('Starting Phantom Net Server Application... Time: ' + new Date().toUTCString());
+console.log('using process.env for connections...');
 
 require('dotenv').config();
 const express       = require('express');
