@@ -27,6 +27,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "ioredis": "^3.2.2",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.5",
     "morgan": "^1.9.0",

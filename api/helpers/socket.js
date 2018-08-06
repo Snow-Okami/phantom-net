@@ -10,7 +10,7 @@ const socket = {
         cb(true);
       }
     });
-    
+
     wss.on('connection', async function connection(ws, req) {
       const ip = req.connection.remoteAddress;
       const proxyIp = req.headers['x-forwarded-for'].split(/\s*,\s*/)[0];
@@ -32,13 +32,14 @@ const socket = {
     
       ws.on('message', async function incoming(data) {
         var msg = utils.addToFrontOfString(data, req.user.username, env.const.RECIPIENT_SEPARATOR);
+        services.message.sendToRedis(msg);
         console.log('received: %s', msg);
       });
     
     });
     
     server.listen(process.env.socketport, function() {
-      console.log('WebSocket started on port: ' + process.env.socketport);
+      console.log('WebSocket started on port ' + process.env.socketport);
     });
   }
 }

@@ -1,3 +1,5 @@
+console.log('Welcome to Node.js server application!\n');
+
 require('dotenv').config();
 const express       = require('express');
 const bodyParser    = require('body-parser');
@@ -28,10 +30,8 @@ app.use('/api', config);
 
 const server = http.createServer(app);
 
-console.log('Welcome to NodeJS server application!');
-
 helpers.socket.connect(WebSocket, server);
 
 app.listen(app.get('port'), app.get('hostname'), function() {
-  console.log('Server running at http://' + process.env.serverhostname + ':' + process.env.serverport + '/api');
+  console.log('Node.js server running at http://' + process.env.serverhostname + ':' + process.env.serverport + '/api');
 });
