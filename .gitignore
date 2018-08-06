@@ -1,3 +1,4 @@
+access.log/
 node_modules
 upload
 .DS_Store

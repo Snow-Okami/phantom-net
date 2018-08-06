@@ -12,7 +12,7 @@ const API = {
     const mail = await helpers.mailer.sendLoginOTPMail(req.body.to); */
 
     res.status(200).set('Content-Type', 'application/json')
-    .send(mail);
+    .send(user);
   },
 
   delete: async (req, res) => {
