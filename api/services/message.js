@@ -10,13 +10,13 @@ const subscriber = redis.createClient();
 const publisher = redis.createClient();
 
 const db = new redis({
-  port: env.const.REDIS_PORT,
-  host: env.const.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
   family: 4,
   db: 0
 });
 
-console.log('RedisDB is available at ' + env.const.REDIS_HOST + ':' + env.const.REDIS_PORT);
+console.log('RedisDB is available at ' + process.env.REDIS_HOST + ':' + process.env.REDIS_PORT);
 
 const message = {
   sendToRedis: (channel) => {
