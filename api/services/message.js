@@ -24,7 +24,7 @@ const message = {
   },
 
   initRedis: () => {
-    subscriber.subscribe('phantomnet');
+    subscriber.subscribe(process.env.db);
     subscriber.on('message', function (channel, message) {
       var redisObj = { channel: channel, message: message };
       socket.parseCommandRequest(redisObj);
