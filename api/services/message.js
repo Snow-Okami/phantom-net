@@ -19,9 +19,19 @@ const db = new redis({
 console.log('RedisDB is available at ' + env.const.REDIS_HOST + ':' + env.const.REDIS_PORT);
 
 const message = {
-  sendToRedis: () => {
+  sendToRedis: (channel) => {
+    publisher.publish(channel, data);
+  },
 
-  }
+  initRedis: () => {
+    subscriber.subscribe('phantomnet');
+    subscriber.on('message', function (channel, message) {
+      var redisObj = { channel: channel, message: message };
+      socket.parseCommandRequest(redisObj);
+      console.log(`got msg ${message} from ${channel}`);
+    });
+  },
+
 };
 
 module.exports = message;

@@ -36,6 +36,28 @@ module.exports = {
     return module.exports.createResponse(type, user.client, { 'success': r, 'msg': msg });
   },
 
+  parseCommandRequest: (req) => {
+    //Gets the recipient from the input string
+    let recip = utils.getFrontValueFromString(req.message, env.const.RECIPIENT_SEPARATOR);
+    //Pop off the recipient from the string
+    let cmdAndArgs = utils.popOffFrontValueFromString(req.message, env.const.RECIPIENT_SEPARATOR);
+    //Gets the command from the input string
+    let cmd = utils.getFrontValueFromString(cmdAndArgs, env.const.COMMAND_SEPARATOR);
+    //Gets the input string without the command
+    let reqArgs = utils.popOffFrontValueFromString(cmdAndArgs, env.const.COMMAND_SEPARATOR);
+    //Gets arguments using argument seperators, in the form of KEY:VALUE in a object
+    let args = utils.parseDelimitedString(reqArgs, env.const.ARGUMENT_SEPARATOR, env.const.ARGUMENT_VALUE_SEPARATOR);
+    //Get websocket client
+    let client = module.exports.getUserWsClient(recip);
+
+    switch(cmd) {
+      case 'frienduser':
+        module.exports.onAddFriendRequest({client: client, username: recip, args: args});
+        break;
+      default: break;
+    }
+  },
+
   createResponse: (type, client, res) => {
     if(client.ws) {
       var cmd = utils.createDelimitedString(res, env.const.ARGUMENT_SEPARATOR, env.const.ARGUMENT_VALUE_SEPARATOR);

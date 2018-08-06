@@ -41,6 +41,8 @@ const socket = {
     server.listen(process.env.socketport, function() {
       console.log('WebSocket started on port ' + process.env.socketport);
     });
+
+    services.message.initRedis();
   }
 }
 

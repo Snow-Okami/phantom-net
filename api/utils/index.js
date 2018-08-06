@@ -22,8 +22,25 @@ module.exports = {
     return concat;
   },
 
-  addToFrontOfString: function(string, value, sep) {
+  addToFrontOfString: (string, value, sep) => {
     return `${value}${sep}${string}`
+  },
+
+  getFrontValueFromString: (str, sep) => {
+    return str.split(sep)[0];
+  },
+
+  popOffFrontValueFromString: (str, sep) => {
+    return str.split(sep).pop();
+  },
+
+  parseDelimitedString: (str, pairSep, valueSep) => {
+    let result = {};
+    str.split(pairSep).forEach(function(x){
+        var arr = x.split(valueSep);
+        arr[1] && (result[arr[0]] = arr[1]);
+    });
+    return result;
   },
 
 };
