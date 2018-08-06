@@ -1,5 +1,6 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
+const mongoose  = require('mongoose');
+const bycript   = require('../helpers/password');
 var Admin, User, Friend, Post;
 
 const models = {
@@ -35,7 +36,7 @@ const models = {
         lname: { type: String },
         username: { type: String, unique: true, required: true },
         email: { type: String, unique: true, required: true },
-        password: { type: String },
+        password: { type: String, required: true },
         createdAt: { type: Date },
         jwtValidatedAt: { type: Date },
         emailValidated: { type: Boolean, default: false },
@@ -74,13 +75,16 @@ const models = {
       const r = await User.findOne(param);
       return r;
     },
-    create: async (param) => {
-      let r;
+    create: async (param) => {      
+      let r, time = new Date().getTime(), ext = { createdAt: time, jwtValidatedAt: time };
+      Object.assign(param, ext);
       try {
+        if(param.password) { param.password = await bycript.hash(param.password); }
         r = await User.create(param);
       } catch(e) {
-        return { success: false, error: e.errmsg };
+        return { success: false, error: e.message };
       }
+      Object.assign(r, { 'password': '' });
       return r;
     },
     update: async (query, param, option) => {

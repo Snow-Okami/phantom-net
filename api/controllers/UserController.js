@@ -4,13 +4,11 @@ const helpers   = require('../helpers/');
 const API = {
   create: async (req, res) => {
     const user = await models.user.create(req.body);
-    /* if(!req.body.to) {
+    if(user.status === false) {
       res.status(404).set('Content-Type', 'application/json')
-      .send();
+      .send(user);
     }
-
-    const mail = await helpers.mailer.sendLoginOTPMail(req.body.to); */
-
+    helpers.mailer.sendLoginOTPMail(user.email);
     res.status(200).set('Content-Type', 'application/json')
     .send(user);
   },
