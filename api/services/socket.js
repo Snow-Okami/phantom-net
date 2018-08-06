@@ -36,7 +36,7 @@ module.exports = {
     return module.exports.createResponse(type, user.client, { 'success': r, 'msg': msg });
   },
 
-  parseCommandRequest: (req) => {
+  parseCommandRequest: async (req) => {
     //Gets the recipient from the input string
     let recip = utils.getFrontValueFromString(req.message, env.const.RECIPIENT_SEPARATOR);
     //Pop off the recipient from the string
@@ -53,7 +53,7 @@ module.exports = {
 
     switch(cmd) {
       case 'frienduser':
-        module.exports.onAddFriendRequest({client: client, username: recip, args: args}); break;
+        await module.exports.onAddFriendRequest({client: client, username: recip, args: args}); break;
       default: break;
     }
   },

@@ -23,11 +23,11 @@ const message = {
     publisher.publish(channel, data);
   },
 
-  initRedis: () => {
+  initRedis: async () => {
     subscriber.subscribe(process.env.db);
-    subscriber.on('message', function (channel, message) {
+    subscriber.on('message', async (channel, message) => {
       var redisObj = { channel: channel, message: message };
-      socket.parseCommandRequest(redisObj);
+      await socket.parseCommandRequest(redisObj);
       console.log(`got msg ${message} from ${channel}`);
     });
   },
