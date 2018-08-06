@@ -48,12 +48,12 @@ module.exports = {
     //Gets arguments using argument seperators, in the form of KEY:VALUE in a object
     let args = utils.parseDelimitedString(reqArgs, env.const.ARGUMENT_SEPARATOR, env.const.ARGUMENT_VALUE_SEPARATOR);
     //Get websocket client
-    let client = module.exports.getUserWsClient(recip);
+    let pos = clients.map((ob) => { return ob.ws; }).indexOf(recip);
+    let client = clients[pos];
 
     switch(cmd) {
       case 'frienduser':
-        module.exports.onAddFriendRequest({client: client, username: recip, args: args});
-        break;
+        module.exports.onAddFriendRequest({client: client, username: recip, args: args}); break;
       default: break;
     }
   },
