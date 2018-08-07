@@ -16,7 +16,7 @@ const mailer = {
       from: process.env.emailuser,
       to: email,
       subject: 'Node.js Test Mail',
-      html: fs.createReadStream(dir + 'loginOTP.ejs')
+      html: fs.createReadStream(dir + 'validateEmail.ejs')
     };
 
     let r;
