@@ -8,7 +8,7 @@ const API = {
       res.status(404).set('Content-Type', 'application/json')
       .send(user);
     }
-    helpers.mailer.sendLoginOTPMail(user.email);
+    helpers.mailer.sendValidateEmail(user.email);
     res.status(200).set('Content-Type', 'application/json')
     .send(user);
   },

@@ -11,7 +11,7 @@ const transporter   = nodemailer.createTransport({
 });
 const dir = path.join(__dirname, '../templates/');
 const mailer = {
-  sendLoginOTPMail: async function(email) {
+  sendValidateEmail: async function(email) {
     const options = {
       from: process.env.emailuser,
       to: email,
