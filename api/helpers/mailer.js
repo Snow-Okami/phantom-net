@@ -1,21 +1,24 @@
 require('dotenv').config();
+const path          = require('path');
+const fs            = require('fs');
 const nodemailer    = require('nodemailer');
-const transporter = nodemailer.createTransport({
+const transporter   = nodemailer.createTransport({
   service: process.env.emailtype,
   auth: {
     user: process.env.emailuser,
     pass: process.env.emailpass,
   }
 });
-
+const dir = path.join(__dirname, '../templates/');
 const mailer = {
-  sendLoginOTPMail: async function(username) {
+  sendLoginOTPMail: async function(email) {
     const options = {
       from: process.env.emailuser,
-      to: username,
+      to: email,
       subject: 'Node.js Test Mail',
-      html: '<p>Testing nodemailer using HTML template.</p>'
+      html: fs.createReadStream(dir + 'loginOTP.ejs')
     };
+
     let r;
     try {
       r = await transporter.sendMail(options);
