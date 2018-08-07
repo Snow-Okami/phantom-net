@@ -32,6 +32,7 @@ const API = {
   },
 
   update: async (req, res) => {
+    if(req.file) { Object.assign(req.body, { 'filename': req.file.filename }); }
     const user = await models.user.update(req.params, req.body, {});
     let s = 200, m = 'User is updated successfully!';
     if(user.error) { s = 404, m = user.error; }

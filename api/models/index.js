@@ -51,6 +51,7 @@ const models = {
         emailValidated: { type: Boolean, default: false },
         status: { type: String, default: 'offline' },
         locked: { type: Boolean, default: false },
+        filename: { type: String, default: 'avatar.png' },
       });
       User = mongoose.model('User', schema);
     },
