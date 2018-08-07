@@ -29,7 +29,8 @@ const routes = () => {
    * /api/user/resend             is now POST /api/auth/resend
    * /api/user/activate/:token    will be POST /api/auth/validate?token=token
    * /api/user/register           is now POST /api/user
-   * /api/user/uploadAvatar       is working with PUT /api/user/:username
+   * /api/user/uploadAvatar,
+   * /avatar/:username            is working with PUT /api/user/:username
    * 
    * PUT
    * /api/user/unlock,
