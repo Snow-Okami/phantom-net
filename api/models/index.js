@@ -109,7 +109,7 @@ const models = {
       try {
         r = await User.findOne(param);
       } catch(e) {
-        return { success: false, error: e.message };
+        return { error: e.message };
       }
       return r;
     },

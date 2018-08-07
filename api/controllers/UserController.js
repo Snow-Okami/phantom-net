@@ -2,6 +2,16 @@ const models    = require('../models/');
 const helpers   = require('../helpers/');
 
 const API = {
+  findExists: async (req, res) => {
+    let r = await models.user.findOne(req.body), type = 'text/plain';
+    if(r === null) { return res.status(200).set('Content-Type', type).send('Okay!'); }
+    if(r.error) { type = 'application/json'; }
+    else if(req.body.email) { r = 'Email already exists!' }
+    else if(req.body.username) { r = 'Username already exists!' }
+    else { r = 'Parameter already exists!' }
+    return res.status(404).set('Content-Type', type).send(r);
+  },
+
   create: async (req, res) => {
     const user = await models.user.create(req.body);
     if(user.error) {
