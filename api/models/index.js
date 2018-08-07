@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose  = require('mongoose');
 const bycript   = require('../helpers/password');
-var Admin, User, Friend, Post;
+var Admin, AuthUser, User, Friend, Post;
 
 const models = {
   connect: async () => {
@@ -12,6 +12,7 @@ const models = {
     db.once('open', () => {
       console.log('MongoDB is available at mongodb://' + process.env.dbhostname + ':' + process.env.dbport + '/' + process.env.db);
       models.create.admin();
+      models.create.authenticate();
       models.create.user();
       models.create.friend();
       models.create.post();
@@ -30,6 +31,14 @@ const models = {
       Admin = mongoose.model('Admin', schema);
     },
 
+    authenticate: async () => {
+      let schema = new mongoose.Schema({
+        email: { type: String, unique: true },
+        time: { type: Date }
+      });
+      AuthUser = mongoose.model('AuthUser', schema);
+    },
+
     user: async () => {
       let schema = new mongoose.Schema({
         fname: { type: String },
@@ -41,6 +50,7 @@ const models = {
         jwtValidatedAt: { type: Date },
         emailValidated: { type: Boolean, default: false },
         status: { type: String, default: 'offline' },
+        locked: { type: Boolean, default: false },
       });
       User = mongoose.model('User', schema);
     },
@@ -66,13 +76,41 @@ const models = {
     }
   },
 
+  authUser: {
+    findOne: async () => {
+
+    },
+    create: async (param) => {
+      let r, time = new Date().getTime();
+      try {
+        let f = await AuthUser.findOne({ 'email': param.email });
+        if(!f) { r = await AuthUser.create({ 'email': param.email, 'time': time }); }
+        else {
+          await AuthUser.update({ 'email': f.email }, { 'time': time });
+          r = { 'email': f.email, 'time': time };
+        }
+      } catch(e) {
+        return { success: false, error: e.message };
+      }
+      return r;
+    },
+    update: async () => {
+
+    }
+  },
+
   user: {
     find: async (param) => {
       const r = await User.find({ name: 'Abhisek Dutta' });
       return r;
     },
     findOne: async (param) => {
-      const r = await User.findOne(param);
+      let r;
+      try {
+        r = await User.findOne(param);
+      } catch(e) {
+        return { success: false, error: e.message };
+      }
       return r;
     },
     create: async (param) => {      
@@ -88,11 +126,15 @@ const models = {
       return r;
     },
     update: async (query, param, option) => {
-      let r;
+      let r, time = new Date().getTime(), ext = { jwtValidatedAt: time };
       try {
+        if(param.password) {
+          Object.assign(param, ext);
+          param.password = await bycript.hash(param.password);
+        }
         r = await User.update(query, param, option);
       } catch(e) {
-        return { success: false, error: e.errmsg };
+        return { error: e.message };
       }
       return r;
     },

@@ -8,6 +8,7 @@ const api           = express.Router();
 const policies      = require('../api/policies/');
 const models        = require('../api/models/');
 const Test          = require('../api/controllers/TestController');
+const Auth          = require('../api/controllers/AuthController');
 const User          = require('../api/controllers/UserController');
 const Post          = require('../api/controllers/PostController');
 
@@ -17,8 +18,21 @@ const routes = () => {
 
   api.get('/test', policies.track, Test.find);
 
+  /**
+   * POST
+   * /api/user/resend is now POST /api/auth/resend
+   * /api/user/activate/:token will be POST /api/auth/validate?token=token
+   * /api/user/register is now POST /api/user
+   * PUT
+   * /api/user/unlock,
+   * /api/user/savepassword are now PUT /api/user/:username
+   */
+  api.post('/auth/resend', policies.track, Auth.resendValidationMail);
+  api.post('/auth/validate', policies.track, Auth.validateEmail);
+
   api.post('/user', policies.track, User.create);
-  api.delete('/user/:name', policies.track, User.delete);
+  api.delete('/user/:username', policies.track, User.delete);
+  api.put('/user/:username', policies.track, User.update);
 
   api.get('/post', policies.track, Post.find);
   api.post('/post', policies.track, upload.single('image'), Post.create);

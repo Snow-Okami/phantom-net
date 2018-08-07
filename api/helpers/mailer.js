@@ -11,10 +11,10 @@ const transporter   = nodemailer.createTransport({
 });
 const dir = path.join(__dirname, '../templates/');
 const mailer = {
-  sendValidateEmail: async function(email) {
+  sendValidationMail: async function(auth) {
     const options = {
       from: process.env.emailuser,
-      to: email,
+      to: auth.email,
       subject: 'Node.js Test Mail',
       html: fs.createReadStream(dir + 'validateEmail.ejs')
     };
