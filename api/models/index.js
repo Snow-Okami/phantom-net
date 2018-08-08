@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose  = require('mongoose');
 const bycript   = require('../helpers/password');
-var Admin, AuthUser, User, Friend, Post;
+var Admin, Chat, AuthUser, User, Friend, Post;
 
 const models = {
   connect: async () => {
@@ -14,6 +14,7 @@ const models = {
       models.create.admin();
       models.create.authenticate();
       models.create.user();
+      models.create.chat();
       models.create.friend();
       models.create.post();
     });
@@ -54,6 +55,14 @@ const models = {
         locked: { type: Boolean, default: false },
       });
       User = mongoose.model('User', schema);
+    },
+
+    chat: async () => {
+      let schema = new mongoose.Schema({
+        username: { type: String },
+        type: { type: String, default: 'bidirectional' }
+      });
+      Chat = mongoose.model('Chat', schema);
     },
 
     friend: async () => {
@@ -141,6 +150,18 @@ const models = {
     },
     delete: async (params) => {
       const r = await User.deleteOne(params);
+      return r;
+    }
+  },
+
+  chat: {
+    create: async (param) => {
+      let r;
+      try {
+        r = await Chat.create(param);
+      } catch(e) {
+        return { error: e.message };
+      }
       return r;
     }
   },

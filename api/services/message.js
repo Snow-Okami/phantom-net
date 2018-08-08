@@ -19,23 +19,37 @@ const db = new redis({
 console.log('RedisDB is available at ' + process.env.REDIS_HOST + ':' + process.env.REDIS_PORT);
 
 const message = {
-  sendToRedis: (channel) => {
-    publisher.publish(channel, data);
+  sendToRedis: async (channel, data) => {
+    return await publisher.publish(channel, data);
   },
 
   sendToKafka: async (msg) => {
     await producer.init();
-    return producer.send({ topic: 'phantomnet', partition: 0, message: { value: msg } });
+    return await producer.send({ topic: process.env.db, partition: 0, message: { value: msg } });
   },
 
   initRedis: async () => {
-    subscriber.subscribe(process.env.db);
+    await subscriber.subscribe(process.env.db);
     subscriber.on('message', async (channel, message) => {
       var redisObj = { channel: channel, message: message };
-      await socket.parseCommandRequest(redisObj);
+      return await socket.parseCommandRequest(redisObj);
       console.log(`got msg ${message} from ${channel}`);
     });
   },
+
+  setRedis: async (key, value) => {
+    return await db.set(key, value);
+  },
+
+  getRedis: async (key) => {
+    let r;
+    try {
+      r = await db.get(key);
+    } catch(e) {
+      console.log(`[${utils.date()}] Failed to get Redis Value ${key}: ${e.message}`);
+    }
+    return r;
+  }
 
 };
 

@@ -1,9 +1,9 @@
-const services    = require('../services/');
+const message    = require('../services/message');
 
 const API = {
   find: async (req, res) => {
     const msg = req.params.message;
-    await services.message.sendToKafka(msg);
+    await message.sendToKafka(msg);
     return res.send(`SENT MSG: ${msg}`);
   }
 };

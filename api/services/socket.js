@@ -67,4 +67,28 @@ module.exports = {
     }
   },
 
+  sendToUser: async (username, msg) => {
+    // Broadcast to everyone else.
+    // var pos = module.exports.getUserWs(username);
+    let pos = clients.map((ob) => { return ob.username; }).indexOf(username);
+    if(pos === -1) { return false; }
+    client = clients[pos];
+    if (client.ws.readyState === WebSocket.OPEN) {
+      await client.ws.send(msg);
+      messages++;
+      return true;
+    }
+    return false;
+  },
+
+  sendAllClients: async (msg) => {
+    // Broadcast to everyone else.
+    clients.forEach(async (client) => {
+      if (client.ws.readyState === WebSocket.OPEN) {
+        await client.ws.send(msg);
+        messages++;
+      }
+    });
+  },
+
 };
