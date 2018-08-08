@@ -23,6 +23,11 @@ const message = {
     publisher.publish(channel, data);
   },
 
+  sendToKafka: async (msg) => {
+    await producer.init();
+    return producer.send({ topic: 'phantomnet', partition: 0, message: { value: msg } });
+  },
+
   initRedis: async () => {
     subscriber.subscribe(process.env.db);
     subscriber.on('message', async (channel, message) => {

@@ -85,7 +85,6 @@ const models = {
       let r, time = new Date().getTime();
       try {
         let f = await AuthUser.findOne({ 'email': param.email });
-        console.log('2', f, { 'email': param.email, 'time': time });
         if(!f) { r = await AuthUser.create({ 'email': param.email, 'time': time }); }
         else {
           await AuthUser.update({ 'email': f.email }, { 'time': time });
@@ -94,7 +93,6 @@ const models = {
       } catch(e) {
         return { success: false, error: e.message };
       }
-      console.log(r);
       return r;
     },
     update: async () => {

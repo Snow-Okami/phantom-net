@@ -13,6 +13,7 @@ const Test          = require('../api/controllers/TestController');
 const Auth          = require('../api/controllers/AuthController');
 const User          = require('../api/controllers/UserController');
 const Post          = require('../api/controllers/PostController');
+const Kafka         = require('../api/controllers/KafkaController');
 
 models.connect();
 
@@ -46,6 +47,8 @@ const routes = () => {
 
   api.get('/post', policies.track, Post.find);
   api.post('/post', policies.track, upload.single('image'), Post.create);
+
+  api.get('/kafka/:message', policies.track, Kafka.find);
 
   return api;
 };
