@@ -43,6 +43,7 @@ const models = {
       let schema = new mongoose.Schema({
         fname: { type: String },
         lname: { type: String },
+        filename: { type: String, default: 'avatar.png' },
         username: { type: String, unique: true, required: true },
         email: { type: String, unique: true, required: true },
         password: { type: String, required: true },
@@ -51,7 +52,6 @@ const models = {
         emailValidated: { type: Boolean, default: false },
         status: { type: String, default: 'offline' },
         locked: { type: Boolean, default: false },
-        filename: { type: String, default: 'avatar.png' },
       });
       User = mongoose.model('User', schema);
     },
@@ -85,6 +85,7 @@ const models = {
       let r, time = new Date().getTime();
       try {
         let f = await AuthUser.findOne({ 'email': param.email });
+        console.log('2', f, { 'email': param.email, 'time': time });
         if(!f) { r = await AuthUser.create({ 'email': param.email, 'time': time }); }
         else {
           await AuthUser.update({ 'email': f.email }, { 'time': time });
@@ -93,6 +94,7 @@ const models = {
       } catch(e) {
         return { success: false, error: e.message };
       }
+      console.log(r);
       return r;
     },
     update: async () => {

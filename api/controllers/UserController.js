@@ -18,7 +18,9 @@ const API = {
       return res.status(404).set('Content-Type', 'application/json')
       .send(user);
     }
+    console.log('1. ', user);
     const auth = await models.authUser.create(user);
+    console.log('3. ', auth);
     helpers.mailer.sendValidationMail(auth);
     return res.status(200).set('Content-Type', 'application/json')
     .send(user);
