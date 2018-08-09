@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose  = require('mongoose');
 const bycript   = require('../helpers/password');
-var Admin, Chat, AuthUser, User, Friend, Post;
+var Admin, Chat, ChatList, AuthUser, User, Friend, Post;
 
 const models = {
   connect: async () => {
@@ -15,6 +15,7 @@ const models = {
       models.create.authenticate();
       models.create.user();
       models.create.chat();
+      models.create.chatList();
       models.create.friend();
       models.create.post();
     });
@@ -61,10 +62,19 @@ const models = {
 
     chat: async () => {
       let schema = new mongoose.Schema({
-        username: { type: String },
+        name: { type: String },
         type: { type: String, default: 'bidirectional' }
       });
       Chat = mongoose.model('Chat', schema);
+    },
+
+    chatList: async () => {
+      let schema = new mongoose.Schema({
+        chatId: { type: String },
+        type: { type: String },
+        username: { type: String }
+      });
+      ChatList = mongoose.model('ChatList', schema);
     },
 
     friend: async () => {
@@ -123,6 +133,7 @@ const models = {
       } catch(e) {
         return { error: e.message };
       }
+      if(!r) { return { error: 'username doesn\'t exists!' }; }
       return r;
     },
     create: async (param) => {      
@@ -157,10 +168,60 @@ const models = {
   },
 
   chat: {
+    findOne: async (param) => {
+      let r;
+      try {
+        r = await Chat.findOne(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      if(!r) { return { error: 'chatId doesn\'t exists!' }; }
+      return r;
+    },
     create: async (param) => {
       let r;
       try {
         r = await Chat.create(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return r;
+    }
+  },
+
+  chatList: {
+    findOne: async (param) => {
+      let r;
+      try {
+        r = await ChatList.findOne(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      if(!r) { return { error: 'Chat doesn\'t exists!' }; }
+      return r;
+    },
+    find: async (param) => {
+      let r;
+      try {
+        r = await ChatList.find(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return r;
+    },
+    add: async (param) => {
+      let r;
+      try {
+        r = await ChatList.create(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return r;
+    },
+    deleteOne: async (param) => {
+      let r;
+      try {
+        r = await ChatList.deleteOne(param);
       } catch(e) {
         return { error: e.message };
       }

@@ -63,6 +63,8 @@ const routes = () => {
   api.post('/ws/sendall', policies.track, Websocket.sendAll);
 
   api.post('/chat', policies.track, Chat.create);
+  api.post('/chat/user', policies.track, Chat.addUser);
+  api.delete('/chat/user', policies.track, Chat.deleteUser);
 
   return api;
 };
