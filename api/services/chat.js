@@ -4,8 +4,8 @@ const models  = require('../models/');
 
 const engine = {
   create: async (param) => {
-    let at = ['bidirectional', 'private', 'open'], type = param.type, username = param.username;
-    if(!at.includes(type)) { return { 'error': 'Invalid chat type detected!' }; }
+    let at = ['private', 'group', 'open'], type = param.type, username = param.username;
+    if(!at.includes(type)) { type = param.type = 'private'; }
     let user = await models.user.findOne({ 'username': username });
     if(user.error) { return user; }
     let chat = await models.chat.create(param);
@@ -24,7 +24,7 @@ const engine = {
     if(chat.error) { return chat; }
     let list = await models.chatList.find({ 'chatId': param.chatId });
     if(list.error) { return list; }
-    if(chat.type === 'bidirectional' && list.length > 1) { return { 'error': 'Can\'t add anymore user to this chat.' }; }
+    if(chat.type === 'private' && list.length > 1) { return { 'error': 'Can\'t add anymore user to this chat.' }; }
     let user = list.find((item) => { return item.username === param.username; });
     if(user) { return { 'error': 'User is already present in this chat.' }; }
     let r = await models.chatList.add(Object.assign(param, { 'type': chat.type }));

@@ -63,7 +63,7 @@ const models = {
     chat: async () => {
       let schema = new mongoose.Schema({
         name: { type: String },
-        type: { type: String, default: 'bidirectional' }
+        type: { type: String, default: 'private' }
       });
       Chat = mongoose.model('Chat', schema);
     },
