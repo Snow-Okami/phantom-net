@@ -53,6 +53,8 @@ const models = {
         emailValidated: { type: Boolean, default: false },
         status: { type: String, default: 'offline' },
         locked: { type: Boolean, default: false },
+        chatId: { type: String },
+        partChatId: { type: String },
       });
       User = mongoose.model('User', schema);
     },
