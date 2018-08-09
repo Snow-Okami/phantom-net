@@ -17,6 +17,7 @@ const Kafka         = require('../api/controllers/KafkaController');
 const Redis         = require('../api/controllers/RedisController');
 const Websocket     = require('../api/controllers/WebsocketController');
 const Chat          = require('../api/controllers/ChatController');
+const Message          = require('../api/controllers/MessageController');
 
 models.connect();
 
@@ -62,9 +63,10 @@ const routes = () => {
   api.post('/ws/sendMsg', policies.track, Websocket.sendMsg);
   api.post('/ws/sendall', policies.track, Websocket.sendAll);
 
-  api.post('/chat', policies.track, Chat.create);
-  api.post('/chat/user', policies.track, Chat.addUser);
-  api.delete('/chat/user', policies.track, Chat.deleteUser);
+  api.get('/message/:createdBy/:chatId', policies.track, Message.find);
+  api.post('/message', policies.track, Message.create);
+  api.put('/message/:messageId', policies.track, Message.update);
+  api.delete('/message/:messageId', policies.track, Message.delete);
 
   return api;
 };

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose  = require('mongoose');
 const bycript   = require('../helpers/password');
-var Admin, Chat, ChatList, AuthUser, User, Friend, Post;
+var Admin, Chat, ChatList, Message, AuthUser, User, Friend, Post;
 
 const models = {
   connect: async () => {
@@ -16,6 +16,7 @@ const models = {
       models.create.user();
       models.create.chat();
       models.create.chatList();
+      models.create.message();
       models.create.friend();
       models.create.post();
     });
@@ -62,7 +63,7 @@ const models = {
 
     chat: async () => {
       let schema = new mongoose.Schema({
-        name: { type: String },
+        name: { type: String, default: 'Chat' },
         type: { type: String, default: 'private' }
       });
       Chat = mongoose.model('Chat', schema);
@@ -70,11 +71,23 @@ const models = {
 
     chatList: async () => {
       let schema = new mongoose.Schema({
-        chatId: { type: String },
-        type: { type: String },
-        username: { type: String }
+        chatId: { type: String, required: true },
+        type: { type: String, required: true },
+        username: { type: String, required: true },
+        agreed: { type: Boolean, default: false },
       });
       ChatList = mongoose.model('ChatList', schema);
+    },
+
+    message: async () => {
+      let schema = new mongoose.Schema({
+        text: { type: String, required: true },
+        chatId: { type: String, required: true },
+        type: { type: String, required: true },
+        createdAt: { type: Date },
+        createdBy: { type: String, required: true },
+      });
+      Message = mongoose.model('Message', schema);
     },
 
     friend: async () => {
@@ -227,6 +240,15 @@ const models = {
       }
       return r;
     }
+  },
+
+  message: {
+    find: async (param) => {
+      return true;
+    },
+    create: async (param) => {
+      return true;
+    },
   },
 
   friend: {
