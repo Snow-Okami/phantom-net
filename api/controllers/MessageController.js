@@ -33,8 +33,9 @@ const API = {
     if(list.length && !chatId) {
       obj = { 'member': req.body.to, 'type': req.body.type };
       let newlist = await models.chatList.find(obj);
-
-      // list and newlist both are array of objects. Check do they have any chatId similar.
+      let r = _.intersectionBy(list, newlist, 'chatId');
+      if(!r.length) { return res.status(404).send('Message server error!'); }
+      chatId = r[0].chatId;
     }
 
     let msg = await API.sendMessage(Object.assign(req.body, { 'chatId': chatId }));

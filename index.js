@@ -8,6 +8,7 @@ const bodyParser    = require('body-parser');
 const http          = require('http');
 const cors          = require('cors');
 const morgan        = require('morgan');
+const _             = require('lodash');
 const env           = require('./environment/');
 const helpers       = require('./api/helpers/');
 const config        = require('./config/');
@@ -21,8 +22,8 @@ const expressSession  = require('express-session');
 const redis           = require('redis');
 const connectRedis    = require('connect-redis');
 
-const redisclient = redis.createClient();
-const redisStore = connectRedis(expressSession);
+const redisclient     = redis.createClient();
+const redisStore      = connectRedis(expressSession);
 const redisSessionStore = new redisStore({ client: redisclient });
 
 let sessionMiddleware = expressSession({
@@ -42,6 +43,7 @@ app.use(morgan('combined', { stream: helpers.log }));
 app.use(sessionMiddleware);
 app.use(cors());
 app.use('/api', config);
+global._ = _;
 
 const server = http.createServer(app);
 
