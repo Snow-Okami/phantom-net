@@ -9,19 +9,34 @@ const API = {
   create: async (req, res) => {
     let chat, chatId;
     if(!req.body.text || !req.body.to || !req.body.type || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
-    let list = await models.chatList.find({ 'member': req.body.createdBy, 'type': req.body.type });
+    if(req.body.type === 'group' && !req.body.chatId) { return res.status(404).send('Missing chatId for group message!'); }
+    
+    let obj = { 'member': req.body.createdBy, 'type': req.body.type };
+    if(req.body.chatId) { chatId = req.body.chatId; Object.assign(obj, { 'chatId': chatId }); }
+    let list = await models.chatList.find(obj);
     if(list.error) { return res.status(404).send(list); }
+
+    if(!list.length && chatId) { return res.status(404).send('Invalid chatId detected!'); }
+
     if(!list.length) {
       chat = await models.chat.create(req.body);
       if(chat.error) { return res.status(404).send(chat); }
       chatId = chat._id;
-      list = await models.chatList.addMany([
+      let newlist = await models.chatList.addMany([
         { 'chatId': chat._id, 'type': chat.type, 'member': req.body.createdBy, 'agreed': true },
         { 'chatId': chat._id, 'type': chat.type, 'member': req.body.to, 'agreed': false },
       ]);
-      if(list.error) { return res.status(404).send(list); }
-      if(!list.length) { return res.status(404).send('Message server error!'); }
+      if(newlist.error) { return res.status(404).send(newlist); }
+      if(!newlist.length) { return res.status(404).send('Message server error!'); }
     }
+
+    if(list.length && !chatId) {
+      obj = { 'member': req.body.to, 'type': req.body.type };
+      let newlist = await models.chatList.find(obj);
+
+      // list and newlist both are array of objects. Check do they have any chatId similar.
+    }
+
     let msg = await API.sendMessage(Object.assign(req.body, { 'chatId': chatId }));
     return res.send(msg);
   },
