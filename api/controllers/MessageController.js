@@ -10,7 +10,7 @@ const API = {
     let chat, chatId;
     if(!req.body.text || !req.body.to || !req.body.type || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
     if(req.body.type === 'group' && !req.body.chatId) { return res.status(404).send('Missing chatId for group message!'); }
-    
+
     let obj = { 'member': req.body.createdBy, 'type': req.body.type };
     if(req.body.chatId) { chatId = req.body.chatId; Object.assign(obj, { 'chatId': chatId }); }
     let list = await models.chatList.find(obj);
