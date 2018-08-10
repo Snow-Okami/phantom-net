@@ -21,7 +21,7 @@ const API = {
     if(!list.length) {
       let user = await models.user.findOne({ 'username': req.body.to });
       if(user.error) { return res.status(404).send('recipient doesn\'t exists!'); }
-      if(user.username === req.body.createdBy) { return res.status(404).send('recipient doesn\'t exists!'); }
+      if(user.username === req.body.createdBy) { return res.status(404).send('recipient can\'t take your message!'); }
 
       chat = await models.chat.create(req.body);
       if(chat.error) { return res.status(404).send(chat); }
