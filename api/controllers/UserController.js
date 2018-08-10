@@ -1,5 +1,6 @@
 const models    = require('../models/');
 const helpers   = require('../helpers/');
+const jwt       = require('jsonwebtoken');
 
 const API = {
   findExists: async (req, res) => {
