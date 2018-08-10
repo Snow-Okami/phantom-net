@@ -73,7 +73,7 @@ const models = {
       let schema = new mongoose.Schema({
         chatId: { type: String, required: true },
         type: { type: String, required: true },
-        username: { type: String, required: true },
+        member: { type: String, required: true },
         agreed: { type: Boolean, default: false },
       });
       ChatList = mongoose.model('ChatList', schema);
@@ -84,7 +84,8 @@ const models = {
         text: { type: String, required: true },
         chatId: { type: String, required: true },
         type: { type: String, required: true },
-        createdAt: { type: Date },
+        createdAt: { type: Date, required: true },
+        to: { type: String, required: true },
         createdBy: { type: String, required: true },
       });
       Message = mongoose.model('Message', schema);
@@ -231,6 +232,15 @@ const models = {
       }
       return r;
     },
+    addMany: async (param) => {
+      let r;
+      try {
+        r = await ChatList.insertMany(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return r;
+    },
     deleteOne: async (param) => {
       let r;
       try {
@@ -247,7 +257,14 @@ const models = {
       return true;
     },
     create: async (param) => {
-      return true;
+      let time = new Date().getTime();
+      let r;
+      try {
+        r = await Message.create(Object.assign(param, { 'createdAt': time }));
+      } catch(e) {
+        return { success: false, error: e.message };
+      }
+      return r;
     },
   },
 
@@ -261,7 +278,7 @@ const models = {
       try {
         r = await Friend.create(param);
       } catch(e) {
-        return { success: false, error: e.errmsg };
+        return { success: false, error: e.message };
       }
       return r;
     },
