@@ -19,6 +19,10 @@ const API = {
     if(!list.length && chatId) { return res.status(404).send('Invalid chatId detected!'); }
 
     if(!list.length) {
+      let user = await models.user.findOne({ 'username': req.body.to });
+      if(user.error) { return res.status(404).send('recipient doesn\'t exists!'); }
+      if(user.username === req.body.createdBy) { return res.status(404).send('recipient doesn\'t exists!'); }
+
       chat = await models.chat.create(req.body);
       if(chat.error) { return res.status(404).send(chat); }
       chatId = chat._id;
