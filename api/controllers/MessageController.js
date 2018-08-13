@@ -47,6 +47,10 @@ const API = {
     return res.send(msg);
   },
 
+  createToGroup: async (req, res) => {
+    return true;
+  },
+
   update: async (req, res) => {
     return true;
   },

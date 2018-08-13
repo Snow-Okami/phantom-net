@@ -68,6 +68,8 @@ const routes = () => {
   api.put('/message/:messageId', policies.track, Message.update);
   api.delete('/message/:messageId', policies.track, Message.delete);
 
+  api.post('/groupmessage', policies.track, Message.createToGroup);
+
   return api;
 };
 
