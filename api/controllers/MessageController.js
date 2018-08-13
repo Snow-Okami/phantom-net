@@ -8,8 +8,8 @@ const API = {
 
   create: async (req, res) => {
     let chatId;
-    if(!req.body.text || !req.body.to || !req.body.type || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
-    if(req.body.type === 'group' && !req.body.chatId) { return res.status(404).send('Missing chatId for group message!'); }
+    if(!req.body.text || !req.body.to || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
+    Object.assign(req.body, { 'type': 'private' });
 
     let sender = await models.user.findOne({ 'username': req.body.createdBy });
     if(sender.error) { return res.status(404).send('sender doesn\'t exists!'); }
