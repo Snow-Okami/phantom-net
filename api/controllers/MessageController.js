@@ -7,7 +7,7 @@ const API = {
   },
 
   create: async (req, res) => {
-    let chat, chatId;
+    let chatId;
     if(!req.body.text || !req.body.to || !req.body.type || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
     if(req.body.type === 'group' && !req.body.chatId) { return res.status(404).send('Missing chatId for group message!'); }
 
@@ -29,22 +29,18 @@ const API = {
     if((!senderlist.length || !recipientlist.length) && chatId) { return res.status(404).send('Invalid chatId detected!'); }
 
     if(!senderlist.length || !recipientlist.length) {
-      chat = await models.chat.create(req.body);
-      if(chat.error) { return res.status(404).send(chat); }
-      chatId = chat._id;
-      let list = await models.chatList.addMany([
-        { 'chatId': chat._id, 'type': chat.type, 'member': req.body.createdBy, 'agreed': true },
-        { 'chatId': chat._id, 'type': chat.type, 'member': req.body.to, 'agreed': false },
-      ]);
-
-      if(list.error) { return res.status(404).send(list); }
-      if(!list.length) { return res.status(404).send('Message server error!'); }
-    }
-
-    if(senderlist.length && recipientlist.length && !chatId) {
+      let member = await API.addMembers(req.body);
+      if(member.error) { return res.status(404).set('Content-Type', 'application/json').send(r); }
+      chatId = member;
+    } else if (senderlist.length && recipientlist.length && !chatId) {
       let r = _.intersectionBy(senderlist, recipientlist, 'chatId');
-      if(!r.length) { return res.status(404).send('Message server error!'); }
-      chatId = r[0].chatId;
+      if(!r.length) {
+        let member = await API.addMembers(req.body);
+        if(member.error) { return res.status(404).set('Content-Type', 'application/json').send(r); }
+        chatId = member;
+      } else {
+        chatId = r[0].chatId;
+      }
     }
 
     let msg = await API.sendMessage(Object.assign(req.body, { 'chatId': chatId }));
@@ -57,6 +53,19 @@ const API = {
 
   delete: async (req, res) => {
     return true;
+  },
+
+  addMembers: async (param) => {
+    let chat = await models.chat.create(param);
+    if(chat.error) { return chat; }
+    let chatId = chat._id;
+    let list = await models.chatList.addMany([
+      { 'chatId': chat._id, 'type': chat.type, 'member': param.createdBy, 'agreed': true },
+      { 'chatId': chat._id, 'type': chat.type, 'member': param.to, 'agreed': false },
+    ]);
+    if(list.error) { return list; }
+    if(!list.length) { return { 'error': 'Message server error!' }; }
+    return chatId;
   },
 
   sendMessage: async (param) => {
