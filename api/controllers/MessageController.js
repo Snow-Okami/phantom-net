@@ -59,8 +59,12 @@ const API = {
     let senderlist = await models.chatList.find(obj);
     if(senderlist.error) { return res.status(404).send(senderlist); }
     if(!senderlist.length) { return res.status(404).send('Invalid chatId detected!'); }
+
+    if(!senderlist[0].agreed) { return res.status(404).send('Please accept the invitation to send & read messages!'); }
+
     let msg = await API.sendMessage(req.body);
-    return msg;
+    if(msg.error) { res.status(404).send(msg); }
+    return res.status(200).send(msg);
   },
 
   update: async (req, res) => {
