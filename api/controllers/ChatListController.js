@@ -23,7 +23,7 @@ const API = {
     if(chat.error) { return res.status(404).send(chat); }
 
     req.body.recipients = _.map(list, (item) => {
-      return { 'chatId': chat._id, 'type': chat.type, 'member': item.username, 'agreed': false }
+      return { 'chatId': chat._id, 'type': chat.type, 'member': item.username, 'agreed': item.username === req.body.createdBy }
     });
     let r = await API.addMember(req.body.recipients);
     if(r.error) { return res.status(404).send(r); }
