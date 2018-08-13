@@ -1,4 +1,3 @@
-const utils  = require('../utils/');
 const models = require('../models/');
 
 const API = {
@@ -48,7 +47,20 @@ const API = {
   },
 
   createToGroup: async (req, res) => {
-    return true;
+    let chatId;
+    if(!req.body.text || !req.body.chatId || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
+    Object.assign(req.body, { 'type': 'group', 'to': 'members' });
+
+    let sender = await models.user.findOne({ 'username': req.body.createdBy });
+    if(sender.error) { return res.status(404).send('sender doesn\'t exists!'); }
+
+    chatId = req.body.chatId;
+    let obj = { 'member': req.body.createdBy, 'type': req.body.type, 'chatId': chatId };
+    let senderlist = await models.chatList.find(obj);
+    if(senderlist.error) { return res.status(404).send(senderlist); }
+    if(!senderlist.length) { return res.status(404).send('Invalid chatId detected!'); }
+    let msg = await API.sendMessage(req.body);
+    return msg;
   },
 
   update: async (req, res) => {

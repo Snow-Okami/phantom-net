@@ -17,7 +17,8 @@ const Kafka         = require('../api/controllers/KafkaController');
 const Redis         = require('../api/controllers/RedisController');
 const Websocket     = require('../api/controllers/WebsocketController');
 const Chat          = require('../api/controllers/ChatController');
-const Message          = require('../api/controllers/MessageController');
+const Message       = require('../api/controllers/MessageController');
+const Group         = require('../api/controllers/ChatListController');
 
 models.connect();
 
@@ -69,6 +70,11 @@ const routes = () => {
   api.delete('/message/:messageId', policies.track, Message.delete);
 
   api.post('/groupmessage', policies.track, Message.createToGroup);
+
+  api.get('/group/:createdBy/:chatId', policies.track, Group.find);
+  api.post('/group', policies.track, Group.create);
+  api.put('/group/:messageId', policies.track, Group.update);
+  api.delete('/group/:messageId', policies.track, Group.delete);
 
   return api;
 };

@@ -64,7 +64,8 @@ const models = {
     chat: async () => {
       let schema = new mongoose.Schema({
         name: { type: String, default: 'Chat' },
-        type: { type: String, default: 'private' }
+        type: { type: String, default: 'private' },
+        admin: { type: String, default: '' }
       });
       Chat = mongoose.model('Chat', schema);
     },
@@ -137,7 +138,12 @@ const models = {
 
   user: {
     find: async (param) => {
-      const r = await User.find({ name: 'Abhisek Dutta' });
+      let r;
+      try {
+        r = await User.find(param);
+      } catch(e) {
+        return { error: e.message };
+      }
       return r;
     },
     findOne: async (param) => {
