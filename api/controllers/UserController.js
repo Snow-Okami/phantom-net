@@ -21,8 +21,9 @@ const API = {
     }
     const auth = await models.authUser.create(user);
     helpers.mailer.sendValidationMail(auth);
-    return res.status(200).set('Content-Type', 'application/json')
-    .send(user);
+    console.log(user);
+    let token = await jwt.sign({ username: user.username, email: user.email, createdAt: user.createdAt, jwtValidatedAt: user.jwtValidatedAt }, '12345', {});
+    return res.status(200).header('Authorization', 'Bearer ' + token).send('Okay!');
   },
 
   delete: async (req, res) => {
