@@ -10,7 +10,7 @@ const API = {
 
     req.body.recipients.push(req.body.createdBy);
     let t = req.body.recipients;
-    req.body.recipients = _.filter(t, (o, i) => { return i === t.lastIndexOf(o); });
+    req.body.recipients = _.uniq(t);
 
     let list = await models.user.find({ 'username': { $in: req.body.recipients } });
     if(list.error) { return res.status(404).send(error); }
