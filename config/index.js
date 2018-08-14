@@ -49,11 +49,11 @@ const routes = () => {
 
   api.post('/user/findExists', policies.track, User.findExists);
   api.post('/user', policies.track, User.create);
-  api.delete('/user/:username', policies.track, User.delete);
-  api.put('/user/:username', policies.track, avupload.single('avatar'), User.update);
+  api.delete('/user/:username', policies.track, policies.isLoggedIn, User.delete);
+  api.put('/user/:username', policies.track, policies.isLoggedIn, avupload.single('avatar'), User.update);
 
-  api.get('/post', policies.track, Post.find);
-  api.post('/post', policies.track, upload.single('image'), Post.create);
+  api.get('/post', policies.track, policies.isLoggedIn, Post.find);
+  api.post('/post', policies.track, policies.isLoggedIn, upload.single('image'), Post.create);
 
   api.get('/kafka/getMessage/:message', policies.track, Kafka.find);
 
@@ -65,16 +65,16 @@ const routes = () => {
   api.post('/ws/sendall', policies.track, Websocket.sendAll);
 
   api.get('/message/:chatId', policies.track, policies.isLoggedIn, Message.find);
-  api.post('/message', policies.track, Message.create);
-  api.put('/message/:messageId', policies.track, Message.update);
-  api.delete('/message/:messageId', policies.track, Message.delete);
+  api.post('/message', policies.track, policies.isLoggedIn, Message.create);
+  api.put('/message/:messageId', policies.track, policies.isLoggedIn, Message.update);
+  api.delete('/message/:messageId', policies.track, policies.isLoggedIn, Message.delete);
 
-  api.post('/groupmessage', policies.track, Message.createToGroup);
+  api.post('/groupmessage', policies.track, policies.isLoggedIn, Message.createToGroup);
 
-  api.get('/group/:createdBy/:chatId', policies.track, Group.find);
-  api.post('/group', policies.track, Group.create);
-  api.put('/group/:messageId', policies.track, Group.update);
-  api.delete('/group/:messageId', policies.track, Group.delete);
+  api.get('/group/:createdBy/:chatId', policies.track, policies.isLoggedIn, Group.find);
+  api.post('/group', policies.track, policies.isLoggedIn, Group.create);
+  api.put('/group/:messageId', policies.track, policies.isLoggedIn, Group.update);
+  api.delete('/group/:messageId', policies.track, policies.isLoggedIn, Group.delete);
 
   return api;
 };

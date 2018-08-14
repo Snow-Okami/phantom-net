@@ -15,7 +15,13 @@ const jwthelper = {
   },
 
   decode: async (token) => {
-    return await jwt.verify(token, key);
+    let r;
+    try {
+      r = await jwt.verify(token, key);
+    } catch(e) {
+      return { error: e.message };
+    }
+    return r;
   }
 }
 
