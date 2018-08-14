@@ -9,6 +9,8 @@ module.exports = {
     DEBUG_VERBOSITY: 2,
 
     expressSessionId: 'jsessionid',
-    expressSessionSecret: '7K.[N3K=$Dsoj1KHT<hBNAt"bdZFb$^+||T?|KJ/Ouh]^;OshOj.?7&f<Lw^BtK'
+    expressSessionSecret: '7K.[N3K=$Dsoj1KHT<hBNAt"bdZFb$^+||T?|KJ/Ouh]^;OshOj.?7&f<Lw^BtK',
+
+    phantomapikey: '3bbda3b3-ea76-4bff-b36c-006fcc440a38'
   }
 };
