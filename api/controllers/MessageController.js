@@ -44,7 +44,7 @@ const API = {
       }
     }
 
-    let msg = await API.sendMessage(Object.assign(req.body, { 'chatId': chatId }));
+    let msg = await API.sendMessage(Object.assign(req.body, { 'chatId': chatId, 'archived': false, 'edited': false }));
     return res.send(msg);
   },
 

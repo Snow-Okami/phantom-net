@@ -88,7 +88,8 @@ const models = {
         createdAt: { type: Date, required: true },
         to: { type: String, required: true },
         createdBy: { type: String, required: true },
-        archived: { type: Boolean, default: false }
+        archived: { type: Boolean, default: false },
+        edited: { type: Boolean, default: false }
       });
       Message = mongoose.model('Message', schema);
     },
