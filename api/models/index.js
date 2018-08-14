@@ -88,6 +88,7 @@ const models = {
         createdAt: { type: Date, required: true },
         to: { type: String, required: true },
         createdBy: { type: String, required: true },
+        archived: { type: Boolean, default: false }
       });
       Message = mongoose.model('Message', schema);
     },
@@ -260,7 +261,13 @@ const models = {
 
   message: {
     find: async (param) => {
-      return true;
+      let r;
+      try {
+        r = await Message.find(param);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return r;
     },
     create: async (param) => {
       let time = new Date().getTime();

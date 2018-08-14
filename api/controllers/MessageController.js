@@ -2,7 +2,9 @@ const models = require('../models/');
 
 const API = {
   find: async (req, res) => {
-    return true;
+    let messages = await models.message.find(Object.assign(req.params, { archived: false }));
+    if(messages.error) { return res.status(404).send(messages); }
+    return res.send(messages);
   },
 
   create: async (req, res) => {
