@@ -32,10 +32,15 @@ const API = {
   },
 
   update: async (req, res) => {
+    let s = 200, m = 'User is updated successfully!', token;
     if(req.file) { Object.assign(req.body, { 'filename': req.file.filename }); }
     const user = await models.user.update(req.params, req.body, {});
-    let s = 200, m = 'User is updated successfully!';
     if(user.error) { s = 404, m = user.error; }
+    else {
+      let u = await models.user.findOne(req.params);
+      token = await helpers.jwt.sign(u);
+      res.header('Authorization', 'Bearer ' + token);
+    }
     return res.status(s).set('Content-Type', 'text/plain').send(m);
   },
 };
