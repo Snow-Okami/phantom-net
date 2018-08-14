@@ -64,7 +64,7 @@ const routes = () => {
   api.post('/ws/sendMsg', policies.track, Websocket.sendMsg);
   api.post('/ws/sendall', policies.track, Websocket.sendAll);
 
-  api.get('/message/:chatId', policies.track, Message.find);
+  api.get('/message/:chatId', policies.track, policies.isLoggedIn, Message.find);
   api.post('/message', policies.track, Message.create);
   api.put('/message/:messageId', policies.track, Message.update);
   api.delete('/message/:messageId', policies.track, Message.delete);
