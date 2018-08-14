@@ -3,6 +3,7 @@ const mailer  = require('./mailer');
 const log     = require('./log');
 const socket  = require('./socket');
 const password  = require('./password');
+const jwt       = require('./jwt');
 
 const helpers = {
 
@@ -10,7 +11,8 @@ const helpers = {
   mailer: mailer,
   log:    log,
   socket: socket,
-  password: password
+  password: password,
+  jwt: jwt
 
 };
 

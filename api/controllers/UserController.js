@@ -1,6 +1,5 @@
 const models    = require('../models/');
 const helpers   = require('../helpers/');
-const jwt       = require('jsonwebtoken');
 
 const API = {
   findExists: async (req, res) => {
@@ -21,7 +20,7 @@ const API = {
     }
     const auth = await models.authUser.create(user);
     helpers.mailer.sendValidationMail(auth);
-    let token = await jwt.sign({ username: user.username, email: user.email, createdAt: user.createdAt, jwtValidatedAt: user.jwtValidatedAt }, '12345', {});
+    let token = await helpers.jwt.sign(user);
     return res.status(200).header('Authorization', 'Bearer ' + token).send('Okay!');
   },
 
