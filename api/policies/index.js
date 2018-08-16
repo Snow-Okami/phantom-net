@@ -24,7 +24,9 @@ const policies = {
     if(new Date() - new Date(user.jwtValidatedAt) > 86400000) { return res.status(403).send('Oop! the session has expired. Please login again.'); }
     
     let createdByReq = ['/group', '/groupmessage', '/message'];
+    let memberReq = /\/message\/\w/gm;
     if(createdByReq.includes(req.url)) { Object.assign(req.body, { 'createdBy': user.username }); }
+    if(memberReq.test(req.url)) { Object.assign(req.body, { 'member': user.username }); }
     next();
   }
 
