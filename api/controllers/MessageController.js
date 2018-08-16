@@ -9,7 +9,7 @@ const API = {
 
   create: async (req, res) => {
     let chatId;
-    if(!req.body.text || !req.body.to || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
+    if(!req.body.text || !req.body.to) { return res.status(404).send('Missing required fields!'); }
     Object.assign(req.body, { 'type': 'private' });
 
     let sender = await models.user.findOne({ 'username': req.body.createdBy });
@@ -50,7 +50,7 @@ const API = {
 
   createToGroup: async (req, res) => {
     let chatId;
-    if(!req.body.text || !req.body.chatId || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
+    if(!req.body.text || !req.body.chatId) { return res.status(404).send('Missing required fields!'); }
     Object.assign(req.body, { 'type': 'group', 'to': 'members' });
 
     let sender = await models.user.findOne({ 'username': req.body.createdBy });

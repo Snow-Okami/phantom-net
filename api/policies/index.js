@@ -1,4 +1,3 @@
-const utils   = require('../utils/');
 const helpers = require('../helpers/');
 const models  = require('../models/');
 
@@ -23,6 +22,9 @@ const policies = {
     });
     if(user.error) { return res.status(403).send('unauthorized login detected!'); }
     if(new Date() - new Date(user.jwtValidatedAt) > 86400000) { return res.status(403).send('Oop! the session has expired. Please login again.'); }
+    
+    let createdByReq = ['/group', '/groupmessage', '/message'];
+    if(createdByReq.includes(req.url)) { Object.assign(req.body, { 'createdBy': user.username }); }
     next();
   }
 

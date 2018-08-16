@@ -5,7 +5,7 @@ const API = {
     return true;
   },
   create: async (req, res) => {
-    if(!req.body.name || !req.body.recipients || !req.body.createdBy) { return res.status(404).send('Missing required fields!'); }
+    if(!req.body.name || !req.body.recipients) { return res.status(404).send('Missing required fields!'); }
     Object.assign(req.body, { 'type': 'group' });
 
     req.body.recipients.push(req.body.createdBy);
