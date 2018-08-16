@@ -16,11 +16,9 @@ const API = {
     if(!req.body.text || !req.body.to) { return res.status(404).send('Missing required fields!'); }
     Object.assign(req.body, { 'type': 'private' });
 
-    let sender = await models.user.findOne({ 'username': req.body.createdBy });
-    if(sender.error) { return res.status(404).send('sender doesn\'t exists!'); }
     let recipient = await models.user.findOne({ 'username': req.body.to });
     if(recipient.error) { return res.status(404).send('recipient doesn\'t exists!'); }
-    if(sender.username === recipient.username) { return res.status(404).send('recipient can\'t take your message!'); }
+    if(req.body.createdBy === recipient.username) { return res.status(404).send('recipient can\'t take your message!'); }
 
     let obj = { 'member': req.body.createdBy, 'type': req.body.type };
     if(req.body.chatId) { chatId = req.body.chatId; Object.assign(obj, { 'chatId': chatId }); }
@@ -56,9 +54,6 @@ const API = {
     let chatId;
     if(!req.body.text || !req.body.chatId) { return res.status(404).send('Missing required fields!'); }
     Object.assign(req.body, { 'type': 'group', 'to': 'members' });
-
-    let sender = await models.user.findOne({ 'username': req.body.createdBy });
-    if(sender.error) { return res.status(404).send('sender doesn\'t exists!'); }
 
     chatId = req.body.chatId;
     let obj = { 'member': req.body.createdBy, 'type': req.body.type, 'chatId': chatId };
