@@ -62,6 +62,12 @@ const API = {
     return res.send('Okay!');
   },
 
+  accept: async (req, res) => {
+    let r = await models.chatList.update({ 'chatId': req.params.chatId, 'member': req.body.admin }, { 'agreed': true }, {});
+    if(r.error) { return res.status(404).send(r); }
+    if(r.nModified) { return res.send('Welcome! now you can send and receive messages to this group.'); }
+    return res.send('You have already accepted the invitation.');
+  },
   removeUser: async (req, res) => {
     let opt = Object.assign({}, { 'admin': req.body.admin, type: 'group', '_id': req.params.chatId });
     let chat = await models.chat.findOne(opt);

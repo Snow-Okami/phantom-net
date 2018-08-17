@@ -257,6 +257,15 @@ const models = {
         return { error: e.message };
       }
       return r;
+    },
+    update: async (query, param, option) => {
+      let r;
+      try {
+        r = await ChatList.update(query, param, option);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return r;
     }
   },
 

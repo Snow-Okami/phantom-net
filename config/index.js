@@ -76,6 +76,7 @@ const routes = () => {
   api.put('/group/:chatId', policies.track, policies.isLoggedIn, avupload.single('avatar'), policies.getCustomReq, Group.update);
   api.delete('/group/:chatId', policies.track, policies.isLoggedIn, Group.delete);
 
+  api.put('/group/:chatId/accept', policies.track, policies.isLoggedIn, policies.getCustomReq, Group.accept);
   api.delete('/group/:chatId/removeUser/:member', policies.track, policies.isLoggedIn, policies.getCustomReq, Group.removeUser);
   api.delete('/group/:chatId/leave', policies.track, policies.isLoggedIn, policies.getCustomReq, Group.leave);
 
