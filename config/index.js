@@ -77,6 +77,7 @@ const routes = () => {
   api.delete('/group/:chatId', policies.track, policies.isLoggedIn, Group.delete);
 
   api.delete('/group/:chatId/removeUser/:member', policies.track, policies.isLoggedIn, policies.getCustomReq, Group.removeUser);
+  api.delete('/group/:chatId/leave', policies.track, policies.isLoggedIn, policies.getCustomReq, Group.leave);
 
   return api;
 };

@@ -73,7 +73,17 @@ const API = {
     if(!r.n) { return res.status(404).send('user doesn\'t exists in the group!'); }
     return res.send('user is removed from the group!');
   },
+  leave: async (req, res) => {
+    let opt = Object.assign({}, { type: 'group', '_id': req.params.chatId });
+    let chat = await models.chat.findOne(opt);
+    if(chat.error) { return res.status(404).send(chat); }
+    if(chat.admin === req.body.admin) { return res.status(404).send('Oops! admin can\'t leave the group.'); }
 
+    let r = await models.chatList.deleteOne(Object.assign(req.params, { 'member': req.body.admin }));
+    if(r.error) { return res.status(404).send(r); }
+    if(!r.n) { return res.status(404).send('You are not in the group!'); }
+    return res.send('You have left the group successfully!');
+  },
   addMember: async (param) => {
     return await models.chatList.addMany(param);
   },
