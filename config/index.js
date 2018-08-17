@@ -50,7 +50,7 @@ const routes = () => {
   api.post('/user/findExists', policies.track, User.findExists);
   api.post('/user', policies.track, User.create);
   api.delete('/user/:username', policies.track, policies.isLoggedIn, User.delete);
-  api.put('/user/:username', policies.track, policies.isLoggedIn, avupload.single('avatar'), User.update);
+  api.put('/user/:username', policies.track, policies.isLoggedIn, policies.getCustomReq, avupload.single('avatar'), User.update);
 
   api.get('/post', policies.track, policies.isLoggedIn, Post.find);
   api.post('/post', policies.track, policies.isLoggedIn, upload.single('image'), Post.create);
@@ -64,17 +64,17 @@ const routes = () => {
   api.post('/ws/sendMsg', policies.track, Websocket.sendMsg);
   api.post('/ws/sendall', policies.track, Websocket.sendAll);
 
-  api.get('/message/:chatId', policies.track, policies.isLoggedIn, Message.find);
-  api.post('/message', policies.track, policies.isLoggedIn, Message.create);
+  api.get('/message/:chatId', policies.track, policies.isLoggedIn, policies.getCustomReq, Message.find);
+  api.post('/message', policies.track, policies.isLoggedIn, policies.getCustomReq, Message.create);
   api.put('/message/:messageId', policies.track, policies.isLoggedIn, Message.update);
   api.delete('/message/:messageId', policies.track, policies.isLoggedIn, Message.delete);
 
-  api.post('/groupmessage', policies.track, policies.isLoggedIn, Message.createToGroup);
+  api.post('/groupmessage', policies.track, policies.isLoggedIn, policies.getCustomReq, Message.createToGroup);
 
   api.get('/group/:createdBy/:chatId', policies.track, policies.isLoggedIn, Group.find);
-  api.post('/group', policies.track, policies.isLoggedIn, Group.create);
-  api.put('/group/:messageId', policies.track, policies.isLoggedIn, Group.update);
-  api.delete('/group/:messageId', policies.track, policies.isLoggedIn, Group.delete);
+  api.post('/group', policies.track, policies.isLoggedIn, policies.getCustomReq, Group.create);
+  api.put('/group/:chatId', policies.track, policies.isLoggedIn, avupload.single('avatar'), policies.getCustomReq, Group.update);
+  api.delete('/group/:chatId', policies.track, policies.isLoggedIn, Group.delete);
 
   return api;
 };

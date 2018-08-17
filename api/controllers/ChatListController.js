@@ -30,10 +30,35 @@ const API = {
     return res.send(r);
   },
   update: async (req, res) => {
-    return true;
+    if(!req.body.recipients) { return res.status(404).send('Missing recipients field!'); }
+    req.body.recipients = JSON.parse(req.body.recipients);
+
+    let opt = Object.assign({}, { 'admin': req.body.admin, '_id': req.params.chatId });
+    let chat = await models.chat.findOne(opt);
+    if(chat.error) { return res.status(404).send(chat); }
+
+    let list = await models.chatList.find(req.params);
+    list = _.map(list, 'member');
+    _.remove(req.body.recipients, (n) => {
+      return _.includes(list, n);
+    });
+    if(!req.body.recipients.length) { return res.status(404).send('recipients are already present in the group!'); }
+    
+    let user = await models.user.find({ 'username': { $in: req.body.recipients } });
+    if(user.error) { return res.status(404).send(error); }
+    if(!user.length) { return res.status(404).send('minimum 1 valid user is required to add in the group!'); }
+
+    req.body.recipients = _.map(user, (item) => {
+      return { 'chatId': chat._id, 'type': chat.type, 'member': item.username, 'agreed': false }
+    });
+
+    let r = await API.addMember(req.body.recipients);
+    if(r.error) { return res.status(404).send(r); }
+    return res.send(r);
+    // return res.send('Okay!');
   },
   delete: async (req, res) => {
-    return true;
+    return res.send('Okay!');
   },
 
   addMember: async (param) => {
