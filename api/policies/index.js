@@ -25,8 +25,12 @@ const policies = {
     
     let createdByReq = ['/group', '/groupmessage', '/message'];
     let memberReq = /\/message\/\w/gm;
+    let usernameReq = /\/user\/\w/gm;
     if(createdByReq.includes(req.url)) { Object.assign(req.body, { 'createdBy': user.username }); }
     if(memberReq.test(req.url)) { Object.assign(req.body, { 'member': user.username }); }
+    if(usernameReq.test(req.url)) {
+      if(req.params.username != user.username) { return res.status(404).send('You are not allowed to update this user.'); }
+    }
     next();
   }
 

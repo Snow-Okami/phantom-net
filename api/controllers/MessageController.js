@@ -82,7 +82,7 @@ const API = {
     let chatId = chat._id;
     let list = await models.chatList.addMany([
       { 'chatId': chat._id, 'type': chat.type, 'member': param.createdBy, 'agreed': true },
-      { 'chatId': chat._id, 'type': chat.type, 'member': param.to, 'agreed': false },
+      { 'chatId': chat._id, 'type': chat.type, 'member': param.to, 'agreed': true },
     ]);
     if(list.error) { return list; }
     if(!list.length) { return { 'error': 'Message server error!' }; }
