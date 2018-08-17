@@ -33,6 +33,8 @@ const API = {
     if(!req.body.recipients) { return res.status(404).send('Missing recipients field!'); }
     req.body.recipients = JSON.parse(req.body.recipients);
 
+    // req.body.recipients = req.body.recipients ? JSON.parse(req.body.recipients) : false;
+
     let opt = Object.assign({}, { 'admin': req.body.admin, '_id': req.params.chatId });
     let chat = await models.chat.findOne(opt);
     if(chat.error) { return res.status(404).send(chat); }
@@ -58,6 +60,18 @@ const API = {
   },
   delete: async (req, res) => {
     return res.send('Okay!');
+  },
+
+  removeUser: async (req, res) => {
+    let opt = Object.assign({}, { 'admin': req.body.admin, type: 'group', '_id': req.params.chatId });
+    let chat = await models.chat.findOne(opt);
+    if(chat.error) { return res.status(404).send(chat); }
+    if(chat.admin === req.params.member) { return res.status(404).send('Oops! admin can\'t be removed from the group.'); }
+
+    let r = await models.chatList.deleteOne(req.params);
+    if(r.error) { return res.status(404).send(r); }
+    if(!r.n) { return res.status(404).send('user doesn\'t exists in the group!'); }
+    return res.send('user is removed from the group!');
   },
 
   addMember: async (param) => {
