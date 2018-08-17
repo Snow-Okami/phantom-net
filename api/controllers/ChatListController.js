@@ -43,7 +43,7 @@ const API = {
       return _.includes(list, n);
     });
     if(!req.body.recipients.length) { return res.status(404).send('recipients are already present in the group!'); }
-    
+
     let user = await models.user.find({ 'username': { $in: req.body.recipients } });
     if(user.error) { return res.status(404).send(error); }
     if(!user.length) { return res.status(404).send('minimum 1 valid user is required to add in the group!'); }
@@ -55,7 +55,6 @@ const API = {
     let r = await API.addMember(req.body.recipients);
     if(r.error) { return res.status(404).send(r); }
     return res.send(r);
-    // return res.send('Okay!');
   },
   delete: async (req, res) => {
     return res.send('Okay!');
