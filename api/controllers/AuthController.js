@@ -16,6 +16,9 @@ const API = {
     .send(r);
   },
 
+  /*
+  * 
+  */
   validateEmail: async (req, res) => {
     
   }
