@@ -135,6 +135,15 @@ const models = {
     },
     update: async () => {
 
+    },
+    comparePassword: async (raw, hash) => {
+      let v;
+      try {
+        v = await bycript.compare(raw, hash);
+      } catch(e) {
+        return { error: e.message };
+      }
+      return v;
     }
   },
 

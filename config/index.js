@@ -46,6 +46,7 @@ const routes = () => {
    */
   api.post('/auth/resend', policies.track, Auth.resendValidationMail);
   api.post('/auth/validate', policies.track, Auth.validateEmail);
+  api.post('/auth/login', policies.track, Auth.login);
 
   api.post('/user/findExists', policies.track, User.findExists);
   api.post('/user', policies.track, User.create);

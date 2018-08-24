@@ -43,6 +43,7 @@ const API = {
     else {
       let u = await models.user.findOne(req.params);
       if(u.error) { return res.status(400).send('Internal server error! Please contact the developers.'); }
+      Object.assign(u, { 'password': '' });
       token = await helpers.jwt.sign(u);
       res.header('Authorization', 'Bearer ' + token);
     }
