@@ -1,0 +1,42 @@
+const db = require('./MongoDB');
+const request = require('async-request');
+
+const helper = {
+  init: async () => {
+    db.connect();
+
+    io.on('connection', function(socket){
+      console.log(socket.id, 'is connected');
+    
+      socket.on('disconnect', function(data) {
+        console.log(socket.id, 'is disconnected');
+      });
+
+      socket.on('chat', async function(req) {
+        /**
+         * @description response has statusCode, headers and body
+         */
+        let response;
+        try {
+          response = await request(req.url, req.options);
+        } catch(e) {
+          console.log('Error:', e.message);
+          return;
+        }
+        if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+
+        socket.broadcast.emit('chat', { handle: req.options.to, message: req.options.text });
+      });
+
+      socket.on('started typing', function(data) {
+        socket.broadcast.emit('started typing', data);
+      });
+
+      socket.on('completed typing', function(data) {
+        socket.broadcast.emit('completed typing', data);
+      });
+    });
+  }
+};
+
+module.exports = helper;

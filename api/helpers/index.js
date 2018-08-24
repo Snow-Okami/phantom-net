@@ -1,19 +1,11 @@
-const file    = require('./file');
-const mailer  = require('./mailer');
-const log     = require('./log');
-const socket  = require('./socket');
-const password  = require('./password');
-const jwt       = require('./jwt');
+const mongodb = require('../helpers/MongoDB');
+const socketio = require('../helpers/Socket.io');
+const websocket = require('../helpers/Websocket');
 
 const helpers = {
-
-  file:   file,
-  mailer: mailer,
-  log:    log,
-  socket: socket,
-  password: password,
-  jwt: jwt
-
+  WebSocket: websocket,
+  SocketIO: socketio,
+  mongo: mongodb
 };
 
 module.exports = helpers;
