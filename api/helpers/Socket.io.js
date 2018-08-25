@@ -2,11 +2,17 @@ const db = require('./MongoDB');
 const request = require('async-request');
 
 const helper = {
+  collection: {},
   init: async () => {
     db.connect();
+    helper.collection = {};
 
     io.on('connection', function(socket){
-      console.log(socket.id, 'is connected');
+
+      socket.on('new connection', function(data) {
+        helper.collection[data] = socket.id;
+        console.log(helper.collection);
+      });
     
       socket.on('disconnect', function(data) {
         console.log(socket.id, 'is disconnected');
@@ -25,7 +31,8 @@ const helper = {
         }
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
 
-        socket.broadcast.emit('chat', { handle: req.options.to, message: req.options.text });
+        // socket.broadcast.emit('chat', { handle: req.options.data.to, message: req.options.data.text });
+        io.to(helper.collection[req.options.data.to]).emit('chat', { handle: req.options.data.to, message: req.options.data.text });
       });
 
       socket.on('started typing', function(data) {
