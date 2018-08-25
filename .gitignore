@@ -1,6 +1,7 @@
 access.log/
 node_modules
 upload
+package-lock.json
 .DS_Store
 .env
 .tmp

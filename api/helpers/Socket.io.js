@@ -31,6 +31,9 @@ const helper = {
         }
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
 
+        /**
+         * @description visit https://socket.io/docs/emit-cheatsheet/ for more details
+         */
         // socket.broadcast.emit('chat', { handle: req.options.data.to, message: req.options.data.text });
         io.to(helper.collection[req.options.data.to]).emit('chat', { handle: req.options.data.to, message: req.options.data.text });
       });
