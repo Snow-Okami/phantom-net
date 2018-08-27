@@ -6,6 +6,6 @@ module.exports = {
 
   social: social,
   socket: socket,
-  message: message
+  message: message,
 
 };
