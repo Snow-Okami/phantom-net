@@ -10,6 +10,13 @@ const helper = {
     io.on('connection', function(socket){
 
       socket.on('new connection', function(data) {
+        /**
+         * @description Concept for group chat. Key = chatId, Value = socketId
+         */
+        /* var object = {
+          chat_5b7f7dc326a1ea051cf57b32: '5b7f7dc326a1ea051cf57b32'
+        }; */
+
         helper.collection[data] = socket.id;
         console.log(helper.collection);
       });
