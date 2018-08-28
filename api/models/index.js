@@ -7,6 +7,7 @@ const models = {
   connect: async () => {
     let mongoUrl = 'mongodb://' + process.env.dbhostname + ':' + process.env.dbport + '/' + process.env.db;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
+    mongoose.set('useCreateIndex', true);
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
