@@ -14,13 +14,9 @@ const helper = {
 
       socket.on('new connection', function(data) {
         helper.collection[data.username] = socket.id;
-
-        console.log(data);
-
         data.chats.map((o) => {
           helper.collection.room[o] = o.replace('r_v_', '');
         });
-        // helper.collection.room['chat_' + data.group[0]] = data.group[0];
         socket.join(data.chats);
 
         console.log(helper.collection);
