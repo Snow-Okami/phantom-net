@@ -42,7 +42,7 @@ const helper = {
          * This will be used for private chat
          */
         // socket.broadcast.emit('chat', { handle: req.options.data.to, message: req.options.data.text });
-        io.to(helper.collection[req.options.data.to]).emit('chat', { handle: req.options.data.to, message: req.options.data.text });
+        io.to(helper.collection[req.options.data.to]).emit('chat', { handle: req.options.data.from, message: req.options.data.text });
 
         /**
          * @description visit https://socket.io/docs/rooms-and-namespaces/ for more details
