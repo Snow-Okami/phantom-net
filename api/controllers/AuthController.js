@@ -55,7 +55,7 @@ const API = {
       token = await helpers.jwt.sign(u);
       res.header('Authorization', 'Bearer ' + token);
     }
-    return res.status(s).set('Content-Type', 'text/plain').send(m);
+    return res.status(s).set('Content-Type', 'application/json').send({ 'message': m, 'token': 'Bearer ' + token });
   }
 };
 
