@@ -49,6 +49,13 @@ const API = {
     }
     return res.status(s).set('Content-Type', 'text/plain').send(m);
   },
+
+  getChats: async (req, res) => {
+    let list = await models.chatList.find({'member': req.params.username});
+    let r = _.map(list, 'chatId');
+    let modified = _.map(r, (o) => { return 'r_v_' + o; });
+    return res.status(200).send({ list: r, modifiedList: modified });
+  }
 };
 
 module.exports = API;
