@@ -41,7 +41,7 @@ const API = {
       return res.status(404).send(valid.error);
     }
     if(!valid) {
-      return res.status(404).send('invalid password!');
+      return res.status(404).send({ type: 'error', text: 'invalid password!' });
     }
 
     let time = new Date().getTime(), ext = { jwtValidatedAt: time },

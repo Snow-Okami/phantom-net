@@ -142,7 +142,7 @@ const models = {
       try {
         v = await bycript.compare(raw, hash);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
       return v;
     }
@@ -163,9 +163,9 @@ const models = {
       try {
         r = await User.findOne(param);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
-      if(!r) { return { error: 'username doesn\'t exists!' }; }
+      if(!r) { return { error: { type: 'error', text: 'username doesn\'t exists!' } }; }
       return r;
     },
     create: async (param) => {      
