@@ -43,12 +43,19 @@ app.use(morgan('combined', { stream: helpers.log }));
 app.use(sessionMiddleware);
 app.use(cors());
 app.use('/api', config);
-global._ = _;
+global._      = _;
 
-const server = http.createServer(app);
+const server  = http.Server(app);
+const io      = require('socket.io')(server);
+global.io     = io;
 
-helpers.socket.connect(WebSocket, server);
+helpers.socketio.init();
+/**
+ * @description server.listen can be used only once. helpers.socket.connect() also performs server.listen()
+ * please checkout to be1f2c9521e9c7a6a9c336a362aa7c1feb516d7b for helpers.socket.connect().
+ */
+// helpers.socket.connect(WebSocket, server);
 
-app.listen(app.get('port'), app.get('hostname'), function() {
+server.listen(app.get('port'), app.get('hostname'), function() {
   console.log('Node.js server running at http://' + process.env.serverhostname + ':' + process.env.serverport + '/api');
 });

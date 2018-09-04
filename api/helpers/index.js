@@ -4,6 +4,7 @@ const log     = require('./log');
 const socket  = require('./socket');
 const password  = require('./password');
 const jwt       = require('./jwt');
+const socketio  = require('./Socket.io');
 
 const helpers = {
 
@@ -12,7 +13,8 @@ const helpers = {
   log:    log,
   socket: socket,
   password: password,
-  jwt: jwt
+  jwt: jwt,
+  socketio: socketio
 
 };
 
