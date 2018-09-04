@@ -45,6 +45,9 @@ app.use(cors());
 app.use('/api', config);
 global._      = _;
 
+/**
+ * Socket.io Module Requirements
+ */
 const server  = http.Server(app);
 const io      = require('socket.io')(server);
 global.io     = io;
