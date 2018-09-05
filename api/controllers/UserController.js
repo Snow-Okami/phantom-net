@@ -74,7 +74,11 @@ const API = {
       let tu = _.find(ud, function(u) { return u.username === o.member; });
       return { chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname };
     });
-    return res.status(200).send({ list: r, modifiedList: modified, chatList: chatList });
+    return res.status(200).send({
+      message: { type: 'success' }, data: {
+        list: r, modifiedList: modified, chatList: chatList
+      }
+    });
   }
 };
 
