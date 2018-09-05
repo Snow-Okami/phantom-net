@@ -49,6 +49,7 @@ const routes = () => {
   api.post('/auth/login', policies.track, Auth.login);
 
   api.post('/user/findExists', policies.track, User.findExists);
+  api.get('/user/:username', policies.track, policies.isLoggedIn, policies.getCustomReq, User.findOne);
   api.post('/user', policies.track, User.create);
   api.delete('/user/:username', policies.track, policies.isLoggedIn, User.delete);
   api.put('/user/:username', policies.track, policies.isLoggedIn, policies.getCustomReq, avupload.single('avatar'), User.update);

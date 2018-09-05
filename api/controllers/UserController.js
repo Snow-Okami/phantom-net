@@ -16,6 +16,19 @@ const API = {
     return res.status(404).set('Content-Type', type).send(r);
   },
 
+  findOne: async (req, res) => {
+    const user = await models.user.findOne(req.params);
+    if(user.error) {
+      return res.status(404).set('Content-Type', 'application/json')
+      .send({ type: 'error', text: user });
+    }
+    let d = _.pick(user, ['fname', 'lname', 'username', 'filename', 'email', 'status']);
+    return res.status(200).send({
+      message: { type: 'success' },
+      data: d
+    });
+  },
+
   create: async (req, res) => {
     const user = await models.user.create(req.body);
     if(user.error) {
@@ -51,10 +64,17 @@ const API = {
   },
 
   getChats: async (req, res) => {
-    let list = await models.chatList.find({'member': req.params.username});
-    let r = _.map(list, 'chatId');
-    let modified = _.map(r, (o) => { return 'r_v_' + o; });
-    return res.status(200).send({ list: r, modifiedList: modified });
+    let m = await models.chatList.find({'member': req.params.username});
+    let r = _.map(l, 'chatId'), modified = _.map(m, (o) => { return 'r_v_' + o; });
+    let cl = await models.chatList.find({ 'chatId': { $in: r } });
+    let au = _.filter(cl, (o) => { return o.member != req.params.username; });
+    let ul = _.map(au, 'member');
+    let ud = await models.user.find({ 'username': { $in: ul } });
+    let chatList = _.map(au, (o) => {
+      let tu = _.find(ud, function(u) { return u.username === o.member; });
+      return { chatId: o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname };
+    });
+    return res.status(200).send({ list: r, modifiedList: modified, chatList: chatList });
   }
 };
 

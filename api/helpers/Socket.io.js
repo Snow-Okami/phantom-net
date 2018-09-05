@@ -46,9 +46,13 @@ const helper = {
         let user = _.findKey(helper.rooms, (o) => {
           return _.includes(o.sid, socket.id); 
         });
-        _.pull(helper.rooms[user].sid, socket.id);
-        if(!helper.rooms[user].sid.length) { delete helper.rooms[user]; }
-        console.log(helper.rooms, 'is disconnected');
+        try {
+          _.pull(helper.rooms[user].sid, socket.id);
+          if(!helper.rooms[user].sid.length) { delete helper.rooms[user]; }
+        } catch(e) {
+          console.log('Error:', e.message);
+        }
+        console.log(user, 'is disconnected');
       });
 
     });

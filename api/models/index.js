@@ -235,7 +235,7 @@ const models = {
     find: async (param) => {
       let r;
       try {
-        r = await ChatList.find(param);
+        r = await ChatList.find(param).limit(100);
       } catch(e) {
         return { error: e.message };
       }
