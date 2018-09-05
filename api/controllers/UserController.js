@@ -70,6 +70,7 @@ const API = {
     let au = _.filter(cl, (o) => { return o.member != req.params.username; });
     let ul = _.map(au, 'member');
     let ud = await models.user.find({ 'username': { $in: ul } });
+    // let msg = await models.message.find();
     let chatList = _.map(au, (o) => {
       let tu = _.find(ud, function(u) { return u.username === o.member; });
       return { chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname };
