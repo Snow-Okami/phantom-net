@@ -154,7 +154,7 @@ const models = {
       try {
         r = await User.find(param);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
       return r;
     },
@@ -205,7 +205,7 @@ const models = {
       try {
         r = await Chat.findOne(param);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
       if(!r) { return { error: 'chatId doesn\'t exists!' }; }
       return r;
@@ -215,7 +215,7 @@ const models = {
       try {
         r = await Chat.create(param);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
       return r;
     }
@@ -283,9 +283,10 @@ const models = {
     find: async (param) => {
       let r;
       try {
-        r = await Message.find(param);
+        r = await Message.find(param).sort({ createdAt: -1 }).limit(15);
+        _.reverse(r);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
       return r;
     },

@@ -23,9 +23,36 @@ const API = {
       .send({ type: 'error', text: user });
     }
     let d = _.pick(user, ['fname', 'lname', 'username', 'filename', 'email', 'status']);
+    /**
+     * @description
+     * m ->         All from chatList for this user.
+     * r ->         Array contains chatIds for this user.
+     * modified ->  Array contains roomIds for this user.
+     * cl ->        Array contains all users records who are in r chatIds.
+     * au ->        Array contains only users records who are in r chatIds EXCEPT this user.
+     * ul ->        Array contains only usernames who are this user's recipients.
+     * ud ->        Contains full user details of all recipients.
+     * chatList ->  Contains a collection on chatIds, roomIds and few user details with last message.
+     */
+    let m = await models.chatList.find({'member': d.username});
+    let r = _.map(m, 'chatId'), modified = _.map(r, (o) => { return 'r_v_' + o; });
+    let cl = await models.chatList.find({ 'chatId': { $in: r } });
+    let au = _.filter(cl, (o) => { return o.member != d.username; });
+    let ul = _.map(au, 'member');
+    let ud = await models.user.find({ 'username': { $in: ul } });
+    let msg = await models.message.find({ 'chatId': { $in: r } });
+    let chatList = _.map(au, (o) => {
+      let tu = _.find(ud, function(u) { return u.username === o.member; });
+      let lm = _.pick(_.last(_.filter(msg, ['chatId', o.chatId])), ['text'])
+      return { selected: false, chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname, lastText: lm.text, messages: [] };
+    });
+
     return res.status(200).send({
       message: { type: 'success' },
-      data: d
+      data: {
+        user: d,
+        chatList: chatList
+      }
     });
   },
 
@@ -64,20 +91,17 @@ const API = {
   },
 
   getChats: async (req, res) => {
+    /**
+     * @description
+     * m ->         All from chatList for this user.
+     * r ->         Array contains chatIds for this user.
+     * modified ->  Array contains roomIds for this user.
+     */
     let m = await models.chatList.find({'member': req.params.username});
     let r = _.map(m, 'chatId'), modified = _.map(r, (o) => { return 'r_v_' + o; });
-    let cl = await models.chatList.find({ 'chatId': { $in: r } });
-    let au = _.filter(cl, (o) => { return o.member != req.params.username; });
-    let ul = _.map(au, 'member');
-    let ud = await models.user.find({ 'username': { $in: ul } });
-    // let msg = await models.message.find();
-    let chatList = _.map(au, (o) => {
-      let tu = _.find(ud, function(u) { return u.username === o.member; });
-      return { chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname };
-    });
     return res.status(200).send({
       message: { type: 'success' }, data: {
-        list: r, modifiedList: modified, chatList: chatList
+        list: r, modifiedList: modified
       }
     });
   }

@@ -8,7 +8,10 @@ const API = {
 
     let messages = await models.message.find(Object.assign(req.params, { archived: false }));
     if(messages.error) { return res.status(404).send(messages); }
-    return res.send(messages);
+    return res.send({
+      message: { type: 'success' },
+      data: messages
+    });
   },
 
   create: async (req, res) => {
