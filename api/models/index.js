@@ -283,7 +283,10 @@ const models = {
     find: async (param) => {
       let r;
       try {
-        r = await Message.find(param).sort({ createdAt: -1 }).limit(15);
+        /**
+         * Aggregation Needed For This Find
+         */
+        r = await Message.find(param).sort({ createdAt: -1 });
         _.reverse(r);
       } catch(e) {
         return { error: { type: 'error', text: e.message } };

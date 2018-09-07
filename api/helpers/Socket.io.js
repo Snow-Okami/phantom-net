@@ -17,7 +17,7 @@ const helper = {
             'Authorization': data.token
           }
         };
-    
+
         /**
          * @description response has statusCode, headers and body
          */
@@ -28,18 +28,18 @@ const helper = {
           return;
         }
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
-    
+
         if(!helper.rooms[data.username]) {
           helper.rooms[data.username] = {
             sid: [socket.id],
-            clist: JSON.parse(response.body).modifiedList
+            clist: JSON.parse(response.body).data.modifiedList
           };
         } else {
           helper.rooms[data.username].sid.push(socket.id);
-          helper.rooms[data.username].clist = JSON.parse(response.body).modifiedList;
+          helper.rooms[data.username].clist = JSON.parse(response.body).data.modifiedList;
         }
         socket.join(helper.rooms[data.username].clist);
-        console.log(data.username, 'is connected');
+        console.log(data.username, 'is connected.');
       });
 
       socket.on('disconnect', async (data) => {
@@ -53,6 +53,53 @@ const helper = {
           console.log('Error:', e.message);
         }
         console.log(user, 'is disconnected');
+      });
+
+      socket.on('typing', async (data) => {
+        if(data.type === 'private' && helper.rooms[data.username]) {
+          _.forEach(helper.rooms[data.username].sid, (id) => {
+            io.to(id).emit('typing', data.typingText);
+          });
+        }
+      });
+
+      socket.on('stopped typing', async (data) => {
+        if(data.type === 'private' && helper.rooms[data.username]) {
+          _.forEach(helper.rooms[data.username].sid, (id) => {
+            io.to(id).emit('stopped typing', data.typingText);
+          });
+        }
+      });
+
+      socket.on('private message', async (data) => {
+        if(data.type === 'private' && helper.rooms[data.username]) {
+          let apiurl = helper.url + '/message', response;
+          let options = {
+            method: 'POST',
+            headers: {
+              'Content-Type':  'application/json',
+              'Authorization': data.token
+            },
+            data: {
+              'text': data.text,
+              'to': data.username
+            }
+          };
+
+          /**
+           * @description response has statusCode, headers and body
+           */
+          try {
+            response = await request(apiurl, options);
+          } catch(e) {
+            console.log('Error:', e.message);
+            return;
+          }
+          if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+          _.forEach(helper.rooms[data.username].sid, (id) => {
+            io.to(id).emit('private message', JSON.parse(response.body));
+          });
+        }
       });
 
     });

@@ -44,7 +44,7 @@ const API = {
     let chatList = _.map(au, (o) => {
       let tu = _.find(ud, function(u) { return u.username === o.member; });
       let lm = _.pick(_.last(_.filter(msg, ['chatId', o.chatId])), ['text'])
-      return { selected: false, chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname, lastText: lm.text, messages: [] };
+      return { mcache: true, selected: false, chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname, lastText: lm.text, messages: [] };
     });
 
     return res.status(200).send({
