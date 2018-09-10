@@ -280,7 +280,17 @@ const models = {
   },
 
   message: {
-    find: async (param) => {
+    find: async (param, skip) => {
+      let r;
+      try {
+        r = await Message.find(param).sort({ createdAt: -1 }).skip(skip).limit(20);
+        _.reverse(r);
+      } catch(e) {
+        return { error: { type: 'error', text: e.message } };
+      }
+      return r;
+    },
+    findOne: async (param) => {
       let r;
       try {
         /**

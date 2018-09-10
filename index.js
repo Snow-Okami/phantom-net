@@ -36,6 +36,7 @@ const redisSessionStore = new redisStore({ client: redisclient }); */
 
 app.set('hostname', process.env.serverhostname);
 app.set('port', process.env.serverport);
+app.set('baseurl', 'http://' + process.env.serverhostname + ':' + process.env.serverport + '/api');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
@@ -51,6 +52,7 @@ global._      = _;
 const server  = http.Server(app);
 const io      = require('socket.io')(server);
 global.io     = io;
+global.app    = app;
 
 helpers.socketio.init();
 /**

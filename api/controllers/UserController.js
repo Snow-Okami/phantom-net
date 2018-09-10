@@ -40,7 +40,7 @@ const API = {
     let au = _.filter(cl, (o) => { return o.member != d.username; });
     let ul = _.map(au, 'member');
     let ud = await models.user.find({ 'username': { $in: ul } });
-    let msg = await models.message.find({ 'chatId': { $in: r } });
+    let msg = await models.message.findOne({ 'chatId': { $in: r } });
     let chatList = _.map(au, (o) => {
       let tu = _.find(ud, function(u) { return u.username === o.member; });
       let lm = _.pick(_.last(_.filter(msg, ['chatId', o.chatId])), ['text'])

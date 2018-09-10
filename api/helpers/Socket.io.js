@@ -72,7 +72,7 @@ const helper = {
       });
 
       socket.on('private message', async (data) => {
-        if(data.type === 'private' && helper.rooms[data.username]) {
+        if(data.type === 'private') {
           let apiurl = helper.url + '/message', response;
           let options = {
             method: 'POST',
@@ -96,9 +96,11 @@ const helper = {
             return;
           }
           if(response.statusCode != 200) { console.log('Error:', response.body); return; }
-          _.forEach(helper.rooms[data.username].sid, (id) => {
-            io.to(id).emit('private message', JSON.parse(response.body));
-          });
+          if(helper.rooms[data.username]) {
+            _.forEach(helper.rooms[data.username].sid, (id) => {
+              io.to(id).emit('private message', JSON.parse(response.body));
+            });
+          }
         }
       });
 

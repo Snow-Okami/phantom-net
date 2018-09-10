@@ -1,5 +1,6 @@
-const helpers = require('../helpers/');
-const models  = require('../models/');
+const urlParser = require('urlparser');
+const helpers   = require('../helpers/');
+const models    = require('../models/');
 let user;
 
 const policies = {
@@ -27,12 +28,20 @@ const policies = {
   },
 
   getCustomReq: async (req, res, next) => {
+    let url = urlParser.parse(app.get('baseurl') + req.url), params = {
+      skip: 0
+    };
+    if(url.query) { params = url.query.params; }
+
     let createdByReq = ['/group', '/groupmessage', '/message'];
     let memberReq = /\/message\/\w/gm;
     let usernameReq = /\/user\/\w/gm;
     let adminReq = /\/group\/\w/gm;
     if(createdByReq.includes(req.url)) { Object.assign(req.body, { 'createdBy': user.username }); }
-    if(memberReq.test(req.url)) { Object.assign(req.body, { 'member': user.username }); }
+    if(memberReq.test(req.url)) {
+      let skip = parseInt(params.skip);
+      Object.assign(req.body, { 'member': user.username, 'skip': skip ? skip : 0 });
+    }
     if(usernameReq.test(req.url)) {
       if(req.params.username != user.username) { return res.status(404).send({ type: 'error', text:'You are not allowed to access this user.' }); }
     }
