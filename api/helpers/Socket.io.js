@@ -105,8 +105,6 @@ const helper = {
       });
 
       socket.on('get available users', async (data) => {
-        console.log(_.keys(helper.rooms));
-
         let apiurl = helper.url + '/user/' + data.username + '/available';
         let options = {
           method: 'GET',
@@ -126,8 +124,12 @@ const helper = {
           return;
         }
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
-
-        console.log(response.body);
+        let r = JSON.parse(response.body), allonline = _.keys(helper.rooms);
+        let online = _.pull(allonline, data.username);
+        Object.assign(r, { online: online });
+        _.forEach(helper.rooms[data.username].sid, (id) => {
+          io.to(id).emit('available users', r);
+        });
       });
 
     });

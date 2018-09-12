@@ -171,7 +171,11 @@ const models = {
       }
       return r;
     },
+    /**
+     * @deprecated: Please use findAll in place of find. We are removing find permanently.
+     */
     find: async (param) => {
+      console.log('Please use findAll in place of find. We are removing find very soon.');
       let r;
       try {
         r = await User.find(param);
