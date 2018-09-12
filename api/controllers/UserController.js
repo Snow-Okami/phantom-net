@@ -111,9 +111,9 @@ const API = {
     if(u.error) { return res.status(400).send(u); }
 
     let allArray = _.map(u, (o) => {
-      return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, username: o.username };
+      return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, member: o.username };
     });
-    _.pullAllBy(allArray, [{ 'username': req.params.username }], 'username');
+    _.pullAllBy(allArray, [{ 'member': req.params.username }], 'member');
 
     u = await models.chatList.find({ member: req.params.username });
     let cid = _.map(u, 'chatId');
@@ -123,7 +123,7 @@ const API = {
     u = await models.user.findAll({ username: { $in: members } });
 
     let recoArray = _.map(u, (o) => {
-      return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, username: o.username };
+      return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, member: o.username };
     });
 
     return res.send({

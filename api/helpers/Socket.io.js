@@ -126,7 +126,7 @@ const helper = {
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
         let r = JSON.parse(response.body), allonline = _.keys(helper.rooms);
         let online = _.pull(allonline, data.username);
-        Object.assign(r, { online: online });
+        Object.assign(r.data, { online: online });
         _.forEach(helper.rooms[data.username].sid, (id) => {
           io.to(id).emit('available users', r);
         });
