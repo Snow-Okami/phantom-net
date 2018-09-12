@@ -149,6 +149,28 @@ const models = {
   },
 
   user: {
+    findOne: async (param) => {
+      let r;
+      try {
+        r = await User.findOne(param);
+      } catch(e) {
+        return { error: { type: 'error', text: e.message } };
+      }
+      if(!r) { return { error: { type: 'error', text: 'username doesn\'t exists!' } }; }
+      return r;
+    },
+    /**
+     * @param : (query: is used to find, skip: no. of records to skip after find, limit: total no. of records to be returned)
+     */
+    findLimited: async (query, skip, limit) => {
+      let r;
+      try {
+        r = await User.find(query).skip(skip).limit(limit);
+      } catch(e) {
+        return { error: { type: 'error', text: e.message } };
+      }
+      return r;
+    },
     find: async (param) => {
       let r;
       try {
@@ -158,14 +180,13 @@ const models = {
       }
       return r;
     },
-    findOne: async (param) => {
+    findAll: async (param) => {
       let r;
       try {
-        r = await User.findOne(param);
+        r = await User.find(param);
       } catch(e) {
         return { error: { type: 'error', text: e.message } };
       }
-      if(!r) { return { error: { type: 'error', text: 'username doesn\'t exists!' } }; }
       return r;
     },
     create: async (param) => {      

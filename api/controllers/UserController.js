@@ -107,17 +107,30 @@ const API = {
   },
 
   getAvailable: async (req, res) => {
-    let u = await models.user.find({ emailValidated: true, locked: false });
-    array = _.map(u, (o) => {
+    let u = await models.user.findLimited({ emailValidated: true, locked: false }, 0, 20);
+    if(u.error) { return res.status(400).send(u); }
+
+    let allArray = _.map(u, (o) => {
       return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, username: o.username };
     });
-    _.pullAllBy(array, [{ 'username': req.params.username }], 'username');
+    _.pullAllBy(allArray, [{ 'username': req.params.username }], 'username');
 
     u = await models.chatList.find({ member: req.params.username });
-    console.log(u);
+    let cid = _.map(u, 'chatId');
+    u = await models.chatList.find({ 'chatId': { $in: cid } });
+    _.pullAllBy(u, [{ member : req.params.username }], 'member');
+    let members = _.map(u, 'member');
+    u = await models.user.findAll({ username: { $in: members } });
+
+    let recoArray = _.map(u, (o) => {
+      return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, username: o.username };
+    });
 
     return res.send({
-      message: { type: 'success' }, data: array
+      message: { type: 'success' }, data: {
+        recommended: recoArray,
+        all: allArray
+      }
     });
   }
 

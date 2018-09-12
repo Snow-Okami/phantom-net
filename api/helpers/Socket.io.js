@@ -126,6 +126,8 @@ const helper = {
           return;
         }
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+
+        console.log(response.body);
       });
 
     });
