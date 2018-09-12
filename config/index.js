@@ -53,7 +53,8 @@ const routes = () => {
   api.post('/user', policies.track, User.create);
   api.delete('/user/:username', policies.track, policies.isLoggedIn, User.delete);
   api.put('/user/:username', policies.track, policies.isLoggedIn, policies.getCustomReq, avupload.single('avatar'), User.update);
-  api.get('/user/:username/chats', policies.track, policies.isLoggedIn, policies.getCustomReq, User.getChats);  
+  api.get('/user/:username/chats', policies.track, policies.isLoggedIn, policies.getCustomReq, User.getChats);
+  api.get('/user/:username/available', policies.track, policies.isLoggedIn, policies.getCustomReq, User.getAvailable);
 
   api.get('/post', policies.track, policies.isLoggedIn, Post.find);
   api.post('/post', policies.track, policies.isLoggedIn, upload.single('image'), Post.create);

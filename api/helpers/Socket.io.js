@@ -104,6 +104,30 @@ const helper = {
         }
       });
 
+      socket.on('get available users', async (data) => {
+        console.log(_.keys(helper.rooms));
+
+        let apiurl = helper.url + '/user/' + data.username + '/available';
+        let options = {
+          method: 'GET',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': data.token
+          }
+        };
+
+        /**
+         * @description response has statusCode, headers and body
+         */
+        try {
+          response = await request(apiurl, options);
+        } catch(e) {
+          console.log('Error:', e.message);
+          return;
+        }
+        if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+      });
+
     });
   },
 

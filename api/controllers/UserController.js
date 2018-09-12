@@ -104,7 +104,23 @@ const API = {
         list: r, modifiedList: modified
       }
     });
+  },
+
+  getAvailable: async (req, res) => {
+    let u = await models.user.find({ emailValidated: true, locked: false });
+    array = _.map(u, (o) => {
+      return { filename: o.filename, status: o.status, fname: o.fname, lname: o.lname, username: o.username };
+    });
+    _.pullAllBy(array, [{ 'username': req.params.username }], 'username');
+
+    u = await models.chatList.find({ member: req.params.username });
+    console.log(u);
+
+    return res.send({
+      message: { type: 'success' }, data: array
+    });
   }
+
 };
 
 module.exports = API;
