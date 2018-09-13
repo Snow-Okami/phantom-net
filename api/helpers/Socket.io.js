@@ -57,6 +57,7 @@ const helper = {
         } catch(e) {
           console.log('Error:', e.message);
         }
+        console.log(user, 'is disconnected!');
       });
 
       socket.on('typing', async (data) => {
@@ -100,6 +101,12 @@ const helper = {
             return;
           }
           if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+          if(helper.rooms[data.createdBy]) {
+            let obj = Object.assign({}, JSON.parse(response.body), {touser: _.pick(data, ['fname', 'lname'])});
+            _.forEach(helper.rooms[data.createdBy].sid, (id) => {
+              io.to(id).emit('message sent', obj);
+            });
+          }
           if(helper.rooms[data.username]) {
             _.forEach(helper.rooms[data.username].sid, (id) => {
               io.to(id).emit('private message', JSON.parse(response.body));
