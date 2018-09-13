@@ -39,7 +39,9 @@ const helper = {
           helper.rooms[data.username].clist = JSON.parse(response.body).data.modifiedList;
         }
         socket.join(helper.rooms[data.username].clist);
-        console.log(data.username, 'is connected.');
+        _.forEach(helper.rooms[data.username].sid, (id) => {
+          io.to(id).emit('logged in');
+        });
       });
 
       socket.on('disconnect', async (data) => {
@@ -47,12 +49,14 @@ const helper = {
           return _.includes(o.sid, socket.id); 
         });
         try {
+          _.forEach(helper.rooms[user].sid, (id) => {
+            io.to(id).emit('logged out');
+          });
           _.pull(helper.rooms[user].sid, socket.id);
           if(!helper.rooms[user].sid.length) { delete helper.rooms[user]; }
         } catch(e) {
           console.log('Error:', e.message);
         }
-        console.log(user, 'is disconnected');
       });
 
       socket.on('typing', async (data) => {
