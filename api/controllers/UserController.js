@@ -53,18 +53,17 @@ const API = {
 
     let gd = await models.chat.findAll({ '_id': { $in: ag } });
     let gmsg = await models.message.findOne({ 'chatId': { $in: ag } });
-    console.log(gd, gmsg);
-    /*
-    console.log(au);
-    let ul = _.map(_.filter(au, ['type', 'private']), 'member');
-    console.log(ul);
-    */
+    let groupChatList = _.map(gd, (o) => {
+      return { mcache: true, selected: false, chatId: o._id, roomId: 'r_v_' + o._id, admin: o.admin, type: o.type, name: o.name, lastText: 'Working on it.', messages: [] };
+    });
+
+    let list = _.concat(chatList, groupChatList);
 
     return res.status(200).send({
       message: { type: 'success' },
       data: {
         user: d,
-        chatList: chatList
+        chatList: list
       }
     });
   },
