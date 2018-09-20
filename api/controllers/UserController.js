@@ -37,7 +37,7 @@ const API = {
     let m = await models.chatList.find({'member': d.username});
     let r = _.map(m, 'chatId'), modified = _.map(r, (o) => { return 'r_v_' + o; });
     let cl = await models.chatList.find({ 'chatId': { $in: r } });
-    let au = _.filter(cl, (o) => { return o.member != d.username; });
+    let au = _.uniqBy(_.filter(cl, (o) => { return o.member != d.username; }), 'chatId');
     let ul = _.map(au, 'member');
     let ud = await models.user.find({ 'username': { $in: ul } });
     let msg = await models.message.findOne({ 'chatId': { $in: r } });
