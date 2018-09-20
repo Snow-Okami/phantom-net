@@ -232,7 +232,16 @@ const models = {
       } catch(e) {
         return { error: { type: 'error', text: e.message } };
       }
-      if(!r) { return { error: 'chatId doesn\'t exists!' }; }
+      // if(!r) { return { error: 'chatId doesn\'t exists!' }; }
+      return r;
+    },
+    findAll: async (param) => {
+      let r;
+      try {
+        r = await Chat.find(param);
+      } catch(e) {
+        return { error: { type: 'error', text: e.message } };
+      }
       return r;
     },
     create: async (param) => {

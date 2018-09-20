@@ -30,22 +30,35 @@ const API = {
      * modified ->  Array contains roomIds for this user.
      * cl ->        Array contains all users records who are in r chatIds.
      * au ->        Array contains only users records who are in r chatIds EXCEPT this user.
+     * ag ->        Array that contains group chat ids for this user.
+     * gd ->        Array contains group details for this user.
+     * gmsg ->      
      * ul ->        Array contains only usernames who are this user's recipients.
      * ud ->        Contains full user details of all recipients.
      * chatList ->  Contains a collection on chatIds, roomIds and few user details with last message.
      */
     let m = await models.chatList.find({'member': d.username});
-    let r = _.map(m, 'chatId'), modified = _.map(r, (o) => { return 'r_v_' + o; });
+    let r = _.map(m, 'chatId');
     let cl = await models.chatList.find({ 'chatId': { $in: r } });
-    let au = _.uniqBy(_.filter(cl, (o) => { return o.member != d.username; }), 'chatId');
+    let au = _.filter(cl, (o) => { return o.member !== d.username && o.type === 'private'; });
+    let ag = _.map(_.uniqBy(_.filter(cl, (o) => { return o.member !== d.username && o.type === 'group'; }), 'chatId'), 'chatId');
     let ul = _.map(au, 'member');
-    let ud = await models.user.find({ 'username': { $in: ul } });
+    let ud = await models.user.findAll({ 'username': { $in: ul } });
     let msg = await models.message.findOne({ 'chatId': { $in: r } });
     let chatList = _.map(au, (o) => {
       let tu = _.find(ud, function(u) { return u.username === o.member; });
       let lm = _.pick(_.last(_.filter(msg, ['chatId', o.chatId])), ['text'])
       return { mcache: true, selected: false, chatId: o.chatId, roomId: 'r_v_' + o.chatId, member: o.member, type: o.type, fname: tu.fname, lname: tu.lname, lastText: lm.text, messages: [] };
     });
+
+    let gd = await models.chat.findAll({ '_id': { $in: ag } });
+    let gmsg = await models.message.findOne({ 'chatId': { $in: ag } });
+    console.log(gd, gmsg);
+    /*
+    console.log(au);
+    let ul = _.map(_.filter(au, ['type', 'private']), 'member');
+    console.log(ul);
+    */
 
     return res.status(200).send({
       message: { type: 'success' },
