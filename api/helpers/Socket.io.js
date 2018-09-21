@@ -143,6 +143,60 @@ const helper = {
         });
       });
 
+      socket.on('create group', async (data) => {
+        let apiurl = helper.url + '/group';
+        let options = {
+          method: 'POST',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': data.token
+          },
+          data: {
+            'name': data.name,
+            'recipients': data.recipients
+          }
+        };
+        let response;
+
+        /**
+         * @description response has statusCode, headers and body
+         */
+        try {
+          response = await request(apiurl, options);
+        } catch(e) {
+          console.log('Error:', e.message);
+          return;
+        }
+        if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+        /**
+         * @description gr : group chat response
+         */
+        let gr = JSON.parse(response.body), chatId = gr[0].chatId;
+
+        apiurl = helper.url + '/groupmessage';
+        options = {
+          method: 'POST',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': data.token
+          },
+          data: {
+            'text': data.text,
+            'chatId': chatId
+          }
+        };
+        try {
+          response = await request(apiurl, options);
+        } catch(e) {
+          console.log('Error:', e.message);
+          return;
+        }
+        if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+        let cr = JSON.parse(response.body);
+
+        console.log(cr);
+      });
+
     });
   },
 
