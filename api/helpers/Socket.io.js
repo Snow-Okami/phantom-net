@@ -201,11 +201,22 @@ const helper = {
         let roomId = 'r_v_' + cr.chatId;
         socket.join(roomId);
         helper.rooms[cr.createdBy].clist.push(roomId);
-        
+
         _.forEach(members, (id) => {
           if(helper.rooms[id] !== undefined) {
             _.forEach(helper.rooms[id].sid, (sid) => {
-              io.to(sid).emit('group message', cr);
+              io.to(sid).emit('group message', {
+                admin: cr.createdBy,
+                chatId: cr.chatId,
+                lastText: cr.text,
+                messages: [],
+                name: cr.name,
+                roomId: roomId,
+                mcache: true,
+                selected: false,
+                name: data.name,
+                type: cr.type
+              });
             });
           }
         });
