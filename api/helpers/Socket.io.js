@@ -192,9 +192,23 @@ const helper = {
           return;
         }
         if(response.statusCode != 200) { console.log('Error:', response.body); return; }
+        /**
+         * @description cr : created chat response
+         */
         let cr = JSON.parse(response.body);
 
-        console.log(cr);
+        let members = _.pull(_.map(gr, 'member'), cr.createdBy);
+        let roomId = 'r_v_' + cr.chatId;
+        socket.join(roomId);
+        helper.rooms[cr.createdBy].clist.push(roomId);
+        
+        _.forEach(members, (id) => {
+          if(helper.rooms[id] !== undefined) {
+            _.forEach(helper.rooms[id].sid, (sid) => {
+              io.to(sid).emit('group message', cr);
+            });
+          }
+        });
       });
 
     });
