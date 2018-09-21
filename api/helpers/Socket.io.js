@@ -38,7 +38,9 @@ const helper = {
           helper.rooms[data.username].sid.push(socket.id);
           helper.rooms[data.username].clist = JSON.parse(response.body).data.modifiedList;
         }
-        socket.join(helper.rooms[data.username].clist);
+        _.forEach(helper.rooms[data.username].clist, (rid) => {
+          socket.join(rid);
+        });
         _.forEach(helper.rooms[data.username].sid, (id) => {
           io.to(id).emit('logged in');
         });
