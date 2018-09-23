@@ -145,6 +145,9 @@ const helper = {
         });
       });
 
+      /**
+       * @description create group event is fired when user creates a group
+       */
       socket.on('create group', async (data) => {
         let apiurl = helper.url + '/group';
         let options = {
