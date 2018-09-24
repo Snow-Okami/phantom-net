@@ -117,6 +117,9 @@ const helper = {
         }
       });
 
+      /**
+       * @description return recommended and available users for instant chat.
+       */
       socket.on('get available users', async (data) => {
         let apiurl = helper.url + '/user/' + data.username + '/available';
         let options = {
@@ -145,6 +148,9 @@ const helper = {
         });
       });
 
+      /**
+       * @description create group event is fired when user creates a group.
+       */
       socket.on('create group', async (data) => {
         let apiurl = helper.url + '/group';
         let options = {
