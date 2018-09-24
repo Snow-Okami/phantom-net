@@ -261,9 +261,9 @@ const models = {
       try {
         r = await ChatList.findOne(param);
       } catch(e) {
-        return { error: e.message };
+        return { error: { type: 'error', text: e.message } };
       }
-      if(!r) { return { error: 'Chat doesn\'t exists!' }; }
+      if(!r) { return { error: { type: 'error', text: 'Chat doesn\'t exists!' } }; }
       return r;
     },
     find: async (param) => {
