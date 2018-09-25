@@ -47,6 +47,10 @@ const models = {
       let schema = new mongoose.Schema({
         fname: { type: String },
         lname: { type: String },
+        /**
+         * @description fname and lname will be replaced by name for better usage.
+         */
+        name: { type: String, required: true },
         filename: { type: String, default: 'avatar.png' },
         username: { type: String, unique: true, required: true },
         email: { type: String, unique: true, required: true },
@@ -57,7 +61,6 @@ const models = {
         status: { type: String, default: 'offline' },
         locked: { type: Boolean, default: false },
         chatId: { type: String },
-        partChatId: { type: String },
       });
       User = mongoose.model('User', schema);
     },
@@ -76,6 +79,10 @@ const models = {
         chatId: { type: String, required: true },
         type: { type: String, required: true },
         member: { type: String, required: true },
+        /**
+         * @description member will be replaced by username for better usage.
+         */
+        username: { type: String, required: true },
         agreed: { type: Boolean, default: false },
       });
       ChatList = mongoose.model('ChatList', schema);
@@ -116,6 +123,9 @@ const models = {
     }
   },
 
+  /**
+   * @description Each modle should have findOne, findLimited, findAll, create, updateOne, deleteOne
+   */
   authUser: {
     findOne: async () => {
 
