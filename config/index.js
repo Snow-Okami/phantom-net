@@ -28,17 +28,32 @@ const routes = () => {
 
   /**
    * GET
-   * /api/user/checkemail/:email,
-   * /api/user/checkusername/:username    is now POST /api/user/findExists
    * /api/user/kafka/:message             is now GET /api/kafka/getMessage/:message
    * /api/user/redis/get/:key             is now GET /api/redis/getKey/:key
    * 
+   * /api/user/:username                  Get user's details
+   * /api/user/:username/chats            Get user's chats (used in chat dashboard)
+   * /api/user/:username/available        All available users for this user. (All + Recomemded Users)
+   * 
+   * /api/message/:messageId              get message details using message id
+   * /api/group/:createdBy/:chatId        get chat details using chatId and createdBy url parameter
+   * 
    * POST
+   * /api/user/checkemail/:email,
+   * /api/user/checkusername/:username    is now POST /api/user/findExists
    * /api/user/resend             is now POST /api/auth/resend
    * /api/user/activate/:token    will be POST /api/auth/validate?token=token
    * /api/user/register           is now POST /api/user
    * /api/user/uploadAvatar,
    * /avatar/:username            is working with PUT /api/user/:username
+   * 
+   * /api/auth/login                  is login API
+   * /api/auth/resend                 is resend validation mail
+   * /api/auth/validate               validates email with required url parameters
+   * 
+   * /api/message                     send private message
+   * /api/groupmessage                send group message
+   * /api/group                       create group
    * 
    * PUT
    * /api/user/unlock,
