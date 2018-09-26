@@ -26,8 +26,7 @@ const models = {
   create: {
     admin: async () => {
       let schema = new mongoose.Schema({
-        fname: { type: String },
-        lname: { type: String },
+        name: { type: String },
         email: { type: String, required: true },
         createdAt: { type: Date },
         jwtValidatedAt: { type: Date },
@@ -84,6 +83,7 @@ const models = {
          */
         username: { type: String, required: true },
         agreed: { type: Boolean, default: false },
+        updatedAt: { type: Date }
       });
       ChatList = mongoose.model('ChatList', schema);
     },
