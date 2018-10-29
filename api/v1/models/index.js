@@ -9,7 +9,7 @@ var Admin;
 
 const Models = {
   connect: async () => {
-    let mongoUrl = `mongodb://${env.username}:${env.password}@ds143953.mlab.com:43953/lab-2`;
+    let mongoUrl = `mongodb://${env.username}:${env.password}@${env.host}:${env.port}/${env.database}`;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
     mongoose.set('useCreateIndex', true);
     let db = mongoose.connection;
