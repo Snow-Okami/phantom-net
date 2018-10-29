@@ -29,7 +29,9 @@ const Models = {
         createdAt: { type: Date },
         jwtValidatedAt: { type: Date },
         emailValidated: { type: Boolean, default: false },
-        allowedToAccess: { type: Boolean, default: false }
+        allowedToAccess: { type: Boolean, default: false },
+        isMale: { type: Boolean, required: true },
+        avatar: { type: String, default: 'admin.jpg' }
       });
       Admin = mongoose.model('Admin', schema);
     }

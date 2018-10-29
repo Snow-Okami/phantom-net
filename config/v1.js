@@ -25,7 +25,10 @@ const routes = () => {
   api.get('/admin/:email', AdminController.findOne);
   api.get('/admins', AdminController.findAll);
   api.post('/admin', AdminController.create);
-  api.put('/admin/:email', AdminController.updateOne);
+  /**
+   * @description Request Body can contain Form-Data or Raw JSON data.
+   */
+  api.put('/admin/:email', Upload.single('file'), AdminController.updateOne);
   api.delete('/admin/:email', AdminController.deleteOne);
 
   /**
