@@ -1,0 +1,1729 @@
+{ 
+    "_id" : ObjectId("5a9e9ea0e1382336873e255d"), 
+    "activity_id" : NumberInt(104), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(20), 
+    "bl_id" : NumberInt(109), 
+    "updated" : "2018-03-06 13:58:56", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5aacf978e1382320885f7bc5"), 
+    "activity_id" : NumberInt(195), 
+    "member_id" : NumberInt(20), 
+    "updated" : "2018-03-17 11:18:16", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(107), 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5aaf880ae1382333db452978"), 
+    "activity_id" : NumberInt(206), 
+    "member_id" : NumberInt(20), 
+    "updated" : "2018-03-19 09:51:06", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(108), 
+    "type" : "completed"
+}
+{ 
+    "_id" : ObjectId("5aaf8e34e1382336ed6f57ce"), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(150), 
+    "type" : "New image", 
+    "media_count" : NumberInt(8), 
+    "activity_id" : NumberInt(208), 
+    "member_id" : NumberInt(44), 
+    "updated" : "2018-03-19 10:17:24"
+}
+{ 
+    "_id" : ObjectId("5ac320e9e138231c7718fc75"), 
+    "activity_id" : NumberInt(242), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(45), 
+    "bl_id" : NumberInt(176), 
+    "updated" : "2018-04-03 06:36:25", 
+    "type" : "Added", 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 19:01:15", 
+    "stream_bl_id" : NumberInt(176), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ac32b80e1382329ec6f4965"), 
+    "activity_id" : NumberInt(244), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(45), 
+    "bl_id" : NumberInt(178), 
+    "updated" : "2018-04-03 07:21:36", 
+    "type" : "Added", 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 19:01:15", 
+    "stream_bl_id" : NumberInt(178), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ac33acee1382336ae4ee805"), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(175), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "activity_id" : NumberInt(245), 
+    "member_id" : NumberInt(45), 
+    "updated" : "2018-04-03 08:26:54"
+}
+{ 
+    "_id" : ObjectId("5ac3e547e138236d370ca0b6"), 
+    "activity_id" : NumberInt(250), 
+    "member_id" : NumberInt(45), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(177), 
+    "updated" : "2018-04-03 20:34:15", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5acdb146e13823165c3d7085"), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(197), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "activity_id" : NumberInt(263), 
+    "member_id" : NumberInt(53), 
+    "updated" : "2018-04-11 06:55:02"
+}
+{ 
+    "_id" : ObjectId("5ad9c980e13823254153dee6"), 
+    "activity_id" : NumberInt(282), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(59), 
+    "bl_id" : NumberInt(223), 
+    "updated" : "2018-04-20 11:05:36", 
+    "type" : "Added", 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 19:01:15", 
+    "stream_bl_id" : NumberInt(223), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5adb447be138236bfe1eda45"), 
+    "activity_id" : NumberInt(301), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(59), 
+    "bl_id" : NumberInt(236), 
+    "updated" : "2018-04-21 14:02:35", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5adda93ee138234f5b5ba8d4"), 
+    "activity_id" : NumberInt(315), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-04-23 09:37:02", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(210), 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5ade2b29e1382372ed2f3564"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:21", 
+    "stream_bl_id" : NumberInt(246), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b29e1382372ed2f3565"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:21", 
+    "stream_bl_id" : NumberInt(241), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b29e1382372ed2f3566"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:21", 
+    "stream_bl_id" : NumberInt(223), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b29e1382372ed2f3567"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:21", 
+    "stream_bl_id" : NumberInt(178), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b39e13823757e4c4cb4"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:37", 
+    "stream_bl_id" : NumberInt(246), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b39e13823757e4c4cb5"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:37", 
+    "stream_bl_id" : NumberInt(241), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b39e13823757e4c4cb6"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:37", 
+    "stream_bl_id" : NumberInt(223), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ade2b39e13823757e4c4cb7"), 
+    "stream_status" : NumberInt(0), 
+    "stream_date" : "2018-04-23 18:51:37", 
+    "stream_bl_id" : NumberInt(178), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5ae94368e1382303fc050148"), 
+    "activity_id" : NumberInt(342), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-05-02 04:49:44", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(248), 
+    "type" : "New image", 
+    "media_count" : NumberInt(3), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5ae9498be138230657384f86"), 
+    "activity_id" : NumberInt(343), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(57), 
+    "bl_id" : NumberInt(253), 
+    "updated" : "2018-05-02 05:15:55", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5ae949b7e138230689474ee5"), 
+    "activity_id" : NumberInt(344), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(57), 
+    "bl_id" : NumberInt(254), 
+    "updated" : "2018-05-02 05:16:39", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5ae949ffe138230689474ee6"), 
+    "activity_id" : NumberInt(345), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-05-02 05:17:51", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(255), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5af592f8e138231e7d3e8af5"), 
+    "activity_id" : NumberInt(352), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(260), 
+    "member_id" : NumberInt(64), 
+    "updated" : "2018-05-11 12:56:24", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b3e2f82e13823122f608346"), 
+    "activity_id" : NumberInt(354), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(301), 
+    "member_id" : NumberInt(97), 
+    "updated" : "2018-07-05 14:47:30", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b474ee0e138235554181685"), 
+    "activity_id" : NumberInt(356), 
+    "member_id" : NumberInt(116), 
+    "updated" : "2018-07-12 12:51:44", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(340), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(1), 
+    "stream_member_id" : NumberInt(116)
+}
+{ 
+    "_id" : ObjectId("5b48307de13823058b1b8b46"), 
+    "activity_id" : NumberInt(357), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(114), 
+    "bl_id" : NumberInt(341), 
+    "updated" : "2018-07-13 04:54:21", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b48308ae1382307c009d3a5"), 
+    "activity_id" : NumberInt(359), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(114), 
+    "bl_id" : NumberInt(343), 
+    "updated" : "2018-07-13 04:54:34", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b4de09ae1382345f9077525"), 
+    "activity_id" : NumberInt(360), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(356), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-17 12:27:06", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b4de0a3e1382345042b3d26"), 
+    "activity_id" : NumberInt(361), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(357), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-17 12:27:15", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b4de1cce1382345042b3d28"), 
+    "activity_id" : NumberInt(362), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(128), 
+    "bl_id" : NumberInt(358), 
+    "updated" : "2018-07-17 12:32:12", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b4de92ee13823495e6066f6"), 
+    "activity_id" : NumberInt(364), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(360), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-17 13:03:42", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b4ed6cce138236d095d63f5"), 
+    "activity_id" : NumberInt(365), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(112), 
+    "bl_id" : NumberInt(361), 
+    "updated" : "2018-07-18 05:57:32", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b5097cbe138232b7e348415"), 
+    "activity_id" : NumberInt(368), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(112), 
+    "bl_id" : NumberInt(366), 
+    "updated" : "2018-07-19 13:53:15", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b516bf7e1382327a5543e65"), 
+    "activity_id" : NumberInt(369), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-20 04:58:31", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(359), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(112)
+}
+{ 
+    "_id" : ObjectId("5b51c8a5e1382343ce4cda25"), 
+    "activity_id" : NumberInt(371), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(112), 
+    "bl_id" : NumberInt(368), 
+    "updated" : "2018-07-20 11:33:57", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b531a3ee1382365742c8f15"), 
+    "activity_id" : NumberInt(374), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(129), 
+    "bl_id" : NumberInt(371), 
+    "updated" : "2018-07-21 11:34:22", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b55a1ece1382316d219e9c6"), 
+    "activity_id" : NumberInt(375), 
+    "member_id" : NumberInt(112), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(369), 
+    "updated" : "2018-07-23 09:37:48", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b55a2dee1382316d362c4e6"), 
+    "activity_id" : NumberInt(376), 
+    "member_id" : NumberInt(112), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(367), 
+    "updated" : "2018-07-23 09:41:50", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b56d329e138231cdc4b14c5"), 
+    "activity_id" : NumberInt(377), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(112), 
+    "bl_id" : NumberInt(372), 
+    "updated" : "2018-07-24 07:20:09", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b56d984e13823271a3eba75"), 
+    "activity_id" : NumberInt(378), 
+    "member_id" : NumberInt(112), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(361), 
+    "updated" : "2018-07-24 07:47:16", 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5b56d984e13823271a3eba77"), 
+    "activity_id" : NumberInt(379), 
+    "member_id" : NumberInt(112), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(361), 
+    "updated" : "2018-07-24 07:47:16", 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5b585dede13823410a5e6995"), 
+    "activity_id" : NumberInt(382), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(132), 
+    "bl_id" : NumberInt(376), 
+    "updated" : "2018-07-25 11:24:29", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b586d0de138234f5f43afa5"), 
+    "activity_id" : NumberInt(383), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(377), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-25 12:29:01", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b597707e1382331b94e10b5"), 
+    "activity_id" : NumberInt(386), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(382), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-26 07:23:51", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b5efbb3e138236536753d54"), 
+    "activity_id" : NumberInt(395), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-07-30 11:51:15", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(388), 
+    "type" : "Updated", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b5f134be1382307486c9995"), 
+    "activity_id" : NumberInt(400), 
+    "member_id" : NumberInt(137), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(388), 
+    "updated" : "2018-07-30 13:31:55", 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5b5ffadbe13823176e284888"), 
+    "activity_id" : NumberInt(406), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-07-31 05:59:55", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(398), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b5ffb17e13823176d1f48d6"), 
+    "activity_id" : NumberInt(408), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-07-31 06:00:55", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(396), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b5fff79e138231c8614b546"), 
+    "activity_id" : NumberInt(411), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-07-31 06:19:37", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(402), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b5fff94e138231eb84cbfa5"), 
+    "activity_id" : NumberInt(412), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-07-31 06:20:04", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(401), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b600d62e138233765569365"), 
+    "activity_id" : NumberInt(413), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(403), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-07-31 07:18:58", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b605a61e1382328743b3fa5"), 
+    "activity_id" : NumberInt(418), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(408), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-07-31 12:47:29", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6060ade13823330d70c0ab"), 
+    "activity_id" : NumberInt(424), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:14:21", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(417), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6060c4e1382336131a14d6"), 
+    "activity_id" : NumberInt(425), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:14:44", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(416), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6060efe1382336427c0df6"), 
+    "activity_id" : NumberInt(426), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:15:27", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(415), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6061dce138233786724dc7"), 
+    "activity_id" : NumberInt(435), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:19:24", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(423), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6061f1e1382338904bd725"), 
+    "activity_id" : NumberInt(436), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:19:45", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(422), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b606209e1382337657cd825"), 
+    "activity_id" : NumberInt(437), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:20:09", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(421), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b606229e138233778374f35"), 
+    "activity_id" : NumberInt(438), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-07-31 13:20:41", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(420), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6147bffe50180ccb7308b9"), 
+    "activity_id" : NumberInt(442), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(141), 
+    "bl_id" : NumberInt(430), 
+    "updated" : "2018-08-01 05:40:15", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b614880fe50180eda30b0d5"), 
+    "activity_id" : NumberInt(443), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(142), 
+    "bl_id" : NumberInt(431), 
+    "updated" : "2018-08-01 05:43:28", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b614aeffe5018115d0c7b74"), 
+    "activity_id" : NumberInt(444), 
+    "member_id" : NumberInt(142), 
+    "updated" : "2018-08-01 05:53:51", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(429), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(142)
+}
+{ 
+    "_id" : ObjectId("5b614b60fe5018115d0c7b78"), 
+    "activity_id" : NumberInt(445), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(432), 
+    "member_id" : NumberInt(142), 
+    "updated" : "2018-08-01 05:55:44", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b614b71fe5018109707da15"), 
+    "activity_id" : NumberInt(446), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(433), 
+    "member_id" : NumberInt(142), 
+    "updated" : "2018-08-01 05:56:01", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b61597dfe5018225f01ee74"), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(400), 
+    "type" : "Updated", 
+    "activity_id" : NumberInt(448), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-08-01 06:55:57", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b6161d9fe501827de5a7957"), 
+    "activity_id" : NumberInt(449), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(434), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-08-01 07:31:37", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b616531fe50182821247975"), 
+    "activity_id" : NumberInt(450), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(435), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-08-01 07:45:53", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b61a956fe50185b18505ce5"), 
+    "activity_id" : NumberInt(452), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(57), 
+    "bl_id" : NumberInt(437), 
+    "updated" : "2018-08-01 12:36:38", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b61ab29fe50185d6505ced5"), 
+    "activity_id" : NumberInt(457), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(57), 
+    "bl_id" : NumberInt(442), 
+    "updated" : "2018-08-01 12:44:25", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b61abe3fe50185e182dab05"), 
+    "activity_id" : NumberInt(458), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(57), 
+    "bl_id" : NumberInt(443), 
+    "updated" : "2018-08-01 12:47:31", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b61ac3dfe50185f00563435"), 
+    "activity_id" : NumberInt(460), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(57), 
+    "bl_id" : NumberInt(445), 
+    "updated" : "2018-08-01 12:49:01", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b629014fe50180ba27556d5"), 
+    "activity_id" : NumberInt(462), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-02 05:01:08", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(389), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b62ae0bfe50186a1d2c4935"), 
+    "activity_id" : NumberInt(464), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(144), 
+    "bl_id" : NumberInt(453), 
+    "updated" : "2018-08-02 07:08:59", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b62fe55e138233156567fb5"), 
+    "activity_id" : NumberInt(468), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(459), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-08-02 12:51:33", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b632805e138234db135ca95"), 
+    "activity_id" : NumberInt(471), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(463), 
+    "member_id" : NumberInt(148), 
+    "updated" : "2018-08-02 15:49:25", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b64475ae138231aeb0f5665"), 
+    "activity_id" : NumberInt(472), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(468), 
+    "updated" : "2018-08-03 12:15:22", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6447b6e138231aeb0f5667"), 
+    "activity_id" : NumberInt(473), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(469), 
+    "updated" : "2018-08-03 12:16:54", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b644adee1382320100e16c5"), 
+    "activity_id" : NumberInt(474), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(470), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-03 12:30:22", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b644ae1e1382320100e16c7"), 
+    "activity_id" : NumberInt(475), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(471), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-03 12:30:25", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b644ae2e1382320100e16c9"), 
+    "activity_id" : NumberInt(476), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(472), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-03 12:30:26", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6453a7e138232bd363cb15"), 
+    "activity_id" : NumberInt(477), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(473), 
+    "updated" : "2018-08-03 13:07:51", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b647b9ae13823579b67ebc5"), 
+    "activity_id" : NumberInt(480), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-08-03 15:58:18", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(235), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5b685b5ae138231fef6b06b4"), 
+    "activity_id" : NumberInt(482), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-08-06 14:29:46", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(397), 
+    "type" : "Updated", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b6a8395e13823058b2ed0f5"), 
+    "activity_id" : NumberInt(517), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(496), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 05:45:57", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6a839be1382305835bbaf5"), 
+    "activity_id" : NumberInt(518), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(497), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 05:46:03", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6a88e5e1382307ae221fe5"), 
+    "activity_id" : NumberInt(535), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:08:37", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(514), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a88fee1382306d0678f25"), 
+    "activity_id" : NumberInt(536), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:09:02", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(513), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a891de1382307ff5b3975"), 
+    "activity_id" : NumberInt(537), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:09:33", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(512), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8974e13823058c276318"), 
+    "activity_id" : NumberInt(538), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:11:00", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(511), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8997e1382307e30cefb5"), 
+    "activity_id" : NumberInt(539), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:11:35", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(510), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a89efe1382307af1bcff5"), 
+    "activity_id" : NumberInt(540), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:13:03", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(509), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8acae13823086739cd95"), 
+    "activity_id" : NumberInt(541), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:16:42", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(508), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8ae5e13823085f6b0405"), 
+    "activity_id" : NumberInt(542), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:17:09", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(507), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8b03e1382308ac581895"), 
+    "activity_id" : NumberInt(543), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:17:39", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(506), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8b3be1382305835bbaff"), 
+    "activity_id" : NumberInt(544), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:18:35", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(505), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8c86e13823085f6b0408"), 
+    "activity_id" : NumberInt(545), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:24:06", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(504), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8cafe13823092202e595"), 
+    "activity_id" : NumberInt(546), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:24:47", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(503), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8cfce1382305835bbb02"), 
+    "activity_id" : NumberInt(547), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:26:04", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(502), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8d2be1382305835bbb05"), 
+    "activity_id" : NumberInt(548), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:26:51", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(500), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8e0ee1382307ae221fe8"), 
+    "activity_id" : NumberInt(549), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:30:38", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(499), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6a8e39e1382309351d9335"), 
+    "activity_id" : NumberInt(550), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-08 06:31:21", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(498), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5b6c27f5e13823713b3ebcc5"), 
+    "activity_id" : NumberInt(551), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(166), 
+    "bl_id" : NumberInt(519), 
+    "updated" : "2018-08-09 11:39:33", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6c3ad8e1382335827134e7"), 
+    "activity_id" : NumberInt(552), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-08-09 13:00:08", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(237), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5b6d2dc2e13823184d20b0c4"), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(520), 
+    "type" : "Updated", 
+    "activity_id" : NumberInt(553), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-08-10 06:16:34", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6d3abce138231ff022ae04"), 
+    "activity_id" : NumberInt(554), 
+    "member_id" : NumberInt(138), 
+    "updated" : "2018-08-10 07:11:56", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(474), 
+    "type" : "Updated", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(138)
+}
+{ 
+    "_id" : ObjectId("5b6d67c4e1382307bb635236"), 
+    "activity_id" : NumberInt(556), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(460), 
+    "updated" : "2018-08-10 10:24:04", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6d03e138230b6849d149"), 
+    "activity_id" : NumberInt(567), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(532), 
+    "updated" : "2018-08-10 10:46:27", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6d13e138230d445ba456"), 
+    "activity_id" : NumberInt(568), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(531), 
+    "updated" : "2018-08-10 10:46:43", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6d23e138230f19351e86"), 
+    "activity_id" : NumberInt(569), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(530), 
+    "updated" : "2018-08-10 10:46:59", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6d32e138230d445ba45a"), 
+    "activity_id" : NumberInt(570), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(529), 
+    "updated" : "2018-08-10 10:47:14", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6d42e138230f5b0f6106"), 
+    "activity_id" : NumberInt(571), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(528), 
+    "updated" : "2018-08-10 10:47:30", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6d55e138230f19351e89"), 
+    "activity_id" : NumberInt(572), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(533), 
+    "member_id" : NumberInt(138), 
+    "updated" : "2018-08-10 10:47:49", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6d6dcbe138230dcf387dfa"), 
+    "activity_id" : NumberInt(573), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(527), 
+    "updated" : "2018-08-10 10:49:47", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6ddae138230f19351e8d"), 
+    "activity_id" : NumberInt(574), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(526), 
+    "updated" : "2018-08-10 10:50:02", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6de8e138230fc31e8d36"), 
+    "activity_id" : NumberInt(575), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(525), 
+    "updated" : "2018-08-10 10:50:16", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6dfae138230fbe230446"), 
+    "activity_id" : NumberInt(576), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(524), 
+    "updated" : "2018-08-10 10:50:34", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6e0fe138230fbe23044a"), 
+    "activity_id" : NumberInt(577), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(523), 
+    "updated" : "2018-08-10 10:50:55", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6e22e138230fc27906f7"), 
+    "activity_id" : NumberInt(578), 
+    "member_id" : NumberInt(57), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(522), 
+    "updated" : "2018-08-10 10:51:14", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b6d6ec6e1382311a354e2c5"), 
+    "activity_id" : NumberInt(579), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(534), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-08-10 10:53:58", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b6d842ce138232ea20ec8d5"), 
+    "activity_id" : NumberInt(582), 
+    "member_id" : NumberInt(57), 
+    "updated" : "2018-08-10 12:25:16", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(399), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(1), 
+    "stream_member_id" : NumberInt(57)
+}
+{ 
+    "_id" : ObjectId("5b6d8796e1382331f86b7665"), 
+    "activity_id" : NumberInt(583), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-08-10 12:39:50", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(411), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6d880ae138232e0e0cf1c5"), 
+    "activity_id" : NumberInt(584), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-08-10 12:41:46", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(418), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6d8835e1382333024b4375"), 
+    "activity_id" : NumberInt(585), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-08-10 12:42:29", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(419), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6d8871e1382331bd3a3df5"), 
+    "activity_id" : NumberInt(586), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-08-10 12:43:29", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(412), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b6d8893e1382333024b4378"), 
+    "activity_id" : NumberInt(587), 
+    "member_id" : NumberInt(129), 
+    "updated" : "2018-08-10 12:44:03", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(414), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(129)
+}
+{ 
+    "_id" : ObjectId("5b72e84be138235b5f10ee25"), 
+    "activity_id" : NumberInt(589), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(537), 
+    "updated" : "2018-08-14 14:33:47", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b72e85de1382359891d7d05"), 
+    "activity_id" : NumberInt(590), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(538), 
+    "updated" : "2018-08-14 14:34:05", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b72e876e138235b9253cea5"), 
+    "activity_id" : NumberInt(591), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(539), 
+    "updated" : "2018-08-14 14:34:30", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b72e892e138235ba73064f5"), 
+    "activity_id" : NumberInt(592), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(540), 
+    "updated" : "2018-08-14 14:34:58", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b72e8b2e1382359891d7d07"), 
+    "activity_id" : NumberInt(594), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(542), 
+    "updated" : "2018-08-14 14:35:30", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b752915e138231d92612766"), 
+    "activity_id" : NumberInt(595), 
+    "member_id" : NumberInt(138), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(541), 
+    "updated" : "2018-08-16 07:34:45", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5b9cbf65493dbd3e1711ae75"), 
+    "activity_id" : NumberInt(607), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(572), 
+    "updated" : "2018-09-15 08:14:29", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cc087493dbd41560bb7c5"), 
+    "activity_id" : NumberInt(608), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(573), 
+    "updated" : "2018-09-15 08:19:19", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cc110493dbd34d96edc65"), 
+    "activity_id" : NumberInt(609), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(574), 
+    "updated" : "2018-09-15 08:21:36", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cc56ddead93505c2445a5"), 
+    "activity_id" : NumberInt(610), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(575), 
+    "updated" : "2018-09-15 08:40:13", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cc836493dbd59de049505"), 
+    "activity_id" : NumberInt(611), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(576), 
+    "updated" : "2018-09-15 08:52:06", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cd839493dbd04881c9715"), 
+    "activity_id" : NumberInt(612), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(577), 
+    "updated" : "2018-09-15 10:00:25", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cd8fa493dbd05f112dab5"), 
+    "activity_id" : NumberInt(613), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(578), 
+    "updated" : "2018-09-15 10:03:38", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cdbea493dbd08c06392d5"), 
+    "activity_id" : NumberInt(614), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(188), 
+    "bl_id" : NumberInt(579), 
+    "updated" : "2018-09-15 10:16:10", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9cfedc493dbd50f75ed0a5"), 
+    "activity_id" : NumberInt(615), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(580), 
+    "member_id" : NumberInt(188), 
+    "updated" : "2018-09-15 12:45:16", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9d0d9f493dbd6a9a42e5e5"), 
+    "activity_id" : NumberInt(616), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(581), 
+    "member_id" : NumberInt(173), 
+    "updated" : "2018-09-15 13:48:15", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9d0db0493dbd6a9a42e5e7"), 
+    "activity_id" : NumberInt(617), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(582), 
+    "member_id" : NumberInt(173), 
+    "updated" : "2018-09-15 13:48:32", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9dd0f8493dbd1d761f8055"), 
+    "activity_id" : NumberInt(618), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(583), 
+    "member_id" : NumberInt(165), 
+    "updated" : "2018-09-16 03:41:44", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9e05705f4a55071d1c35d5"), 
+    "activity_id" : NumberInt(619), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(584), 
+    "member_id" : NumberInt(138), 
+    "updated" : "2018-09-16 07:25:36", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9e07b35f4a55091b2426c5"), 
+    "activity_id" : NumberInt(620), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(585), 
+    "updated" : "2018-09-16 07:35:15", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5b9e3f625f4a5522182bd385"), 
+    "activity_id" : NumberInt(621), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(586), 
+    "member_id" : NumberInt(138), 
+    "updated" : "2018-09-16 11:32:50", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5ba4f92de1382315730c6c85"), 
+    "activity_id" : NumberInt(623), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(138), 
+    "bl_id" : NumberInt(599), 
+    "updated" : "2018-09-21 13:59:09", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5ba4f9d1e1382313443b602a"), 
+    "activity_id" : NumberInt(624), 
+    "member_id" : NumberInt(138), 
+    "updated" : "2018-09-21 14:01:53", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(521), 
+    "type" : "New image", 
+    "media_count" : NumberInt(1), 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(138)
+}
+{ 
+    "_id" : ObjectId("5bb5e21de204cc6c261e6615"), 
+    "activity_id" : NumberInt(625), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(600), 
+    "updated" : "2018-10-04 09:49:17", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb5e2e1e204cc6c214501b5"), 
+    "activity_id" : NumberInt(626), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(601), 
+    "updated" : "2018-10-04 09:52:33", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb5e358e204cc61f5443ef5"), 
+    "activity_id" : NumberInt(627), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(602), 
+    "updated" : "2018-10-04 09:54:32", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb5e382e204cc6ff120f286"), 
+    "activity_id" : NumberInt(628), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(603), 
+    "updated" : "2018-10-04 09:55:14", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb5e3a4e204cc70031d3e75"), 
+    "activity_id" : NumberInt(629), 
+    "activity" : "idea", 
+    "member_id" : NumberInt(137), 
+    "bl_id" : NumberInt(604), 
+    "updated" : "2018-10-04 09:55:48", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb5ea82e204cc75b843b21c"), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(605), 
+    "type" : "New image", 
+    "media_count" : NumberInt(2), 
+    "activity_id" : NumberInt(630), 
+    "member_id" : NumberInt(137), 
+    "updated" : "2018-10-04 10:25:06", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(137)
+}
+{ 
+    "_id" : ObjectId("5bb5eef7e204cc025429ad06"), 
+    "activity_id" : NumberInt(631), 
+    "member_id" : NumberInt(137), 
+    "activity" : "group", 
+    "group_bl_id" : NumberInt(456), 
+    "updated" : "2018-10-04 10:44:07", 
+    "type" : "Created"
+}
+{ 
+    "_id" : ObjectId("5bb5faf6e204cc131133dfa5"), 
+    "activity_id" : NumberInt(632), 
+    "member_id" : NumberInt(137), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(607), 
+    "updated" : "2018-10-04 11:35:18", 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5bb5faf6e204cc131133dfa7"), 
+    "activity_id" : NumberInt(633), 
+    "member_id" : NumberInt(137), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(607), 
+    "updated" : "2018-10-04 11:35:18", 
+    "type" : "Updated"
+}
+{ 
+    "_id" : ObjectId("5bb615d0e204cc3a1e103e26"), 
+    "activity_id" : NumberInt(634), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(609), 
+    "member_id" : NumberInt(183), 
+    "updated" : "2018-10-04 13:29:52", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb61616e204cc3a93547187"), 
+    "activity_id" : NumberInt(635), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(610), 
+    "member_id" : NumberInt(183), 
+    "updated" : "2018-10-04 13:31:02", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb6164fe204cc3bab1f80e5"), 
+    "activity_id" : NumberInt(636), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(611), 
+    "member_id" : NumberInt(183), 
+    "updated" : "2018-10-04 13:31:59", 
+    "type" : "Added"
+}
+{ 
+    "_id" : ObjectId("5bb7ac7de204cc41893fc9b5"), 
+    "activity_id" : NumberInt(637), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:25:01", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(587), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7ac93e204cc427a75f9b5"), 
+    "activity_id" : NumberInt(638), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:25:23", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(571), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7acd1e204cc427a75f9b8"), 
+    "activity_id" : NumberInt(639), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:26:25", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(570), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7acf0e204cc43236029d5"), 
+    "activity_id" : NumberInt(640), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:26:56", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(569), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7ad18e204cc43236029d8"), 
+    "activity_id" : NumberInt(641), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:27:36", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(568), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7ad34e204cc43b5749e36"), 
+    "activity_id" : NumberInt(642), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:28:04", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(567), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7ad4ee204cc3519157cc7"), 
+    "activity_id" : NumberInt(643), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:28:30", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(566), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7ad73e204cc3519157cca"), 
+    "activity_id" : NumberInt(644), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:29:07", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(565), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bb7adb1e204cc45a7407b84"), 
+    "activity_id" : NumberInt(645), 
+    "member_id" : NumberInt(59), 
+    "updated" : "2018-10-05 18:30:09", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(564), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(59)
+}
+{ 
+    "_id" : ObjectId("5bbb054fe204cc2f22106685"), 
+    "activity_id" : NumberInt(646), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-10-08 07:20:47", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(536), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(112)
+}
+{ 
+    "_id" : ObjectId("5bbb0566e204cc32092660c4"), 
+    "activity_id" : NumberInt(647), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-10-08 07:21:10", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(455), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(112)
+}
+{ 
+    "_id" : ObjectId("5bbb057de204cc307c3ecad5"), 
+    "activity_id" : NumberInt(648), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-10-08 07:21:33", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(553), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(112)
+}
+{ 
+    "_id" : ObjectId("5bbb05c3e204cc307c3ecad8"), 
+    "activity_id" : NumberInt(649), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-10-08 07:22:43", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(454), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(112)
+}
+{ 
+    "_id" : ObjectId("5bbb05f2e204cc2bd16b5f26"), 
+    "activity_id" : NumberInt(650), 
+    "member_id" : NumberInt(112), 
+    "updated" : "2018-10-08 07:23:30", 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(427), 
+    "type" : "completed", 
+    "stream_status" : NumberInt(0), 
+    "stream_member_id" : NumberInt(112)
+}
+{ 
+    "_id" : ObjectId("5bbf1096e138234df4356f45"), 
+    "activity_id" : NumberInt(651), 
+    "activity" : "idea", 
+    "bl_id" : NumberInt(613), 
+    "member_id" : NumberInt(183), 
+    "updated" : "2018-10-11 08:57:58", 
+    "type" : "Added"
+}

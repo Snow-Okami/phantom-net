@@ -1,0 +1,22 @@
+{
+  "name": "node-server",
+  "description": "Node JS server contains API's for different platform.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://abhisekdutta507@bitbucket.org/abhisekdutta507/node-server.git"
+  },
+  "engines": {
+    "node": "8.12.0",
+    "npm": "6.4.1"
+  },
+  "keywords": [
+    "Node",
+    "JS",
+    "Socket.io",
+    "Express",
+    "JS",
+    "Heroku",
+    "Bitbucket",
+    "MLab"
+  ]
+}

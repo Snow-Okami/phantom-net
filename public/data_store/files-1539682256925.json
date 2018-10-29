@@ -1,0 +1,294 @@
+{ 
+    "_id" : ObjectId("5b348c63e138232c0332a634"), 
+    "location_id" : NumberInt(1), 
+    "member_id" : NumberInt(75), 
+    "option" : "been_to", 
+    "location" : "GA, USA", 
+    "regionlocation" : "32.1656221,-82.90007509999998", 
+    "status" : "completed", 
+    "created" : "2018-06-28 07:21:07"
+}
+{ 
+    "_id" : ObjectId("5b348c6ee1382327e71e27a7"), 
+    "location_id" : NumberInt(2), 
+    "member_id" : NumberInt(75), 
+    "option" : "been_to", 
+    "location" : "VIC, Australia", 
+    "regionlocation" : "-37.47130769999999,144.7851531", 
+    "status" : "completed", 
+    "created" : "2018-06-28 07:21:18"
+}
+{ 
+    "_id" : ObjectId("5b348ee5e138232dd87056b4"), 
+    "location_id" : NumberInt(3), 
+    "member_id" : NumberInt(75), 
+    "option" : "want_to", 
+    "location" : "4/9 Phayathai Road, Thanon Phaya Thai, Ratchathewi, Bangkok, Thailand", 
+    "regionlocation" : "13.7608541,100.53745279999998", 
+    "status" : "pending", 
+    "created" : "2018-06-28 07:31:49"
+}
+{ 
+    "_id" : ObjectId("5b348ffce138232efd68b6d4"), 
+    "location_id" : NumberInt(4), 
+    "member_id" : NumberInt(75), 
+    "option" : "want_to", 
+    "location" : "Government First Grade College, Hosahalli Extension, Vijaya Nagar, Bengaluru, Karnataka, India", 
+    "regionlocation" : "12.9665649,77.53966390000005", 
+    "status" : "pending", 
+    "created" : "2018-06-28 07:36:28"
+}
+{ 
+    "_id" : ObjectId("5b43084ce138231eae322994"), 
+    "location_id" : NumberInt(5), 
+    "member_id" : NumberInt(105), 
+    "option" : "want_to", 
+    "location" : "B-N-2, Sikar Road, Ambabari, Vidhyadhar Nagar, Jaipur, Rajasthan, India", 
+    "regionlocation" : "26.942955,75.77397999999994", 
+    "status" : "pending", 
+    "created" : "2018-07-09 07:01:32"
+}
+{ 
+    "_id" : ObjectId("5b430857e138231e516ca3d4"), 
+    "location_id" : NumberInt(6), 
+    "member_id" : NumberInt(105), 
+    "option" : "been_to", 
+    "location" : "Buenos Aires, Argentina", 
+    "regionlocation" : "-34.60368440000001,-58.381559100000004", 
+    "status" : "completed", 
+    "created" : "2018-07-09 07:01:43"
+}
+{ 
+    "_id" : ObjectId("5b45fc35e138234979731e06"), 
+    "location_id" : NumberInt(7), 
+    "member_id" : NumberInt(93), 
+    "option" : "been_to", 
+    "location" : "Zürich, Switzerland", 
+    "regionlocation" : "47.3768866,8.541694000000007", 
+    "status" : "completed", 
+    "created" : "2018-07-11 12:46:45"
+}
+{ 
+    "_id" : ObjectId("5b4876f0e13823273f71a194"), 
+    "location_id" : NumberInt(8), 
+    "member_id" : NumberInt(114), 
+    "option" : "want_to", 
+    "location" : "American Fork, UT, USA", 
+    "regionlocation" : "40.3768954,-111.79576450000002", 
+    "status" : "pending", 
+    "created" : "2018-07-13 09:54:56"
+}
+{ 
+    "_id" : ObjectId("5b4f8910e138231460275844"), 
+    "location_id" : NumberInt(9), 
+    "member_id" : NumberInt(124), 
+    "option" : "been_to", 
+    "location" : "Chennai, Tamil Nadu, India", 
+    "regionlocation" : "13.0826802,80.27071840000008", 
+    "status" : "completed", 
+    "created" : "2018-07-18 18:38:08"
+}
+{ 
+    "_id" : ObjectId("5b4f8931e138231475055564"), 
+    "location_id" : NumberInt(10), 
+    "member_id" : NumberInt(124), 
+    "option" : "been_to", 
+    "location" : "London, UK", 
+    "regionlocation" : "51.5073509,-0.12775829999998223", 
+    "status" : "completed", 
+    "created" : "2018-07-18 18:38:41"
+}
+{ 
+    "_id" : ObjectId("5b58789fe138235d49300534"), 
+    "location_id" : NumberInt(11), 
+    "member_id" : NumberInt(132), 
+    "option" : "been_to", 
+    "location" : "india", 
+    "regionlocation" : ",", 
+    "status" : "completed", 
+    "created" : "2018-07-25 13:18:23"
+}
+{ 
+    "_id" : ObjectId("5b59b06ce1382301b862bbc4"), 
+    "location_id" : NumberInt(12), 
+    "member_id" : NumberInt(138), 
+    "option" : "want_to", 
+    "location" : "romania", 
+    "regionlocation" : ",", 
+    "status" : "pending", 
+    "created" : "2018-07-26 11:28:44", 
+    "updated" : "2018-07-30 13:35:40"
+}
+{ 
+    "_id" : ObjectId("5b59b0c6e13823060048c094"), 
+    "location_id" : NumberInt(13), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "GERMANY", 
+    "regionlocation" : ",", 
+    "status" : "completed", 
+    "created" : "2018-07-26 11:30:14", 
+    "updated" : "2018-07-26 11:38:30"
+}
+{ 
+    "_id" : ObjectId("5b59b2c5e1382306c5691f74"), 
+    "location_id" : NumberInt(14), 
+    "member_id" : NumberInt(138), 
+    "option" : "want_to", 
+    "location" : "Germany", 
+    "regionlocation" : ",", 
+    "status" : "pending", 
+    "created" : "2018-07-26 11:38:45", 
+    "updated" : "2018-07-30 13:29:47"
+}
+{ 
+    "_id" : ObjectId("5b59b346e138230c45172144"), 
+    "location_id" : NumberInt(15), 
+    "member_id" : NumberInt(124), 
+    "option" : "been_to", 
+    "location" : "nagapattinam", 
+    "regionlocation" : ",", 
+    "status" : "completed", 
+    "created" : "2018-07-26 11:40:54", 
+    "updated" : "2018-07-26 11:41:23"
+}
+{ 
+    "_id" : ObjectId("5b59b59ee1382312fd0ab944"), 
+    "location_id" : NumberInt(16), 
+    "member_id" : NumberInt(124), 
+    "option" : "been_to", 
+    "location" : "Nagapattinam, Tamil Nadu, India", 
+    "regionlocation" : "10.7656082,79.84238879999998", 
+    "status" : "completed", 
+    "created" : "2018-07-26 11:50:54"
+}
+{ 
+    "_id" : ObjectId("5b59b6b0e1382316454b1114"), 
+    "location_id" : NumberInt(17), 
+    "member_id" : NumberInt(124), 
+    "option" : "been_to", 
+    "location" : "Hawaii, USA", 
+    "regionlocation" : "19.8967662,-155.58278180000002", 
+    "status" : "completed", 
+    "created" : "2018-07-26 11:55:28"
+}
+{ 
+    "_id" : ObjectId("5b5f07e7e1382378fc2ee394"), 
+    "location_id" : NumberInt(18), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "Asia", 
+    "regionlocation" : "34.047863,100.61965529999998", 
+    "status" : "completed", 
+    "created" : "2018-07-30 12:43:19"
+}
+{ 
+    "_id" : ObjectId("5b5f1419e1382308af6dfde4"), 
+    "location_id" : NumberInt(19), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "Japan", 
+    "regionlocation" : "36.204824,138.252924", 
+    "status" : "completed", 
+    "created" : "2018-07-30 13:35:21"
+}
+{ 
+    "_id" : ObjectId("5b62b0c5fe5018746d4054c4"), 
+    "location_id" : NumberInt(20), 
+    "member_id" : NumberInt(144), 
+    "option" : "want_to", 
+    "location" : "Indonesia", 
+    "regionlocation" : "-0.789275,113.92132700000002", 
+    "status" : "pending", 
+    "created" : "2018-08-02 07:20:37"
+}
+{ 
+    "_id" : ObjectId("5b62b0dafe5018740852c274"), 
+    "location_id" : NumberInt(21), 
+    "member_id" : NumberInt(144), 
+    "option" : "been_to", 
+    "location" : "Italy", 
+    "regionlocation" : "41.87194,12.567379999999957", 
+    "status" : "completed", 
+    "created" : "2018-08-02 07:20:58"
+}
+{ 
+    "_id" : ObjectId("5ba34a28e138235dac79b074"), 
+    "location_id" : NumberInt(22), 
+    "member_id" : NumberInt(173), 
+    "option" : "been_to", 
+    "location" : "Abu Dhabi - United Arab Emirates", 
+    "regionlocation" : "24.453884,54.37734380000006", 
+    "status" : "completed", 
+    "created" : "2018-09-20 07:20:08"
+}
+{ 
+    "_id" : ObjectId("5bb5c033e204cc2fe6014de4"), 
+    "location_id" : NumberInt(23), 
+    "member_id" : NumberInt(138), 
+    "option" : "want_to", 
+    "location" : "East Java, Indonesia", 
+    "regionlocation" : "-7.5360639,112.23840169999994", 
+    "status" : "pending", 
+    "created" : "2018-10-04 07:24:35"
+}
+{ 
+    "_id" : ObjectId("5bb5c058e204cc31650dd7c4"), 
+    "location_id" : NumberInt(24), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "Edmonton, AB, Canada", 
+    "regionlocation" : "53.544389,-113.49092669999999", 
+    "status" : "completed", 
+    "created" : "2018-10-04 07:25:12"
+}
+{ 
+    "_id" : ObjectId("5bb5c06ee204cc35303b05f4"), 
+    "location_id" : NumberInt(25), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "France", 
+    "regionlocation" : "46.227638,2.213749000000007", 
+    "status" : "completed", 
+    "created" : "2018-10-04 07:25:34"
+}
+{ 
+    "_id" : ObjectId("5bb5c089e204cc312c6813b4"), 
+    "location_id" : NumberInt(26), 
+    "member_id" : NumberInt(138), 
+    "option" : "want_to", 
+    "location" : "TN, USA", 
+    "regionlocation" : "35.5174913,-86.5804473", 
+    "status" : "pending", 
+    "created" : "2018-10-04 07:26:01"
+}
+{ 
+    "_id" : ObjectId("5bb5c099e204cc2fbd5b1ec4"), 
+    "location_id" : NumberInt(27), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "UT, USA", 
+    "regionlocation" : "39.3209801,-111.09373110000001", 
+    "status" : "completed", 
+    "created" : "2018-10-04 07:26:17"
+}
+{ 
+    "_id" : ObjectId("5bb5c0abe204cc360460ba84"), 
+    "location_id" : NumberInt(28), 
+    "member_id" : NumberInt(138), 
+    "option" : "want_to", 
+    "location" : "Zürich, Switzerland", 
+    "regionlocation" : "47.3768866,8.541694000000007", 
+    "status" : "pending", 
+    "created" : "2018-10-04 07:26:35"
+}
+{ 
+    "_id" : ObjectId("5bb5c0c9e204cc35303b05f5"), 
+    "location_id" : NumberInt(29), 
+    "member_id" : NumberInt(138), 
+    "option" : "been_to", 
+    "location" : "VA, USA", 
+    "regionlocation" : "37.4315734,-78.65689420000001", 
+    "status" : "completed", 
+    "created" : "2018-10-04 07:27:05"
+}
