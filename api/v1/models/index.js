@@ -9,13 +9,12 @@ var Admin;
 
 const Models = {
   connect: async () => {
-    let mongoUrl = `mongodb://${env.host}:${env.port}/${env.database}`;
+    let mongoUrl = `mongodb://${env.username}:${env.password}@ds143953.mlab.com:43953/lab-2`;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
     mongoose.set('useCreateIndex', true);
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
-      // console.log(`MongoDB is available at mongodb://${env.host}:${env.port}/${env.database}`);
       Models.create.admin();
     });
   },

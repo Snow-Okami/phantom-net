@@ -1,10 +1,7 @@
 const env = {
   Mlab: {
-    host: '127.0.0.1',
-    port: 27017,
-    database: 'psynapsus-admin-panel',
-    username: '',
-    password: ''
+    username: 'psynapsus',
+    password: 'password123'
   },
   JWT: {
     key: '45gH8pt'
