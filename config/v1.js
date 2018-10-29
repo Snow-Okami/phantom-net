@@ -4,12 +4,12 @@ const Policies = require('../api/v1/policies');
 const FileHelper = require('../api/v1/helpers/file');
 require('../api/v1/models/').connect();
 
-const storage = multer.diskStorage({ destination: './public/data_store/', filename: FileHelper.getName });
+const storage = multer.diskStorage({ destination: './public/avatar/', filename: FileHelper.getName });
 const Upload = multer({ storage: storage, fileFilter: FileHelper.filter });
 
 const TestController = require('../api/v1/controllers/TestController');
-const UserController = require('../api/v1/controllers/UserController');
-const DatabaseController = require('../api/v1/controllers/DatabaseController');
+const AdminController = require('../api/v1/controllers/AdminController');
+// const DatabaseController = require('../api/v1/controllers/DatabaseController');
 
 const api = express.Router();
 
@@ -20,18 +20,18 @@ const routes = () => {
   api.get('/test', TestController.findAll);
 
   /**
-   * @description User API CRUD operation.
+   * @description Admin API CRUD operation.
    */
-  api.get('/user/:username', UserController.findOne);
-  api.get('/users', UserController.findAll);
-  api.post('/user', UserController.create);
-  api.put('/user/:username', UserController.updateOne);
-  api.delete('/user/:username', UserController.deleteOne);
+  api.get('/admin/:email', AdminController.findOne);
+  api.get('/admins', AdminController.findAll);
+  api.post('/admin', AdminController.create);
+  api.put('/admin/:email', AdminController.updateOne);
+  api.delete('/admin/:email', AdminController.deleteOne);
 
   /**
    * @description store JSON data to MongoDB database.
    */
-  api.post('/store', Upload.array('files'), DatabaseController.create);
+  // api.post('/store', Upload.array('files'), DatabaseController.create);
 
   return api;
 };

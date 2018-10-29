@@ -14,9 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.use('/api/v1', v1);
 
-const test = require('upload-npm-module');
-test.printMsg();
-
 const server = http.Server(app);
 /**
  * @description Heroku server listen.

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const env = require('../../../environment/');
 
-var User;
+var Admin;
 
 const Models = {
   connect: async () => {
@@ -14,39 +14,37 @@ const Models = {
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
       // console.log(`MongoDB is available at mongodb://${env.Mlab.host}:${env.Mlab.port}/${env.Mlab.database}`);
-      Models.create.user();
+      Models.create.admin();
     });
   },
 
   create: {
-    user: async () => {
+    admin: async () => {
       let schema = new mongoose.Schema({
-        name: { type: String, required: true },
-        filename: { type: String, default: 'avatar.png' },
-        username: { type: String, unique: true, required: true },
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
+        fullName: { type: String },
         email: { type: String, unique: true, required: true },
         password: { type: String, required: true },
         createdAt: { type: Date },
         jwtValidatedAt: { type: Date },
         emailValidated: { type: Boolean, default: false },
-        status: { type: String, default: 'offline' },
-        locked: { type: Boolean, default: false },
-        chatId: { type: String },
+        allowedToAccess: { type: Boolean, default: false }
       });
-      User = mongoose.model('User', schema);
+      Admin = mongoose.model('Admin', schema);
     }
   },
 
   objects: {
-    user: {
+    admin: {
       /**
        * @description finds one user only with matching parameter.
        */
       findOne: async (param) => {
         let r;
-        try { r = await User.findOne(param); }
+        try { r = await Admin.findOne(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r) { return { error: { type: 'error', text: 'user doesn\'t exists!' } }; }
+        if(!r) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -55,24 +53,24 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await User.find(param); }
+        try { r = await Admin.find(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no user found!' } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no admin found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
       /**
        * @description creates one user with required parameters.
-       * @param param looks like {name: String, username: String, email: String, password: String}.
+       * @param param looks like {firstName: String, lastName: String, email: String, password: String}.
        */
       create: async (param) => {
         let r, time = new Date().getTime(), ext = { createdAt: time, jwtValidatedAt: time };
         Object.assign(param, ext);
         try {
           // if(param.password) { param.password = await bycript.hash(param.password); }
-          r = await User.create(param);
+          r = await Admin.create(param);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r) { return { error: { type: 'error', text: 'can\'t create user!' } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create admin!' } }; }
         // Object.assign(r, { 'password': '' });
         return { message: { type: 'success' }, data: r };
       },
@@ -82,9 +80,9 @@ const Models = {
        */
       deleteOne: async (param) => {
         let r;
-        try { r = await User.deleteOne(param); }
+        try { r = await Admin.deleteOne(param); }
         catch(e) {  return { error: { type: 'error', text: e.message } }; }
-        if(!r.n) { return { error: { type: 'error', text: 'user doesn\'t exists!' } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -98,36 +96,9 @@ const Models = {
             Object.assign(param, ext);
             // param.password = await bycript.hash(param.password);
           }
-          r = await User.updateOne(query, param, option);
+          r = await Admin.updateOne(query, param, option);
         } catch(e) { { return { error: { type: 'error', text: e.message } }; } }
-        if(!r.n) { return { error: { type: 'error', text: 'user doesn\'t exists!' } }; }
-        return { message: { type: 'success' }, data: r };
-      }
-    },
-
-    db: {
-      /**
-       * @description creates one user with required parameters.
-       * @param param looks like {name: String, username: String, email: String, password: String}.
-       */
-      create: async (param) => {
-        
-      },
-
-      /**
-       * @description deletes only one user matching the parameters from Mlab database.
-       */
-      deleteOne: async (param) => {
-        
-      },
-
-      /**
-       * @description Read the files present in a directory.
-       */
-      readDir: async (param) => {
-        let r;
-        try { r = await fs.readdir(param.path); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
     }
