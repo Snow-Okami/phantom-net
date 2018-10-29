@@ -3,7 +3,7 @@
   "description": "Node JS server contains API's for different platform.",
   "repository": {
     "type": "git",
-    "url": "git+https://abhisekdutta507@bitbucket.org/abhisekdutta507/node-server.git"
+    "url": "git+https://github.com/Snow-Okami/phantom-net.git"
   },
   "engines": {
     "node": "8.12.0",
