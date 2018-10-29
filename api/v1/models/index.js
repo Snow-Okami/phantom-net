@@ -1,6 +1,8 @@
 
 const mongoose = require('mongoose');
 const fs = require('fs');
+const _ = require('lodash');
+const bycript   = require('../helpers/bcrypt');
 const env = require('../../../environment/');
 
 var Admin;
@@ -37,7 +39,12 @@ const Models = {
     }
   },
 
+  bycript: bycript,
+
+  _: _,
+
   objects: {
+
     admin: {
       /**
        * @description finds one user only with matching parameter.
@@ -69,7 +76,7 @@ const Models = {
         let r, time = new Date().getTime(), ext = { createdAt: time, jwtValidatedAt: time };
         Object.assign(param, ext);
         try {
-          // if(param.password) { param.password = await bycript.hash(param.password); }
+          if(param.password) { param.password = await bycript.hash(param.password); }
           r = await Admin.create(param);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r) { return { error: { type: 'error', text: 'can\'t create admin!' } }; }
