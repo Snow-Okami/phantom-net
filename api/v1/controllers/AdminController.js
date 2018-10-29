@@ -1,6 +1,7 @@
 const Models = require('../models/').objects;
 const bycript = require('../models/').bycript;
 const _ = require('../models/')._;
+const jwt = require('../helpers/jwt');
 
 const AdminController = {
   findOne: async (req, res) => {
@@ -44,15 +45,24 @@ const AdminController = {
   },
 
   login: async (req, res) => {
+    /**
+     * @description Request Body must contain Email & Password.
+     */
     if(!req.body.password || !req.body.email) {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'Please include email & password filed.' });
     }
 
+    /**
+     * @description Find Admin using Email id.
+     */
     let password = req.body.password;
     delete req.body.password;
     const a = await Models.admin.findOne(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-    
+
+    /**
+     * @description Compare password provided by Admin.
+     */
     const vp = await bycript.compare(password, a.data.password);
     if(vp.error) {
       return res.status(404).set('Content-Type', 'application/json').send(vp.error);
@@ -61,9 +71,23 @@ const AdminController = {
       return res.status(404).send({ type: 'error', text: 'invalid password!' });
     }
 
-    return res.status(200).send(
-      _.pick(a.data, ['avatar', 'firstName', 'lastName', 'email', 'isMale', 'allowedToAccess'])
+    /**
+     * @description Generate JWT token.
+     */
+    const token = await jwt.sign(
+      _.pick(a.data, ['email', 'isMale', 'createdAt', 'jwtValidatedAt'])
     );
+
+    /**
+     * @description Return Email and Token as LoggedIn response.
+     */
+    return res.status(200).set('Content-Type', 'application/json').send({
+      message: { type: 'success' },
+      data: {
+        token: 'Bearer ' + token,
+        email: a.data.email
+      }
+    });
   }
 };
 

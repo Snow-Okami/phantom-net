@@ -5,6 +5,9 @@ const env = {
     database: 'psynapsus-admin-panel',
     username: '',
     password: ''
+  },
+  JWT: {
+    key: '45gH8pt'
   }
 };
 

@@ -3,19 +3,19 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
-const env = require('../../../environment/');
+const env = require('../../../environment/').Mlab;
 
 var Admin;
 
 const Models = {
   connect: async () => {
-    let mongoUrl = `mongodb://${env.Mlab.host}:${env.Mlab.port}/${env.Mlab.database}`;
+    let mongoUrl = `mongodb://${env.host}:${env.port}/${env.database}`;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
     mongoose.set('useCreateIndex', true);
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
-      // console.log(`MongoDB is available at mongodb://${env.Mlab.host}:${env.Mlab.port}/${env.Mlab.database}`);
+      // console.log(`MongoDB is available at mongodb://${env.host}:${env.port}/${env.database}`);
       Models.create.admin();
     });
   },
