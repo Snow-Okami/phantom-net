@@ -83,10 +83,7 @@ const AdminController = {
      */
     return res.status(200).set('Content-Type', 'application/json').send({
       message: { type: 'success' },
-      data: {
-        token: 'Bearer ' + token,
-        email: a.data.email
-      }
+      data: { token: 'Bearer ' + token }
     });
   }
 };
