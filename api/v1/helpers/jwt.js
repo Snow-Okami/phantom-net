@@ -13,6 +13,19 @@ const jwthelper = {
   },
 
   decode: async (token) => {
+    /**
+     * @description token must start with Bearer text.
+     */
+    let regex = /^(Bearer\s)/gm;
+    if(!regex.test(token)) {
+      return { error: 'invalid token' };
+    }
+
+    /**
+     * Remove the Bearer text from token.
+     */
+    token = token.replace('Bearer ', '');
+    
     let r;
     try {
       r = await jwt.verify(token, env.key);

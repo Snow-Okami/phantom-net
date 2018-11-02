@@ -26,6 +26,7 @@ const routes = () => {
   api.get('/admins', AdminController.findAll);
   api.post('/admin', AdminController.create);
   api.post('/admin/login', AdminController.login);
+  api.post('/admin/logout', AdminController.logout);
   /**
    * @description Request Body can contain Form-Data or Raw JSON data.
    */

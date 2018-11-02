@@ -75,7 +75,7 @@ const AdminController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'isMale', 'createdAt', 'jwtValidatedAt'])
+      _.pick(a.data, ['email', 'createdAt', 'jwtValidatedAt'])
     );
 
     /**
@@ -85,6 +85,34 @@ const AdminController = {
       message: { type: 'success' },
       data: { token: 'Bearer ' + token }
     });
+  },
+
+  logout: async (req, res) => {
+    /**
+     * @description Request Body must contain Email & Password.
+     */
+    if(!req.body.token) {
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'Please include token filed.' });
+    }
+
+    /**
+     * @description Decode and Authenticate JWT token.
+     */
+    const token = await jwt.decode(req.body.token);
+    if(token.error) {
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
+    }
+
+    let time = new Date().getTime();
+    const a = await Models.admin.updateOne(
+      _.pick(token, ['email', 'createdAt', 'jwtValidatedAt']), { jwtValidatedAt: time }, {}
+    );
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+
+    /**
+     * @description Return Logged Out Successful Response.
+     */
+    return res.status(200).set('Content-Type', 'application/json').send(a);
   }
 };
 

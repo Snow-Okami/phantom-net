@@ -102,7 +102,7 @@ const Models = {
         try {
           if(param.password) {
             Object.assign(param, ext);
-            // param.password = await bycript.hash(param.password);
+            param.password = await bycript.hash(param.password);
           }
           r = await Admin.updateOne(query, param, option);
         } catch(e) { { return { error: { type: 'error', text: e.message } }; } }
