@@ -5,7 +5,7 @@ const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
 const env = require('../../../environment/').Mlab;
 
-var Admin;
+var Id, Admin;
 
 const Models = {
   connect: async () => {
@@ -15,13 +15,38 @@ const Models = {
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
+      Models.create.id();
       Models.create.admin();
     });
   },
 
   create: {
+
+    /**
+     * @description Initial id creator for all models.
+     */
+    id: async () => {
+      let schema = new mongoose.Schema({
+        admin: { type: String, required: true, default: '0' },
+        user: { type: String, required: true, default: '0' },
+      });
+      Id = mongoose.model('Id', schema);
+
+      /**
+       * @description Find if id exists or not.
+       */
+      let l;
+      try { l = await Models.objects.id.findOne({}); } catch(e) {}
+
+      /**
+       * @description Create ids if doesn't exists.
+       */
+      if(l.error) { try { await Models.objects.id.create({}); } catch(e) {} }
+    },
+
     admin: async () => {
       let schema = new mongoose.Schema({
+        id: { type: String, required: true, unique: true }, 
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         fullName: { type: String },
@@ -35,7 +60,8 @@ const Models = {
         avatar: { type: String, default: 'admin.jpg' }
       });
       Admin = mongoose.model('Admin', schema);
-    }
+    },
+
   },
 
   bycript: bycript,
@@ -79,7 +105,6 @@ const Models = {
           r = await Admin.create(param);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r) { return { error: { type: 'error', text: 'can\'t create admin!' } }; }
-        // Object.assign(r, { 'password': '' });
         return { message: { type: 'success' }, data: r };
       },
 
@@ -105,10 +130,49 @@ const Models = {
             param.password = await bycript.hash(param.password);
           }
           r = await Admin.updateOne(query, param, option);
-        } catch(e) { { return { error: { type: 'error', text: e.message } }; } }
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
+    },
+
+    id: {
+      /**
+       * @description finds one user only with matching parameter.
+       */
+      findOne: async (param) => {
+        let r;
+        try { r = await Id.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'id doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description creates one user with required parameters.
+       * @param param looks like {firstName: String, lastName: String, email: String, password: String}.
+       */
+      create: async (param) => {
+        let r;
+        try {
+          r = await Id.create(param);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create id!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description updates only one id at a time.
+       */
+      updateOne: async (query, param, option) => {
+        let r;
+        try {
+          r = await Id.updateOne(query, param, option);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'id doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
     }
   }
 };

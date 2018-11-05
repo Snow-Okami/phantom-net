@@ -27,8 +27,21 @@ const AdminController = {
   },
 
   create: async (req, res) => {
+    const id = await Models.id.findOne({});
+    if(id.error) { return res.status(404).set('Content-Type', 'application/json').send(id.error); }
+
+    /**
+     * @description Increment id field with 1.
+     */
+    await Models.id.updateOne({'admin': id.data.admin}, {'admin': Number(id.data.admin) + 1}, {});
+
+    /**
+     * @description SET id property for Admin.
+     */
+    req.body.id = id.data.admin;
     const a = await Models.admin.create(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+
     return res.status(200).send(a);
   },
 
