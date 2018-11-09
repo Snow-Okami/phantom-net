@@ -1,7 +1,7 @@
 const file = {
   filter: function(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error('Only JSON files are allowed!'), false);
+      return cb(new Error('Only image files are allowed!'), false);
     }
     cb(null, true);
   },
@@ -9,7 +9,7 @@ const file = {
   getName: function(req, file, cb) {
     cb(
       null,
-      file.fieldname + '-avatar-' + Date.now() + file.originalname.slice(file.originalname.lastIndexOf('.'), file.originalname.length)
+      file.fieldname + '-psynapsus-' + Date.now() + file.originalname.slice(file.originalname.lastIndexOf('.'), file.originalname.length)
     );
   }
 };

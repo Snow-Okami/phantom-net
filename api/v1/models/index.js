@@ -5,7 +5,7 @@ const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
 const env = require('../../../environment/').Mlab;
 
-var Id, Admin;
+var Id, Admin, Post;
 
 const Models = {
   connect: async () => {
@@ -17,6 +17,7 @@ const Models = {
     db.once('open', () => {
       Models.create.id();
       Models.create.admin();
+      Models.create.post();
     });
   },
 
@@ -29,6 +30,7 @@ const Models = {
       let schema = new mongoose.Schema({
         admin: { type: String, required: true, default: '0' },
         user: { type: String, required: true, default: '0' },
+        post: { type: String, required: true, default: '0' },
       });
       Id = mongoose.model('Id', schema);
 
@@ -60,6 +62,19 @@ const Models = {
         avatar: { type: String, default: 'admin.jpg' }
       });
       Admin = mongoose.model('Admin', schema);
+    },
+
+    post: async () => {
+      let schema = new mongoose.Schema({
+        id: { type: String, required: true, unique: true }, 
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        tags: { type: String },
+        publish: { type: Boolean, required: true, default: false },
+        image: { type: String, default: 'image.jpg' },
+        createdAt: { type: Date, required: true }
+      });
+      Post = mongoose.model('Post', schema);
     },
 
   },
@@ -95,7 +110,7 @@ const Models = {
 
       /**
        * @description creates one user with required parameters.
-       * @param param looks like {firstName: String, lastName: String, email: String, password: String}.
+       * @param param looks like {firstName: String, lastName: String, email: String, password: String, id: String, avatar: String}.
        */
       create: async (param) => {
         let r, time = new Date().getTime(), ext = { createdAt: time, jwtValidatedAt: time };
@@ -134,6 +149,34 @@ const Models = {
         if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
+    },
+
+    post: {
+
+      /**
+       * @description finds all the available posts in the Mlab database.
+       */
+      findAll: async (param) => {
+        let r;
+        try { r = await Post.find(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description posts an update with required parameters.
+       * @param param looks like {title: String, description: String, publish: Boolean, id: String, image: String}.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try {
+          r = await Post.create(param);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },   
     },
 
     id: {
