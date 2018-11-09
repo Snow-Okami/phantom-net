@@ -1,6 +1,6 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
-const URL = require('../helpers/url-parser');
+const URL = require('../helpers/urlParser');
 
 const PostController = {
   findOne: async (req, res) => {
@@ -14,11 +14,20 @@ const PostController = {
    */
   findLimited: async (req, res) => {
     const params = await URL.parse(req.url);
+    if(!params.skip || !params.limit) {
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'no post found!' });
+    }
 
-    return res.status(200).send({
-      message: { type: 'success' },
-      data: 'API is under construction. Please try after some time.'
-    });
+    /**
+     * @description Convert String to Number.
+     */
+    params = {
+      skip: Number(params.skip),
+      limit: Number(params.limit)
+    };
+    const p = await Models.post.findLimited(params);
+    if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    return res.status(200).send(p);
   },
 
   findAll: async (req, res) => {

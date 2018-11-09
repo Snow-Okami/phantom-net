@@ -156,6 +156,17 @@ const Models = {
       /**
        * @description finds all the available posts in the Mlab database.
        */
+      findLimited: async (param) => {
+        let r;
+        try { r = await Post.find({}).skip(param.skip).limit(param.limit); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description finds all the available posts in the Mlab database.
+       */
       findAll: async (param) => {
         let r;
         try { r = await Post.find(param); }
