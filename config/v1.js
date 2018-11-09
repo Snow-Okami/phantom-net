@@ -45,6 +45,7 @@ const routes = () => {
   /**
    * @description Post API CRUD operation.
    */
+  api.get('/post', PostController.findLimited);
   api.get('/posts', PostController.findAll);
   api.post('/post', UploadImage.single('image'), PostController.create);
 

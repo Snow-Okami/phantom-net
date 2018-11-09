@@ -1,5 +1,6 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
+const URL = require('../helpers/url-parser');
 
 const PostController = {
   findOne: async (req, res) => {
@@ -12,6 +13,8 @@ const PostController = {
    * @description Need to complete this API.
    */
   findLimited: async (req, res) => {
+    const params = await URL.parse(req.url);
+
     return res.status(200).send({
       message: { type: 'success' },
       data: 'API is under construction. Please try after some time.'
