@@ -164,7 +164,7 @@ const Models = {
       },
 
       /**
-       * @description finds all the available posts in the Mlab database.
+       * @description finds limited of the available posts in the Mlab database.
        */
       findLimited: async (query, option) => {
         let r;
