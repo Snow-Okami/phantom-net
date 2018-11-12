@@ -12,7 +12,6 @@ const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 
 const TestController = require('../api/v1/controllers/TestController');
 const AdminController = require('../api/v1/controllers/AdminController');
-// const DatabaseController = require('../api/v1/controllers/DatabaseController');
 const PostController = require('../api/v1/controllers/PostController');
 
 const api = express.Router();
@@ -44,6 +43,12 @@ const routes = () => {
 
   /**
    * @description Post API CRUD operation.
+   */
+  api.get('/post/:id', PostController.findOne);
+  /**
+   * @param sort: -1 (Descending) (Default) & 1 (Ascending). OPTIONAL Query Parameter.
+   * @param skip: Only POSITIVE Numbers. Default is 0. OPTIONAL Query Parameter.
+   * @param limit: Only POSITIVE Numbers. Default is 10. OPTIONAL Query Parameter.
    */
   api.get('/post', PostController.findLimited);
   api.get('/posts', PostController.findAll);

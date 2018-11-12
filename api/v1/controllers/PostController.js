@@ -14,18 +14,22 @@ const PostController = {
    */
   findLimited: async (req, res) => {
     const params = await URL.parse(req.url);
-    if(!params.skip || !params.limit) {
-      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'no post found!' });
-    }
+    /**
+     * @description REQUIRED when skip & limit is must.
+     */
+    // if(!params.skip || !params.limit) {
+    //   return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include skip & limit query params.' });
+    // }
 
     /**
      * @description Convert String to Number.
      */
-    params = {
-      skip: Number(params.skip),
-      limit: Number(params.limit)
+    const option = {
+      sort: Number(params.sort) ? Number(params.sort) : -1,
+      skip: Number(params.skip) ? Number(params.skip) : 0,
+      limit: Number(params.limit) ? Number(params.limit) : 10
     };
-    const p = await Models.post.findLimited(params);
+    const p = await Models.post.findLimited({}, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
   },

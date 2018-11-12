@@ -9,7 +9,7 @@ const file = {
   getName: function(req, file, cb) {
     cb(
       null,
-      file.fieldname + '-psynapsus-' + Date.now() + file.originalname.slice(file.originalname.lastIndexOf('.'), file.originalname.length)
+      'psynapsus-' + file.fieldname + Date.now() + file.originalname.slice(file.originalname.lastIndexOf('.'), file.originalname.length)
     );
   }
 };

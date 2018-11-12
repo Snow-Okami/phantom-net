@@ -152,13 +152,23 @@ const Models = {
     },
 
     post: {
+      /**
+       * @description finds one post only with matching parameter.
+       */
+      findOne: async (param) => {
+        let p;
+        try { p = await Post.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: p };
+      },
 
       /**
        * @description finds all the available posts in the Mlab database.
        */
-      findLimited: async (param) => {
+      findLimited: async (query, option) => {
         let r;
-        try { r = await Post.find({}).skip(param.skip).limit(param.limit); }
+        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
