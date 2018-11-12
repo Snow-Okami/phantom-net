@@ -6,7 +6,7 @@
     "url": "git+https://github.com/Snow-Okami/phantom-net.git"
   },
   "engines": {
-    "node": "8.12.0",
+    "node": "10.3.0",
     "npm": "6.4.1"
   },
   "keywords": [
