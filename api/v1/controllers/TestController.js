@@ -11,7 +11,7 @@ const TestController = {
     if(!interval) {
       interval = setInterval(_ => {
         HEROKU.setActive();
-      }, 4000);
+      }, 1200000);
     }
 
     return res.status(200).send({
