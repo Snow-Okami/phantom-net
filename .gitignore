@@ -1,7 +1,17 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
 access.log/
+
+# dependencies
 node_modules
-public/image
+
+# misc
 package-lock.json
+
+# System Files
 .DS_Store
-.env
 .tmp
+
+# environment settings
+.env
