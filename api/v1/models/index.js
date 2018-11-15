@@ -3,13 +3,15 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
-const env = require('../../../environment/').Mlab;
+const cloudinary = require('cloudinary');
+const env_c = require('../../../environment/').cloudinary;
+const env_m = require('../../../environment/').Mlab;
 
 var Id, Admin, Post;
 
 const Models = {
   connect: async () => {
-    let mongoUrl = `mongodb://${env.username}:${env.password}@${env.host}:${env.port}/${env.database}`;
+    let mongoUrl = `mongodb://${env_m.username}:${env_m.password}@${env_m.host}:${env_m.port}/${env_m.database}`;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
     mongoose.set('useCreateIndex', true);
     let db = mongoose.connection;
@@ -19,6 +21,10 @@ const Models = {
       Models.create.admin();
       Models.create.post();
     });
+  },
+
+  joinCloudinary: async () => {
+    cloudinary.config(env_c);
   },
 
   create: {
@@ -197,7 +203,19 @@ const Models = {
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
         return { message: { type: 'success' }, data: r };
-      },   
+      },
+      
+      /**
+       * @description Uploads image files to the Cloudinary server.
+       */
+      uploadImage: async (param) => {
+        let r;
+        try {
+          r = await cloudinary.v2.uploader.upload(param);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
+        return { message: { type: 'success' }, data: r };
+      }
     },
 
     id: {

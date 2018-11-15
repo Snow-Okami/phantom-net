@@ -3,6 +3,7 @@ const multer = require('multer');
 const Policies = require('../api/v1/policies');
 const FileHelper = require('../api/v1/helpers/file');
 require('../api/v1/models/').connect();
+require('../api/v1/models/').joinCloudinary();
 
 let storage = multer.diskStorage({ destination: './public/image/avatar/', filename: FileHelper.getName });
 const UploadAvatar = multer({ storage: storage, fileFilter: FileHelper.filter });

@@ -54,7 +54,15 @@ const PostController = {
      */
 
     req.body.id = id.data.post;
-    if(req.file) { req.body.image = (process.env.DEVELOPMENT ? `http://localhost:${process.env.PORT}/image/post/` : 'https://psynapsus.herokuapp.com/image/post/') + req.file.filename; }
+
+    /**
+     * @description UPLOADS the image file on Cloudinary.
+     */
+    if(req.file) {
+      let URL = (process.env.DEVELOPMENT ? `http://localhost:${process.env.PORT}/image/post/` : 'https://psynapsus.herokuapp.com/image/post/') + req.file.filename;
+      const i = await Models.post.uploadImage(req.file.path);
+      req.body.image = i.error ? URL : i['data']['secure_url'];
+    }
     const p = await Models.post.create(req.body);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
 

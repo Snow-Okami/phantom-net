@@ -15,3 +15,6 @@ package-lock.json
 
 # environment settings
 .env
+
+# assets
+public/image
