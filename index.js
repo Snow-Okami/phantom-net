@@ -14,7 +14,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.use(cors({ origin: ['https://psynapsus.netlify.com', 'http://localhost:4004', 'https://codesandbox.io/s/52w09o3q1k', 'https://52w09o3q1k.codesandbox.io'] }));
+app.use(cors({ origin: ['https://psynapsus.netlify.com'
+, 'http://localhost:4004'
+, 'https://codesandbox.io/s/52w09o3q1k'
+, 'https://52w09o3q1k.codesandbox.io'
+, 'https://practical-benz-6bc9a1.netlify.com'] }));
 app.use('/api/v1', v1);
 app.use('/api/v2', v2);
 
