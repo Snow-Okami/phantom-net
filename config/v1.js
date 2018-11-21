@@ -51,7 +51,7 @@ const routes = () => {
    * @param skip: Only POSITIVE Numbers. Default is 0. OPTIONAL Query Parameter.
    * @param limit: Only POSITIVE Numbers. Default is 10. OPTIONAL Query Parameter.
    */
-  api.get('/post', PostController.findLimited);
+  api.get('/post', Policies.isLoggedIn, PostController.findLimited);
   api.get('/posts', PostController.findAll);
   api.post('/post', UploadImage.single('image'), PostController.create);
 
