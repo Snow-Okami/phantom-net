@@ -1,6 +1,5 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
-const URL = require('../helpers/urlParser');
 
 const PostController = {
   findOne: async (req, res) => {
@@ -13,13 +12,7 @@ const PostController = {
    * @description Need to complete this API.
    */
   findLimited: async (req, res) => {
-    const params = await URL.parse(req.url);
-    /**
-     * @description REQUIRED when skip & limit is must.
-     */
-    // if(!params.skip || !params.limit) {
-    //   return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include skip & limit query params.' });
-    // }
+    const params = req.query;
 
     /**
      * @description Convert String to Number.
