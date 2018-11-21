@@ -23,6 +23,9 @@ app.use('/api/v1', v1);
 app.use('/api/v2', v2);
 
 const server = http.Server(app);
+
+require('./api/v1/controllers/MessageController').connect(server);
+
 /**
  * @description Heroku server listen.
  */
