@@ -1,6 +1,7 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
 const jwt = require('../helpers/jwt');
+const authFreeOrigin = require('../../../environment/').authFreeOrigin;
 
 const policies = {
   track: async (req, res, next) => {
@@ -9,7 +10,7 @@ const policies = {
   },
 
   isLoggedIn: async (req, res, next) => {
-    console.log(req.headers);
+    if(_.includes(authFreeOrigin, req.headers.origin)) { next(); }
 
     if(!req.headers.authorization) { return res.status(404).set('Content-Type', 'application/json').send({ error: { type: 'error', text: 'please include authorization in header' } }); }
 

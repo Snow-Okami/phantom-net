@@ -26,34 +26,29 @@ const routes = () => {
   /**
    * @description Admin API CRUD operation.
    */
-  api.get('/admin/:email', AdminController.findOne);
-  api.get('/admins', AdminController.findAll);
+  api.get('/admin/:email', Policies.isLoggedIn, AdminController.findOne);
+  api.get('/admins', Policies.isLoggedIn, AdminController.findAll);
   api.post('/admin', AdminController.create);
   api.post('/admin/login', AdminController.login);
-  api.post('/admin/logout', AdminController.logout);
+  api.post('/admin/logout', Policies.isLoggedIn, AdminController.logout);
   /**
    * @description Request Body can contain Form-Data or Raw JSON data.
    */
-  api.put('/admin/:email', UploadAvatar.single('avatar'), AdminController.updateOne);
-  api.delete('/admin/:email', AdminController.deleteOne);
-
-  /**
-   * @description store JSON data to MongoDB database.
-   */
-  // api.post('/store', Upload.array('files'), DatabaseController.create);
+  api.put('/admin/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), AdminController.updateOne);
+  api.delete('/admin/:email', Policies.isLoggedIn, AdminController.deleteOne);
 
   /**
    * @description Post API CRUD operation.
    */
-  api.get('/post/:id', PostController.findOne);
+  api.get('/post/:id', Policies.isLoggedIn, PostController.findOne);
   /**
    * @param sort: -1 (Descending) (Default) & 1 (Ascending). OPTIONAL Query Parameter.
    * @param skip: Only POSITIVE Numbers. Default is 0. OPTIONAL Query Parameter.
    * @param limit: Only POSITIVE Numbers. Default is 10. OPTIONAL Query Parameter.
    */
   api.get('/post', Policies.isLoggedIn, PostController.findLimited);
-  api.get('/posts', PostController.findAll);
-  api.post('/post', UploadImage.single('image'), PostController.create);
+  api.get('/posts', Policies.isLoggedIn, PostController.findAll);
+  api.post('/post', Policies.isLoggedIn, UploadImage.single('image'), PostController.create);
 
   return api;
 };

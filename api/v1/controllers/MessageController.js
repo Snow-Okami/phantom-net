@@ -11,7 +11,7 @@ const MessageController = {
 
   connected: async (res) => {
     Socket = res;
-    console.log('socket', Socket.handshake.headers);
+    // console.log('socket', Socket.handshake.headers);
 
     Socket.on('login', MessageController.onLogin);
   },
