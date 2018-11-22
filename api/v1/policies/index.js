@@ -39,7 +39,7 @@ const policies = {
         return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
       }
 
-      const c = await Models.user.findOne(
+      const u = await Models.user.findOne(
         _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
       );
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
