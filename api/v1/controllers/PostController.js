@@ -12,8 +12,11 @@ const PostController = {
    * @description Need to complete this API.
    */
   findLimited: async (req, res) => {
+    /**
+     * @description SET QUERY to get published posts.
+     */
+    const query = req.body.capability > 1 ? {} : { 'publish': true };
     const params = req.query;
-
     /**
      * @description Convert String to Number.
      */
@@ -22,7 +25,7 @@ const PostController = {
       skip: Number(params.skip) ? Number(params.skip) : 0,
       limit: Number(params.limit) ? Number(params.limit) : 10
     };
-    const p = await Models.post.findLimited({}, option);
+    const p = await Models.post.findLimited(query, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
   },
