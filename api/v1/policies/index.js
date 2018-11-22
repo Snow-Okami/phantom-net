@@ -1,7 +1,6 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
 const jwt = require('../helpers/jwt');
-const authFreeOrigin = require('../../../environment/').authFreeOrigin;
 
 const policies = {
   track: async (req, res, next) => {
@@ -10,22 +9,23 @@ const policies = {
   },
 
   isLoggedIn: async (req, res, next) => {
-    if(_.includes(authFreeOrigin, req.headers.origin)) { next(); }
+    if(!req.headers.authorization) { req.body.capability = 0; }
+    else {
+      /**
+       * @description Decode and Authenticate JWT token.
+       */
+      const token = await jwt.decode(req.headers.authorization);
+      if(token.error) {
+        return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
+      }
 
-    if(!req.headers.authorization) { return res.status(404).set('Content-Type', 'application/json').send({ error: { type: 'error', text: 'please include authorization in header' } }); }
+      const c = await Models.user.findOne(
+        _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
+      );
+      if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
 
-    /**
-     * @description Decode and Authenticate JWT token.
-     */
-    const token = await jwt.decode(req.headers.authorization);
-    if(token.error) {
-      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
+      req.body.capability = c.data.capability;
     }
-
-    const a = await Models.admin.findOne(
-      _.pick(token, ['email', 'createdAt', 'jwtValidatedAt'])
-    );
-    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
     next();
   },

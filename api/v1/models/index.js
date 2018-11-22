@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary');
 const env_c = require('../../../environment/').cloudinary;
 const env_m = require('../../../environment/').Mlab;
 
-var Id, Admin, Post;
+var Id, User, Post;
 
 const Models = {
   connect: async () => {
@@ -18,7 +18,7 @@ const Models = {
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', () => {
       Models.create.id();
-      Models.create.admin();
+      Models.create.user();
       Models.create.post();
     });
   },
@@ -34,9 +34,8 @@ const Models = {
      */
     id: async () => {
       let schema = new mongoose.Schema({
-        admin: { type: String, required: true, default: '0' },
         user: { type: String, required: true, default: '0' },
-        post: { type: String, required: true, default: '0' },
+        post: { type: String, required: true, default: '0' }
       });
       Id = mongoose.model('Id', schema);
 
@@ -52,7 +51,7 @@ const Models = {
       if(l.error) { try { await Models.objects.id.create({}); } catch(e) {} }
     },
 
-    admin: async () => {
+    user: async () => {
       let schema = new mongoose.Schema({
         id: { type: String, required: true, unique: true }, 
         firstName: { type: String, required: true },
@@ -65,9 +64,10 @@ const Models = {
         emailValidated: { type: Boolean, default: false },
         allowedToAccess: { type: Boolean, default: false },
         isMale: { type: Boolean, required: true },
-        avatar: { type: String, default: 'admin.jpg' }
+        avatar: { type: String, default: 'user.jpg' },
+        capability: { type: Number, default: 2 }
       });
-      Admin = mongoose.model('Admin', schema);
+      User = mongoose.model('User', schema);
     },
 
     post: async () => {
@@ -91,15 +91,15 @@ const Models = {
 
   objects: {
 
-    admin: {
+    user: {
       /**
        * @description finds one user only with matching parameter.
        */
       findOne: async (param) => {
         let r;
-        try { r = await Admin.findOne(param); }
+        try { r = await User.findOne(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
+        if(!r) { return { error: { type: 'error', text: 'user doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -108,9 +108,9 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Admin.find(param); }
+        try { r = await User.find(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no admin found!' } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no user found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -123,9 +123,9 @@ const Models = {
         Object.assign(param, ext);
         try {
           if(param.password) { param.password = await bycript.hash(param.password); }
-          r = await Admin.create(param);
+          r = await User.create(param);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r) { return { error: { type: 'error', text: 'can\'t create admin!' } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create user!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -134,7 +134,7 @@ const Models = {
        */
       deleteOne: async (param) => {
         let r;
-        try { r = await Admin.deleteOne(param); }
+        try { r = await User.deleteOne(param); }
         catch(e) {  return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
@@ -150,7 +150,7 @@ const Models = {
             Object.assign(param, ext);
             param.password = await bycript.hash(param.password);
           }
-          r = await Admin.updateOne(query, param, option);
+          r = await User.updateOne(query, param, option);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };

@@ -9,13 +9,12 @@ const cors = require('cors');
 const v1 = require('./config/v1');
 const v2 = require('./config/v2');
 require('dotenv').config();
-const allowOrigin = require('./environment/').allowOrigin;
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.use(cors({ origin: allowOrigin }));
+app.use(cors({ origin: require('./environment/').ao }));
 app.use('/api/v1', v1);
 app.use('/api/v2', v2);
 

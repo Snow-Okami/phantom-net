@@ -2,13 +2,7 @@ const jwt = require('jsonwebtoken');
 const env = require('../../../environment/').JWT;
 
 const jwthelper = {
-  sign: async (param) => {
-    let payload = {
-      'username': param.username,
-      'email': param.email,
-      'createdAt': param.createdAt,
-      'jwtValidatedAt': param.jwtValidatedAt
-    };
+  sign: async (payload) => {
     return await jwt.sign(payload, env.key);
   },
 

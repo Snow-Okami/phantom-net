@@ -12,7 +12,7 @@ storage = multer.diskStorage({ destination: './public/image/post/', filename: Fi
 const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 
 const TestController = require('../api/v1/controllers/TestController');
-const AdminController = require('../api/v1/controllers/AdminController');
+const UserController = require('../api/v1/controllers/UserController');
 const PostController = require('../api/v1/controllers/PostController');
 
 const api = express.Router();
@@ -26,16 +26,16 @@ const routes = () => {
   /**
    * @description Admin API CRUD operation.
    */
-  api.get('/admin/:email', Policies.isLoggedIn, AdminController.findOne);
-  api.get('/admins', Policies.isLoggedIn, AdminController.findAll);
-  api.post('/admin', AdminController.create);
-  api.post('/admin/login', AdminController.login);
-  api.post('/admin/logout', Policies.isLoggedIn, AdminController.logout);
+  api.get('/admin/:email', Policies.isLoggedIn, UserController.findOne);
+  api.get('/admins', Policies.isLoggedIn, UserController.findAll);
+  api.post('/admin', UserController.create);
+  api.post('/admin/login', UserController.login);
+  api.post('/admin/logout', UserController.logout);
   /**
    * @description Request Body can contain Form-Data or Raw JSON data.
    */
-  api.put('/admin/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), AdminController.updateOne);
-  api.delete('/admin/:email', Policies.isLoggedIn, AdminController.deleteOne);
+  api.put('/admin/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
+  api.delete('/admin/:email', Policies.isLoggedIn, UserController.deleteOne);
 
   /**
    * @description Post API CRUD operation.

@@ -1,11 +1,11 @@
-const Models = require('../models/').objects;
-const bycript = require('../models/').bycript;
-const _ = require('../models/')._;
+const Models = require('../models').objects;
+const bycript = require('../models').bycript;
+const _ = require('../models')._;
 const jwt = require('../helpers/jwt');
 
-const AdminController = {
+const UserController = {
   findOne: async (req, res) => {
-    const a = await Models.admin.findOne(req.params);
+    const a = await Models.user.findOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
   },
@@ -21,7 +21,7 @@ const AdminController = {
   },
 
   findAll: async (req, res) => {
-    const a = await Models.admin.findAll({});
+    const a = await Models.user.findAll({});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
   },
@@ -33,13 +33,13 @@ const AdminController = {
     /**
      * @description Increment id field with 1.
      */
-    await Models.id.updateOne({'admin': id.data.admin}, {'admin': Number(id.data.admin) + 1}, {});
+    await Models.id.updateOne({'user': id.data.user}, {'user': Number(id.data.user) + 1}, {});
 
     /**
-     * @description SET id property for Admin.
+     * @description SET id property for User.
      */
-    req.body.id = id.data.admin;
-    const a = await Models.admin.create(req.body);
+    req.body.id = id.data.user;
+    const a = await Models.user.create(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
     return res.status(200).send(a);
@@ -47,13 +47,13 @@ const AdminController = {
 
   updateOne: async (req, res) => {
     if(req.file) { req.body.avatar = req.file.filename; }
-    const a = await Models.admin.updateOne(req.params, req.body, {});
+    const a = await Models.user.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
   },
 
   deleteOne: async (req, res) => {
-    const a = await Models.admin.deleteOne(req.params);
+    const a = await Models.user.deleteOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
   },
@@ -67,15 +67,15 @@ const AdminController = {
     }
 
     /**
-     * @description Find Admin using Email id.
+     * @description Find User using Email id.
      */
     let password = req.body.password;
     delete req.body.password;
-    const a = await Models.admin.findOne(req.body);
+    const a = await Models.user.findOne(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
     /**
-     * @description Compare password provided by Admin.
+     * @description Compare password provided by User.
      */
     const vp = await bycript.compare(password, a.data.password);
     if(vp.error) {
@@ -89,7 +89,7 @@ const AdminController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'createdAt', 'jwtValidatedAt'])
+      _.pick(a.data, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
     );
 
     /**
@@ -118,8 +118,8 @@ const AdminController = {
     }
 
     let time = new Date().getTime();
-    const a = await Models.admin.updateOne(
-      _.pick(token, ['email', 'createdAt', 'jwtValidatedAt']), { jwtValidatedAt: time }, {}
+    const a = await Models.user.updateOne(
+      _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
     );
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
@@ -130,4 +130,4 @@ const AdminController = {
   }
 };
 
-module.exports = AdminController;
+module.exports = UserController;
