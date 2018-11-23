@@ -23,13 +23,13 @@ const policies = {
     );
     if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
-    req.body.capability = u.data.capability;
+    req.query.capability = u.data.capability;
 
     next();
   },
 
   allowPublic: async (req, res, next) => {
-    if(!req.headers.authorization) { req.body.capability = 0; }
+    if(!req.headers.authorization) { req.query.capability = 0; }
     else {
       /**
        * @description Decode and Authenticate JWT token.
@@ -44,7 +44,7 @@ const policies = {
       );
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
-      req.body.capability = u.data.capability;
+      req.query.capability = u.data.capability;
     }
 
     next();

@@ -40,7 +40,7 @@ const routes = () => {
   /**
    * @description Post API CRUD operation.
    */
-  api.get('/post/:id', Policies.isLoggedIn, PostController.findOne);
+  api.get('/post/:id', Policies.allowPublic, PostController.findOne);
   /**
    * @param sort: -1 (Descending) (Default) & 1 (Ascending). OPTIONAL Query Parameter.
    * @param skip: Only POSITIVE Numbers. Default is 0. OPTIONAL Query Parameter.

@@ -3,6 +3,12 @@ const _ = require('../models/')._;
 
 const PostController = {
   findOne: async (req, res) => {
+    /**
+     * @description REQUIRED for PUBLIC API's.
+     */
+    const query = req.query.capability > 1 ? {} : { 'publish': true };
+    Object.assign(req.params, query);
+
     const p = await Models.post.findOne(req.params);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
@@ -12,10 +18,6 @@ const PostController = {
    * @description Need to complete this API.
    */
   findLimited: async (req, res) => {
-    /**
-     * @description SET QUERY to get published posts.
-     */
-    const query = req.body.capability > 1 ? {} : { 'publish': true };
     const params = req.query;
     /**
      * @description Convert String to Number.
@@ -25,6 +27,11 @@ const PostController = {
       skip: Number(params.skip) ? Number(params.skip) : 0,
       limit: Number(params.limit) ? Number(params.limit) : 10
     };
+    /**
+     * @description SET QUERY to get published posts. REQUIRED for PUBLIC API's.
+     */
+    const query = params.capability > 1 ? {} : { 'publish': true };
+
     const p = await Models.post.findLimited(query, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
