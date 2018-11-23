@@ -65,7 +65,8 @@ const Models = {
         allowedToAccess: { type: Boolean, default: false },
         isMale: { type: Boolean, required: true },
         avatar: { type: String, default: 'user.jpg' },
-        capability: { type: Number, default: 2 }
+        capability: { type: Number, default: 2 },
+        online: { type: Boolean, default: false }
       });
       User = mongoose.model('User', schema);
     },

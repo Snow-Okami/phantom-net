@@ -1,23 +1,53 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
+const cookie = require('../helpers/cookie');
+const jwt = require('../helpers/jwt');
 
-let io, Socket;
+let io;
 
 const MessageController = {
+
+  data: {
+
+  },
+
   connect: async (server) => {
     io = require('socket.io')(server);
     io.on('connection', MessageController.connected);
   },
 
-  connected: async (res) => {
-    Socket = res;
-    // console.log('socket', Socket.handshake.headers);
+  connected: async (Socket) => {
+    /**
+     * @description Login EventListener is here.
+     */
+    Socket.on('login', async (data) => {
+      /**
+       * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
+       */
+      const c = cookie.decode(Socket.handshake.headers.cookie);
+      const token = await jwt.decode(c['ps-t-a-p']);
+      if(token.error) {
+        
+      }
 
-    Socket.on('login', MessageController.onLogin);
-  },
+      console.log(token.email, ' is connected');
+    });
 
-  onLogin: async (data) => {
-    console.log('data ', data);
+    /**
+     * @description Disconnected EventListener is here.
+     */
+    Socket.on('disconnect', async () => {
+      /**
+       * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
+       */
+      const c = cookie.decode(Socket.handshake.headers.cookie);
+      const token = await jwt.decode(c['ps-t-a-p']);
+      if(token.error) {
+        
+      }
+
+      console.log(token.email, ' is disconnected');
+    });
   }
 };
 
