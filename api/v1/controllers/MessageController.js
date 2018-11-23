@@ -13,42 +13,41 @@ const MessageController = {
 
   connect: async (server) => {
     io = require('socket.io')(server);
-    io.on('connection', MessageController.connected);
-  },
-
-  connected: async (Socket) => {
-    /**
-     * @description Login EventListener is here.
-     */
-    Socket.on('login', async (data) => {
-      /**
-       * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
-       */
-      const c = cookie.decode(Socket.handshake.headers.cookie);
-      const token = await jwt.decode(c['ps-t-a-p']);
-      if(token.error) {
-        
-      }
-
-      console.log(token.email, ' is connected');
-    });
 
     /**
-     * @description Disconnected EventListener is here.
+     * @description EventListeners should stay inside the connect().
      */
-    Socket.on('disconnect', async () => {
+    io.on('connection', async (Socket) => {
       /**
-       * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
+       * @description Login EventListener is here.
        */
-      const c = cookie.decode(Socket.handshake.headers.cookie);
-      const token = await jwt.decode(c['ps-t-a-p']);
-      if(token.error) {
-        
-      }
+      Socket.on('login', async (data) => {
+        /**
+         * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
+         */
+        const c = cookie.decode(Socket.handshake.headers.cookie);
+        const token = await jwt.decode(c['ps-t-a-p']);
+        if(token.error) { return token; }
 
-      console.log(token.email, ' is disconnected');
+        console.log(token.email, ' is connected');
+      });
+
+      /**
+       * @description Disconnected EventListener is here.
+       */
+      Socket.on('disconnect', async (reason) => {
+        /**
+         * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
+         */
+        const c = cookie.decode(Socket.handshake.headers.cookie);
+        const token = await jwt.decode(c['ps-t-a-p']);
+        if(token.error) { return token; }
+
+        console.log(token.email, ' is disconnected for ', reason);
+      });
     });
   }
+
 };
 
 module.exports = MessageController;
