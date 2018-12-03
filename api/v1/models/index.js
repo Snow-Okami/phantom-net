@@ -53,7 +53,6 @@ const Models = {
 
     user: async () => {
       let schema = new mongoose.Schema({
-        id: { type: String, required: true, unique: true }, 
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         fullName: { type: String },
@@ -66,7 +65,8 @@ const Models = {
         isMale: { type: Boolean, required: true },
         avatar: { type: String, default: 'user.jpg' },
         capability: { type: Number, default: 2 },
-        online: { type: Boolean, default: false }
+        online: { type: Boolean, default: false },
+        id: { type: String, required: true }, 
       });
       User = mongoose.model('User', schema);
     },
