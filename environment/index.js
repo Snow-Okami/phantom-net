@@ -20,11 +20,9 @@ const env = {
    */
   ao: [
     'https://psynapsus.netlify.com'
-    , 'https://practical-benz-6bc9a1.netlify.com'
+    , 'https://rottenvisions.netlify.com'
     , 'http://localhost:4004'
     , 'http://localhost:4005'
-    , 'https://codesandbox.io/s/52w09o3q1k'
-    , 'https://52w09o3q1k.codesandbox.io'
   ]
 };
 
