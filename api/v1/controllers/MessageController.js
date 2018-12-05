@@ -46,19 +46,30 @@ const MessageController = {
         const u = await MessageController.policy.isSecure(Socket.handshake.headers.cookie);
         if(u.error) { return u; }
 
+        /**
+         * @description Updates user's online field.
+         */
         const ur = await Models.user.updateOne({ email: u.email }, { online: true });
         if(ur.error) { return ur; }
 
         const ch = await Models.chat.findAll({ users: u.email });
         if(ch.error) { return ch; }
-        
-        /**
-         * @description Might be required in future.
-         */
-        // MessageController.data.users[u.email] = {};
-        // MessageController.data.users[u.email].chats = ch.data;
 
-        console.log(u.email, 'is connected');
+        /**
+         * @description Create CHAT rooms using chat ids.
+         */
+        let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });        
+        
+        Socket.join(rooms, async () => {
+          /**
+           * @description Might be required in future.
+           */
+          MessageController.data.users[u.email] = {};
+          MessageController.data.users[u.email].rooms = Object.keys(Socket.rooms);
+
+          console.log(u.email, 'is connected', MessageController.data.users[u.email]);
+        });
+
       });
 
       /**
