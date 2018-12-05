@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary');
 const env_c = require('../../../environment/').cloudinary;
 const env_m = require('../../../environment/').Mlab;
 
-var Id, User, Post;
+var Id, User, Post, Chat;
 
 const Models = {
   connect: async () => {
@@ -20,6 +20,7 @@ const Models = {
       Models.create.id();
       Models.create.user();
       Models.create.post();
+      Models.create.chat();
     });
   },
 
@@ -35,7 +36,8 @@ const Models = {
     id: async () => {
       let schema = new mongoose.Schema({
         user: { type: String, required: true, default: '0' },
-        post: { type: String, required: true, default: '0' }
+        post: { type: String, required: true, default: '0' },
+        chat: { type: String, required: true, default: '0' }
       });
       Id = mongoose.model('Id', schema);
 
@@ -82,6 +84,21 @@ const Models = {
         createdAt: { type: Date, required: true }
       });
       Post = mongoose.model('Post', schema);
+    },
+
+    chat: async() => {
+      let schema = new mongoose.Schema({
+        id: { type: String, unique: true, required: true },
+        type: { type: Number, default: 0 },
+        fullName: { type: String, default: '' },
+        users: { type: [], default: [] },
+        createdAt: { type: Date },
+        admin: {
+          email: { type: String, required: true },
+          fullName: { type: String, required: true }
+        }
+      });
+      Chat = mongoose.model('Chat', schema);
     },
 
   },
@@ -215,6 +232,76 @@ const Models = {
           r = await cloudinary.v2.uploader.upload(param);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
+        return { message: { type: 'success' }, data: r };
+      }
+    },
+
+    chat: {
+      /**
+       * @description finds one chat only with matching parameter.
+       */
+      findOne: async (param) => {
+        let p;
+        try { p = await Chat.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!p) { return { error: { type: 'error', text: 'chat doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: p };
+      },
+
+      /**
+       * @description finds limited of the available chats in the Mlab database.
+       */
+      findLimited: async (query, option) => {
+        let r;
+        try { r = await Chat.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no chat found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description finds all the available chats in the Mlab database.
+       */
+      findAll: async (param) => {
+        let r;
+        try { r = await Chat.find(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no chat found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description posts an update with required parameters.
+       * @param param looks like {title: String, description: String, publish: Boolean, id: String, image: String}.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try { r = await Chat.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create chat!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description deletes only one chat matching the parameters from Mlab database.
+       */
+      deleteOne: async (param) => {
+        let r;
+        try { r = await Chat.deleteOne(param); }
+        catch(e) {  return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'chat doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description updates only one user at a time. If parameter contains password it updates jwtValidatedAt.
+       */
+      updateOne: async (query, param, option) => {
+        let r;
+        try { r = await Chat.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'chat doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
     },
