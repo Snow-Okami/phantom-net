@@ -19,7 +19,9 @@ const MessageController = {
       /**
        * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
        */
-      const c = cookie.decode(bearer);
+      const c = await cookie.decode(bearer);
+      console.log('decoded cookie is', c);
+
       const token = await jwt.decode(c['ps-t-a-p']);
       if(token.error) { return token; }
       
