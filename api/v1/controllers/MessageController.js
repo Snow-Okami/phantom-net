@@ -1,6 +1,7 @@
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
 const cookie = require('../helpers/cookie');
+const chat = require('../helpers/chat');
 const jwt = require('../helpers/jwt');
 
 let io;
@@ -65,7 +66,7 @@ const MessageController = {
 
         Socket.join(rooms, async () => {
           /**
-           * @description Might be required in future.
+           * @description Required when we do not have cookie support on server.
            */
           MessageController.data.users[u.email] = {};
           MessageController.data.users[u.email].rooms = Object.keys(Socket.rooms);
@@ -80,15 +81,13 @@ const MessageController = {
        */
       Socket.on('disconnect', async (reason) => {
         /**
-         * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
+         * @description Get from controller data when cookie not available.
          */
-        const c = cookie.decode(Socket.handshake.headers.cookie);
-        const token = await jwt.decode(c['ps-t-a-p']);
-        if(token.error) { return token; }
+        let email = await chat.getEmail(MessageController.data.users, Socket.id);
 
-        await Models.user.updateOne({ email: token.email }, { online: false });
+        await Models.user.updateOne({ email: email }, { online: false });
 
-        console.log(token.email, 'is disconnected for', reason);
+        console.log(email, 'is disconnected for', reason);
       });
     });
   }
