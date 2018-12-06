@@ -1,6 +1,6 @@
 {
   "name": "psynapsus-server",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Node JS server contains API's for different platform.",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,6 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.1",
-    "async-request": "^1.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.13.2",
@@ -43,6 +42,6 @@
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.7"
   }
 }

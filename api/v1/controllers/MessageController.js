@@ -61,7 +61,7 @@ const MessageController = {
          * @description Create CHAT rooms using chat ids.
          */
         let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });        
-        
+
         Socket.join(rooms, async () => {
           /**
            * @description Might be required in future.
