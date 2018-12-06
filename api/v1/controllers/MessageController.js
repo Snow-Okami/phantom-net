@@ -15,14 +15,14 @@ const MessageController = {
     /**
      * @description Check Bearer token for security.
      */
-    isSecure: async (bearer) => {
+    isSecure: async (param) => {
       /**
        * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
        */
-      const c = await cookie.decode(bearer);
+      const c = await cookie.decode(param.localCookie);
       const token = await jwt.decode(c['ps-t-a-p']);
       if(token.error) { return token; }
-      
+
       const u = await Models.user.findOne(
         _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
       );
@@ -42,10 +42,11 @@ const MessageController = {
       /**
        * @description Login EventListener is here.
        */
-      Socket.on('login', async (data) => {
-        console.log('decoded cookie is', Socket.handshake);
-
-        const u = await MessageController.policy.isSecure(Socket.handshake.headers.cookie);
+      Socket.on('login', async (param) => {
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await MessageController.policy.isSecure(Object.assign({}, Socket.handshake.headers, param));
         if(u.error) { return u; }
 
         /**
