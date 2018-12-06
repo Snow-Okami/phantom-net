@@ -20,8 +20,6 @@ const MessageController = {
        * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
        */
       const c = await cookie.decode(bearer);
-      console.log('decoded cookie is', c);
-
       const token = await jwt.decode(c['ps-t-a-p']);
       if(token.error) { return token; }
       
@@ -45,6 +43,8 @@ const MessageController = {
        * @description Login EventListener is here.
        */
       Socket.on('login', async (data) => {
+        console.log('decoded cookie is', Socket.handshake);
+
         const u = await MessageController.policy.isSecure(Socket.handshake.headers.cookie);
         if(u.error) { return u; }
 
