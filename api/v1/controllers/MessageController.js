@@ -33,13 +33,17 @@ const MessageController = {
         const ur = await Models.user.updateOne({ email: u.email }, { online: true });
         if(ur.error) { return ur; }
 
-        const ch = await Models.chat.findAll({ users: u.email });
+        const ch = await Models.chat.findAll({ "users.email": u.email });
         if(ch.error) { return ch; }
 
         /**
          * @description Create CHAT rooms using chat ids.
          */
-        let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });        
+        let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });
+        /**
+         * @description Sends the CHAT informations to user.
+         */
+        io.to(Socket.id).emit('chats', ch);
 
         Socket.join(rooms, async () => {
           /**

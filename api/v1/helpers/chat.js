@@ -17,7 +17,7 @@ const chat = {
         return _.includes(o.rooms, sid);
       });
     },
-  
+
     isSecure: async (param) => {
       /**
        * @description DECODE the cookie to get 'ps-t-a-p' & 'ps-u-a-p' keys.
