@@ -33,6 +33,11 @@ const MessageController = {
         const ur = await Models.user.updateOne({ email: u.email }, { online: true });
         if(ur.error) { return ur; }
 
+        /**
+         * @description Pass the user info 
+         */
+        io.to(Socket.id).emit('user', _.pick(u, ['email', 'firstName', 'lastName', 'emailValidated', 'avatar', 'online']));
+
         const ch = await Models.chat.findAll({ "users.email": u.email });
         if(ch.error) { return ch; }
 
