@@ -113,7 +113,10 @@ const Models = {
         id: { type: String, unique: true, required: true },
         cid: { type: String, required: true },
         text: { type: String, required: true },
-        createdBy: { type: String, required: true },
+        createdBy: {
+          email: { type: String, required: true },
+          fullName: { type: String, required: true }
+        },
         createdAt: { type: Date, required: true }
       });
       Message = mongoose.model('Message', schema);
