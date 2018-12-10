@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary');
 const env_c = require('../../../environment/').cloudinary;
 const env_m = require('../../../environment/').Mlab;
 
-var Id, User, Post, Chat;
+var Id, User, Post, Chat, Message;
 
 const Models = {
   connect: async () => {
@@ -21,6 +21,7 @@ const Models = {
       Models.create.user();
       Models.create.post();
       Models.create.chat();
+      Models.create.message();
     });
   },
 
@@ -96,9 +97,26 @@ const Models = {
         admin: {
           email: { type: String, required: true },
           fullName: { type: String, required: true }
-        }
+        },
+        lastMessage: {
+          text: { type: String, required: true },
+          createdBy: { type: String, required: true },
+          createdAt: { type: Date, required: true }
+        },
+        messages: { type: [], default: [] },
       });
       Chat = mongoose.model('Chat', schema);
+    },
+
+    message: async => {
+      let schema = new mongoose.Schema({
+        id: { type: String, unique: true, required: true },
+        cid: { type: String, required: true },
+        text: { type: String, required: true },
+        createdBy: { type: String, required: true },
+        createdAt: { type: Date, required: true }
+      });
+      Message = mongoose.model('Message', schema);
     },
 
   },
@@ -304,6 +322,31 @@ const Models = {
         if(!r.n) { return { error: { type: 'error', text: 'chat doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
+    },
+
+    message: {
+      /**
+       * @description finds limited of the available message in the Mlab database.
+       */
+      findLimited: async (query, option) => {
+        let r;
+        try { r = await Message.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no message found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+      /**
+       * @description creates a message with required parameters.
+       * @param param looks like {title: String, description: String, publish: Boolean, id: String, image: String}.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try { r = await Message.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create message!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
     },
 
     id: {

@@ -62,6 +62,16 @@ const MessageController = {
 
       });
 
+      Socket.on('findLimitedMessage', async (param) => {
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
+        if(u.error) { return u; }
+
+        console.log(u, param);
+      });
+
       /**
        * @description Disconnected EventListener is here.
        */
