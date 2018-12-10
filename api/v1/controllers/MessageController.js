@@ -36,7 +36,7 @@ const MessageController = {
         /**
          * @description Pass the user info 
          */
-        io.to(Socket.id).emit('user', _.pick(u, ['email', 'firstName', 'lastName', 'emailValidated', 'avatar', 'online']));
+        io.to(Socket.id).emit('user', _.pick(u, ['email', 'firstName', 'lastName', 'fullName', 'emailValidated', 'avatar', 'online']));
 
         const ch = await Models.chat.findAll({ "users.email": u.email });
         if(ch.error) { return ch; }
@@ -69,7 +69,10 @@ const MessageController = {
         const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
         if(u.error) { return u; }
 
-        console.log(u, param);
+        const m = await Models.message.findLimited(param.message.query, param.message.option);
+        if(m.error) { return m; }
+
+        io.to(Socket.id).emit('messages', m);
       });
 
       /**
