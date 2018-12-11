@@ -76,6 +76,19 @@ const MessageController = {
       });
 
       /**
+       * @description Ping occurs when somebody sends a message.
+       */
+      Socket.on('ping', async (param) => {
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
+        if(u.error) { return u; }
+
+        console.log(param, u.data);
+      });
+
+      /**
        * @description Disconnected EventListener is here.
        */
       Socket.on('disconnect', async (reason) => {
