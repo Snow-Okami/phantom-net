@@ -76,16 +76,34 @@ const MessageController = {
       });
 
       /**
-       * @description Ping occurs when somebody sends a message.
+       * @description Text occurs when somebody sends a message.
        */
-      Socket.on('ping', async (param) => {
+      Socket.on('text', async (param) => {
         /**
          * @description Socket.handshake.headers.cookie contains the default cookie parameters.
          */
         const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
         if(u.error) { return u; }
 
-        console.log(param, u.data);
+        const id = await Models.id.findOne({});
+        if(id.error) { return id; }
+
+        /**
+         * @description Increment id field with 1.
+         */
+        await Models.id.updateOne({'message': id.data.message}, {'message': Number(id.data.message) + 1}, {});
+        /**
+         * @description SET id property for Message.
+         */
+        param.message.query.id = id.data.message;
+
+        const p = await Models.message.create(param.message.query);
+        if(p.error) { return p; }
+
+        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) }, {});
+        if(nu.error) { return nu; }
+
+        // emit in the chat room.
       });
 
       /**

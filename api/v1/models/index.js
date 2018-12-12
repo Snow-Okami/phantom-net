@@ -38,7 +38,8 @@ const Models = {
       let schema = new mongoose.Schema({
         user: { type: String, required: true, default: '0' },
         post: { type: String, required: true, default: '0' },
-        chat: { type: String, required: true, default: '0' }
+        chat: { type: String, required: true, default: '0' },
+        message: { type: String, required: true, default: '0' }
       });
       Id = mongoose.model('Id', schema);
 
@@ -100,7 +101,10 @@ const Models = {
         },
         lastMessage: {
           text: { type: String, required: true },
-          createdBy: { type: String, required: true },
+          createdBy: {
+            email: { type: String, required: true },
+            fullName: { type: String, required: true }
+          },
           createdAt: { type: Date, required: true }
         },
         messages: { type: [], default: [] },
