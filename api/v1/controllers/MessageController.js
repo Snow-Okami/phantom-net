@@ -70,6 +70,7 @@ const MessageController = {
         if(u.error) { return u; }
 
         const m = await Models.message.findLimited(param.message.query, param.message.option);
+        console.log(m);
         if(m.error) { return m; }
 
         io.to(Socket.id).emit('messages', m);
@@ -100,10 +101,11 @@ const MessageController = {
         const p = await Models.message.create(param.message.query);
         if(p.error) { return p; }
 
-        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) }, {});
+        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'createdAt']) }, {});
         if(nu.error) { return nu; }
 
         // emit in the chat room.
+        io.to('_c' + param.message.query.cid).emit('texted', { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) });
       });
 
       /**

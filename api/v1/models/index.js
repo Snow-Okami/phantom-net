@@ -339,7 +339,6 @@ const Models = {
         let r;
         try { r = await Message.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no message found!' } }; }
         return { message: { type: 'success' }, data: _.reverse(r) };
       },
       /**
