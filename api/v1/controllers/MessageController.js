@@ -70,7 +70,6 @@ const MessageController = {
         if(u.error) { return u; }
 
         const m = await Models.message.findLimited(param.message.query, param.message.option);
-        console.log(m);
         if(m.error) { return m; }
 
         io.to(Socket.id).emit('messages', m);
