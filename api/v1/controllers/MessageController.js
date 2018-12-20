@@ -117,6 +117,12 @@ const MessageController = {
         const expr = new RegExp('(' + param.message.query.text + ')', 'gmi');
         const p = await Models.user.findAll({ email: { $regex: expr } });
         /**
+         * @description filter the packet.
+         */
+        if(!p.error) {
+          p.data = _.map(p.data, (u) => { return _.pick(u, ['email', 'fullName', 'id', 'online', 'avatar']) });
+        }
+        /**
          * @description send packet to user.
          */
         io.to(Socket.id).emit('packet', p);
