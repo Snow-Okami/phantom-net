@@ -107,6 +107,21 @@ const MessageController = {
         io.to('_c' + param.message.query.cid).emit('texted', { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) });
       });
 
+      Socket.on('search', async (param) => {
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
+        if(u.error) { return u; }
+
+        const expr = new RegExp('(' + param.message.query.text + ')', 'gmi');
+        const p = await Models.user.findAll({ email: { $regex: expr } });
+        /**
+         * @description send packet to user.
+         */
+        io.to(Socket.id).emit('packet', p);
+      });
+
       /**
        * @description Disconnected EventListener is here.
        */

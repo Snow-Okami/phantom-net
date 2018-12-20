@@ -127,20 +127,6 @@ const UserController = {
      * @description Return Logged Out Successful Response.
      */
     return res.status(200).set('Content-Type', 'application/json').send(a);
-  },
-
-  search: async (req, res) => {
-    // const a = await Models.user.findAll({});
-    // if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-    // return res.status(200).send(a);
-    // /(dut)/gmi
-
-    console.log(req);
-
-    return res.status(200).send({
-      message: { type: 'success' },
-      data: 'API is under construction. Please try after some time.'
-    });
   }
 };
 
