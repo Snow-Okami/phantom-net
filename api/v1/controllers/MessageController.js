@@ -115,17 +115,26 @@ const MessageController = {
         if(u.error) { return u; }
 
         const expr = new RegExp('(' + param.message.query.text + ')', 'gmi');
-        const p = await Models.user.findAll({ email: { $regex: expr } });
+        let p = await Models.user.findAll({ email: { $regex: expr } });
         /**
          * @description filter the packet.
          */
         if(!p.error) {
-          p.data = _.map(p.data, (u) => { return _.pick(u, ['email', 'fullName', 'id', 'online', 'avatar']) });
+          _.remove(p.data, (t_u) => { return t_u.email === u.email });
+          p.data = _.map(p.data, (t_u) => { return _.pick(t_u, ['email', 'fullName', 'id', 'online', 'avatar']) });
+          /**
+           * @description when no user exists in data.
+           */
+          if(!p.data.length) { p = { error: { type: 'error', text: 'no user found!' } }; }
         }
         /**
          * @description send packet to user.
          */
         io.to(Socket.id).emit('packet', p);
+      });
+
+      Socket.on('chat', async (param) => {
+        console.log(param);
       });
 
       /**
