@@ -100,12 +100,12 @@ const Models = {
           fullName: { type: String, required: true }
         },
         lastMessage: {
-          text: { type: String, required: true },
+          text: { type: String, default: '' },
           createdBy: {
-            email: { type: String, required: true },
-            fullName: { type: String, required: true }
+            email: { type: String },
+            fullName: { type: String }
           },
-          createdAt: { type: Date, required: true }
+          createdAt: { type: Date }
         },
         messages: { type: [], default: [] },
       });
@@ -280,7 +280,6 @@ const Models = {
         let r;
         try { r = await Chat.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no chat found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -291,7 +290,6 @@ const Models = {
         let r;
         try { r = await Chat.find(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no chat found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 

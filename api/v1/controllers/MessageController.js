@@ -134,7 +134,58 @@ const MessageController = {
       });
 
       Socket.on('chat', async (param) => {
-        console.log(param);
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
+        if(u.error) { return u; }
+
+        const id = await Models.id.findOne({});
+        if(id.error) { return id; }
+
+        /**
+         * @description Increment id field with 1.
+         */
+        await Models.id.updateOne({'chat': id.data.chat}, {'chat': Number(id.data.chat) + 1}, {});
+
+        const au = _.pick(u, ['email', 'fullName']);
+        /**
+         * @description bind the admin with the chat.
+         */
+        param.message.query.users.push(au);
+        Object.assign(param.message.query, { admin: au, messages: [], type: param.message.query.users.length > 2 ? 1 : 0, id: id.data.chat });
+
+        const c = await Models.chat.create(param.message.query);
+        if(c.error) { return c; }
+
+        let room = '_c' + c.data.id;
+        /**
+         * @description filter all online users socket ids.
+         */
+        let aou = _.map(c.data.users, (cu) => { if(MessageController.data.users[cu.email]) { return MessageController.data.users[cu.email].rooms[0]; } });
+        /**
+         * @description share the packet to everybody in the chat.
+         */
+        _.forEach(aou, (sid) => { if(sid) { io.to(sid).emit('cPacket', { chat: c, room: room }); } });
+      });
+
+      /**
+       * @description join the socket room.
+       */
+      Socket.on('join', async (param) => {
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
+        if(u.error) { return u; }
+
+        Socket.join(param.message.room, async () => {
+          /**
+           * @description Required when we do not have cookie support on server.
+           */
+          if(!MessageController.data.users[u.email]) { MessageController.data.users[u.email] = {}; }
+          MessageController.data.users[u.email].rooms = Object.keys(Socket.rooms);
+        });
       });
 
       /**
