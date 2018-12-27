@@ -208,6 +208,13 @@ const MessageController = {
       });
 
       /**
+       * @description confirms typing is completed.
+       */
+      Socket.on('typed', async (param) => {
+        Socket.to('_c' + param.message.query.cid).emit('typed', param.message.query);
+      });
+
+      /**
        * @description Disconnected EventListener is here.
        */
       Socket.on('disconnect', async (reason) => {
