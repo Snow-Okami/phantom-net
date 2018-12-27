@@ -42,6 +42,12 @@ const MessageController = {
         if(ch.error) { return ch; }
 
         /**
+         * @description filter the data response with required objects.
+         */
+        ch.data = _.map(ch.data, (o) => { return _.pick(o, ['admin', 'lastMessage', 'type', 'fullName', 'users', 'messages', 'id', 'createdAt']) });
+        ch.data = _.map(ch.data, (o) => { return Object.assign(o, { isTyping: { show: false, lastMessage: { cid: '', createdBy: { email: '', fullName: '' }, text: '' } } }); });
+
+        /**
          * @description Create CHAT rooms using chat ids.
          */
         let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });
@@ -186,6 +192,19 @@ const MessageController = {
           if(!MessageController.data.users[u.email]) { MessageController.data.users[u.email] = {}; }
           MessageController.data.users[u.email].rooms = Object.keys(Socket.rooms);
         });
+      });
+
+      /**
+       * @description confirms & sends the typing response.
+       */
+      Socket.on('typing', async (param) => {
+        /**
+         * @description Socket.handshake.headers.cookie contains the default cookie parameters.
+         */
+        const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
+        if(u.error) { return u; }
+
+        Socket.to('_c' + param.message.query.cid).emit('typing', { lastMessage: param.message.query });
       });
 
       /**
