@@ -108,6 +108,7 @@ const Models = {
           createdAt: { type: Date }
         },
         messages: { type: [], default: [] },
+        isTyping: { show: { type: Boolean, default: false }, lastMessage: { cid: { type: String, default: '' }, createdBy: { email: { type: String, default: '' }, fullName: { type: String, default: '' } }, text: { type: String, default: '' } } }
       });
       Chat = mongoose.model('Chat', schema);
     },

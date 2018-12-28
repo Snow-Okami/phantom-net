@@ -42,12 +42,6 @@ const MessageController = {
         if(ch.error) { return ch; }
 
         /**
-         * @description filter the data response with required objects.
-         */
-        ch.data = _.map(ch.data, (o) => { return _.pick(o, ['admin', 'lastMessage', 'type', 'fullName', 'users', 'messages', 'id', 'createdAt']) });
-        ch.data = _.map(ch.data, (o) => { return Object.assign(o, { isTyping: { show: false, lastMessage: { cid: '', createdBy: { email: '', fullName: '' }, text: '' } } }); });
-
-        /**
          * @description Create CHAT rooms using chat ids.
          */
         let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });
