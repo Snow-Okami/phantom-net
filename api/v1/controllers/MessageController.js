@@ -54,8 +54,8 @@ const MessageController = {
           /**
            * @description Required when we do not have cookie support on server.
            */
-          MessageController.data.users[u.email] = {};
-          MessageController.data.users[u.email].rooms = Object.keys(Socket.rooms);
+          if(!MessageController.data.users[u.email]) { MessageController.data.users[u.email] = {}; MessageController.data.users[u.email].rooms = []; }
+          MessageController.data.users[u.email].rooms = _.concat(_.difference(MessageController.data.users[u.email].rooms, Object.keys(Socket.rooms)), Object.keys(Socket.rooms));
 
           console.log(u.email, 'is connected', MessageController.data.users[u.email]);
         });
@@ -187,8 +187,8 @@ const MessageController = {
           /**
            * @description Required when we do not have cookie support on server.
            */
-          if(!MessageController.data.users[u.email]) { MessageController.data.users[u.email] = {}; }
-          MessageController.data.users[u.email].rooms = Object.keys(Socket.rooms);
+          if(!MessageController.data.users[u.email]) { MessageController.data.users[u.email] = {}; MessageController.data.users[u.email].rooms = []; }
+          MessageController.data.users[u.email].rooms = _.concat(_.difference(MessageController.data.users[u.email].rooms, Object.keys(Socket.rooms)), Object.keys(Socket.rooms));
         });
       });
 
