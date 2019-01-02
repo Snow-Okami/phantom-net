@@ -95,6 +95,7 @@ const Models = {
         fullName: { type: String, default: '' },
         users: { type: [], default: [] },
         createdAt: { type: Date },
+        updatedAt: { type: Date },
         admin: {
           email: { type: String, required: true },
           fullName: { type: String, required: true }
@@ -279,7 +280,7 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Chat.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
+        try { r = await Chat.find(query).sort({ updatedAt: option.sort }).skip(option.skip).limit(option.limit); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         return { message: { type: 'success' }, data: r };
       },
@@ -289,7 +290,7 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Chat.find(param); }
+        try { r = await Chat.find(param).sort({ updatedAt: -1 }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         return { message: { type: 'success' }, data: r };
       },
@@ -299,7 +300,7 @@ const Models = {
        * @param param looks like {title: String, description: String, publish: Boolean, id: String, image: String}.
        */
       create: async (param) => {
-        let r, time = new Date().getTime(), ext = { createdAt: time };
+        let r, time = new Date().getTime(), ext = { createdAt: time, updatedAt: time };
         Object.assign(param, ext);
         try { r = await Chat.create(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }

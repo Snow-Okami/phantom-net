@@ -100,7 +100,11 @@ const MessageController = {
         const p = await Models.message.create(param.message.query);
         if(p.error) { return p; }
 
-        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'createdAt']) }, {});
+        /**
+         * @description Update the time of last message.
+         */
+        let time = new Date().getTime();
+        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'createdAt']), updatedAt: time }, {});
         if(nu.error) { return nu; }
 
         // emit in the chat room.
