@@ -225,6 +225,11 @@ const MessageController = {
 
         console.log(email, 'is disconnected for', reason);
       });
+
+      /**
+       * @description Stay alive.
+       */
+      Socket.on('keep alive', async (param) => {});
     });
   }
 
