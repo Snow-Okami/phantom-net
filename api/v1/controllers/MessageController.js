@@ -230,7 +230,7 @@ const MessageController = {
       /**
        * @description Stay alive.
        */
-      Socket.on('keep alive', async (param) => {});
+      Socket.on('keep alive', async (param) => { let d = new Date(); let op = { connection: 'alive', time: d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() }; });
     });
   }
 
