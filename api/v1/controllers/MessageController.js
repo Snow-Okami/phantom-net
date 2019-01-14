@@ -7,7 +7,8 @@ let io;
 const MessageController = {
 
   data: {
-    users: {}
+    users: {},
+    initCRId: '_croom_'
   },
 
   connect: async (server) => {
@@ -44,7 +45,7 @@ const MessageController = {
         /**
          * @description Create CHAT rooms using chat ids.
          */
-        let rooms = _.map(ch.data, (o) => { return '_c' + o.id; });
+        let rooms = _.map(ch.data, (o) => { return MessageController.data.initCRId + o.id; });
         /**
          * @description Sends the CHAT informations to user.
          */
@@ -108,7 +109,7 @@ const MessageController = {
         if(nu.error) { return nu; }
 
         // emit in the chat room.
-        io.to('_c' + param.message.query.cid).emit('texted', { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) });
+        io.to(MessageController.data.initCRId + param.message.query.cid).emit('texted', { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) });
       });
 
       Socket.on('search', async (param) => {
@@ -162,7 +163,7 @@ const MessageController = {
         const c = await Models.chat.create(param.message.query);
         if(c.error) { return c; }
 
-        let room = '_c' + c.data.id;
+        let room = MessageController.data.initCRId + c.data.id;
         /**
          * @description filter all online users socket ids.
          */
@@ -202,14 +203,14 @@ const MessageController = {
         const u = await chat.isSecure(Object.assign({}, Socket.handshake.headers, param));
         if(u.error) { return u; }
 
-        Socket.to('_c' + param.message.query.cid).emit('typing', { lastMessage: param.message.query });
+        Socket.to(MessageController.data.initCRId + param.message.query.cid).emit('typing', { lastMessage: param.message.query });
       });
 
       /**
        * @description confirms typing is completed.
        */
       Socket.on('typed', async (param) => {
-        Socket.to('_c' + param.message.query.cid).emit('typed', param.message.query);
+        Socket.to(MessageController.data.initCRId + param.message.query.cid).emit('typed', param.message.query);
       });
 
       /**
