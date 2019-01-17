@@ -213,6 +213,27 @@ const MessageController = {
         Socket.to(MessageController.data.initCRId + param.message.query.cid).emit('typed', param.message.query);
       });
 
+            /**
+       * @description Logout EventListener is here.
+       */
+      Socket.on('logout', async (reason) => {
+        /**
+         * @description Get from controller data when cookie not available.
+         */
+        let email = await chat.getEmail(MessageController.data.users, Socket.id);
+
+        console.log('before remove', MessageController.data.users, Socket.id);
+
+        // remove logged out socket ids from server.
+        if(email) { _.remove(MessageController.data.users[email].rooms, (t_id) => { return t_id === Socket.id }); }
+
+        console.log('after remove', MessageController.data.users, Socket.id, email);
+
+        await Models.user.updateOne({ email: email }, { online: false });
+
+        console.log(email, 'is now logged out.');
+      });
+
       /**
        * @description Disconnected EventListener is here.
        */
@@ -222,8 +243,11 @@ const MessageController = {
          */
         let email = await chat.getEmail(MessageController.data.users, Socket.id);
 
+        // remove disconnected socket ids from server.
+        if(email) { _.remove(MessageController.data.users[email].rooms, (t_id) => { return t_id === Socket.id }); }
+        
         await Models.user.updateOne({ email: email }, { online: false });
-
+        
         console.log(email, 'is disconnected for', reason);
       });
 
