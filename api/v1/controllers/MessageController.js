@@ -167,7 +167,9 @@ const MessageController = {
         /**
          * @description filter all online users socket ids.
          */
-        let aou = _.map(c.data.users, (cu) => { if(MessageController.data.users[cu.email]) { return MessageController.data.users[cu.email].rooms[0]; } });
+        let t_d = MessageController.data
+        , aou = []
+        , t_aou = _.map(c.data.users,(cu)=>{if(t_d.users[cu.email]){return _.filter(t_d.users[cu.email].rooms,(cr)=>{return !cr.includes(t_d.initCRId);});}else{return [];}});_.forEach(t_aou,(t_a)=>{aou=_.concat(aou,t_a);});
         /**
          * @description share the packet to everybody in the chat.
          */
@@ -211,27 +213,6 @@ const MessageController = {
        */
       Socket.on('typed', async (param) => {
         Socket.to(MessageController.data.initCRId + param.message.query.cid).emit('typed', param.message.query);
-      });
-
-            /**
-       * @description Logout EventListener is here.
-       */
-      Socket.on('logout', async (reason) => {
-        /**
-         * @description Get from controller data when cookie not available.
-         */
-        let email = await chat.getEmail(MessageController.data.users, Socket.id);
-
-        console.log('before remove', MessageController.data.users, Socket.id);
-
-        // remove logged out socket ids from server.
-        if(email) { _.remove(MessageController.data.users[email].rooms, (t_id) => { return t_id === Socket.id }); }
-
-        console.log('after remove', MessageController.data.users, Socket.id, email);
-
-        await Models.user.updateOne({ email: email }, { online: false });
-
-        console.log(email, 'is now logged out.');
       });
 
       /**
