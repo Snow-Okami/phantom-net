@@ -14,6 +14,7 @@ const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 const TestController = require('../api/v1/controllers/TestController');
 const UserController = require('../api/v1/controllers/UserController');
 const PostController = require('../api/v1/controllers/PostController');
+const VersionController = require('../api/v1/controllers/VersionController');
 
 const api = express.Router();
 
@@ -22,6 +23,13 @@ const api = express.Router();
  */
 const routes = () => {
   api.get('/test', TestController.findAll);
+
+  /**
+   * @description Version controller CRUD operations.
+   */
+  api.get('/version', VersionController.findOne);
+  api.post('/version', VersionController.create);
+  api.put('/version', VersionController.updateOne);
 
   /**
    * @description Admin API CRUD operation.

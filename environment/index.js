@@ -23,7 +23,13 @@ const env = {
     , 'https://rottenvisions.netlify.com'
     , 'http://localhost:4004'
     , 'http://localhost:4005'
-  ]
+  ],
+
+  ver: {
+    server: '1.4.3',
+    clientLatest: '3.0.3',
+    clientCurrent: '3.0.2',
+  }
 };
 
 module.exports = env;

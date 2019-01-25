@@ -6,8 +6,9 @@ const bycript   = require('../helpers/bcrypt');
 const cloudinary = require('cloudinary');
 const env_c = require('../../../environment/').cloudinary;
 const env_m = require('../../../environment/').Mlab;
+const env_v = require('../../../environment').ver;
 
-var Id, User, Post, Chat, Message;
+var Id, User, Post, Chat, Message, Version;
 
 const Models = {
   connect: async () => {
@@ -22,6 +23,7 @@ const Models = {
       Models.create.post();
       Models.create.chat();
       Models.create.message();
+      Models.create.version();
     });
   },
 
@@ -88,7 +90,7 @@ const Models = {
       Post = mongoose.model('Post', schema);
     },
 
-    chat: async() => {
+    chat: async () => {
       let schema = new mongoose.Schema({
         id: { type: String, unique: true, required: true },
         type: { type: Number, default: 0 },
@@ -114,7 +116,7 @@ const Models = {
       Chat = mongoose.model('Chat', schema);
     },
 
-    message: async => {
+    message: async () => {
       let schema = new mongoose.Schema({
         id: { type: String, unique: true, required: true },
         cid: { type: String, required: true },
@@ -126,6 +128,28 @@ const Models = {
         createdAt: { type: Date, required: true }
       });
       Message = mongoose.model('Message', schema);
+    },
+
+    version: async () => {
+      let schema = new mongoose.Schema({
+        server: { type: String, required: true },
+        clientLatest: { type: String, required: true },
+        clientCurrent: { type: String, required: true },
+        updatedAt: { type: Date, required: true }
+      });
+      Version = mongoose.model('Version', schema);
+
+      /**
+       * @description Find if id exists or not.
+       */
+      let l;
+      try { l = await Models.objects.version.findOne({}); } catch(e) {}
+
+      /**
+       * @description Create ids if doesn't exists.
+       */
+      if(l.error) { try { await Models.objects.version.create(env_v); } catch(e) {} }
+      else { try { await Models.objects.version.updateOne({ clientLatest: env_v.clientCurrent }, env_v, {}); } catch(e) {} }
     },
 
   },
@@ -392,7 +416,45 @@ const Models = {
         return { message: { type: 'success' }, data: r };
       },
 
-    }
+    },
+
+    version: {
+      /**
+       * @description finds the version update from server.
+       */
+      findOne: async (param) => {
+        let r;
+        try { r = await Version.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'version doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description creates the version update for clients.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { updatedAt: time };
+        Object.assign(param, ext);
+        try { r = await Version.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create version!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description updates the available version on the server.
+       */
+      updateOne: async (query, param, option) => {
+        let r, time = new Date().getTime(), ext = { updatedAt: time };
+        Object.assign(param, ext);
+        try { r = await Version.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'version doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      }
+    },
+
   }
 };
 
