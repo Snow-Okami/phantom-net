@@ -84,7 +84,7 @@ const Models = {
         description: { type: String, required: true },
         tags: { type: String },
         publish: { type: Boolean, required: true, default: false },
-        image: { type: String, default: 'image.jpg' },
+        image: { type: String, default: '' },
         createdAt: { type: Date, required: true }
       });
       Post = mongoose.model('Post', schema);
