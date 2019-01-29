@@ -57,6 +57,7 @@ const routes = () => {
   api.get('/post', Policies.allowPublic, PostController.findLimited);
   api.get('/posts', Policies.isLoggedIn, PostController.findAll);
   api.post('/post', Policies.isLoggedIn, UploadImage.single('image'), PostController.create);
+  api.put('/post/:id', Policies.isLoggedIn, UploadImage.single('image'), PostController.updateOne);
 
   return api;
 };

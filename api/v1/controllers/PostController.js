@@ -73,6 +73,14 @@ const PostController = {
   },
 
   updateOne: async (req, res) => {
+    /**
+     * @description UPLOADS the image file on Cloudinary.
+     */
+    if(req.file) {
+      let URL = (process.env.DEVELOPMENT ? `http://localhost:${process.env.PORT}/image/post/` : 'https://psynapsus.herokuapp.com/image/post/') + req.file.filename;
+      const i = await Models.post.uploadImage(req.file.path);
+      req.body.image = i.error ? URL : i['data']['secure_url'];
+    }
     const p = await Models.post.updateOne(req.params, req.body, {});
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);

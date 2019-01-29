@@ -273,6 +273,17 @@ const Models = {
         if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
         return { message: { type: 'success' }, data: r };
       },
+
+      /**
+       * @description updates only one user at a time. If parameter contains password it updates jwtValidatedAt.
+       */
+      updateOne: async (query, param, option) => {
+        let r;
+        try { r = await Post.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
       
       /**
        * @description Uploads image files to the Cloudinary server.
