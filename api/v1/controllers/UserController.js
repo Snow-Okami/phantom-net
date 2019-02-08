@@ -63,7 +63,7 @@ const UserController = {
      * @description Request Body must contain Email & Password.
      */
     if(!req.body.password || !req.body.email) {
-      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'Please include email & password filed.' });
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include email & password filed.' });
     }
 
     /**

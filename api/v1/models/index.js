@@ -8,7 +8,7 @@ const env_c = require('../../../environment/').cloudinary;
 const env_m = require('../../../environment/').Mlab;
 const env_v = require('../../../environment').ver;
 
-var Id, User, Post, Chat, Message, Version;
+var Id, User, Post, Comment, Reply, Chat, Message, Version;
 
 const Models = {
   connect: async () => {
@@ -21,6 +21,8 @@ const Models = {
       Models.create.id();
       Models.create.user();
       Models.create.post();
+      Models.create.comment();
+      Models.create.reply();
       Models.create.chat();
       Models.create.message();
       Models.create.version();
@@ -40,6 +42,8 @@ const Models = {
       let schema = new mongoose.Schema({
         user: { type: String, required: true, default: '0' },
         post: { type: String, required: true, default: '0' },
+        comment: { type: String, required: true, default: '0' },
+        reply: { type: String, required: true, default: '0' },
         chat: { type: String, required: true, default: '0' },
         message: { type: String, required: true, default: '0' }
       });
@@ -88,6 +92,28 @@ const Models = {
         createdAt: { type: Date, required: true }
       });
       Post = mongoose.model('Post', schema);
+    },
+
+    comment: async () => {
+      let schema = new mongoose.Schema({
+        id: { type: String, required: true, unique: true },
+        text: { type: String, required: true },
+        createdFor: { type: String, required: true },
+        createdBy: { type: String, required: true },
+        createdAt: { type: Date, required: true }
+      });
+      Comment = mongoose.model('Comment', schema);
+    },
+
+    reply: async () => {
+      let schema = new mongoose.Schema({
+        id: { type: String, required: true, unique: true },
+        text: { type: String, required: true },
+        createdFor: { type: String, required: true },
+        createdBy: { type: String, required: true },
+        createdAt: { type: Date, required: true }
+      });
+      Reply = mongoose.model('Reply', schema);
     },
 
     chat: async () => {
@@ -296,6 +322,44 @@ const Models = {
         if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
         return { message: { type: 'success' }, data: r };
       }
+    },
+
+    comment: {
+      /**
+       * @description finds one chat only with matching parameter.
+       */
+      findOne: async (param) => {
+        let p; let Item = param.type === 'comment' ? Comment : Reply;
+        try { p = await Item.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!p) { return { error: { type: 'error', text: param.type + ' doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: p };
+      },
+
+      /**
+       * @description finds all the available chats in the Mlab database.
+       */
+      findAll: async (param) => {
+        let r; let Item = param.type === 'comment' ? Comment : Reply;
+        try { r = await Item.find(param).sort({ updatedAt: -1 }); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description posts an update with required parameters.
+       * @param param 
+       */
+      create: async (param) => {
+        let Item = param.type === 'comment' ? Comment : Reply;
+
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try { r = await Item.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create ' + param.type + '!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
     },
 
     chat: {

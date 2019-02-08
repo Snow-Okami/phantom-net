@@ -14,6 +14,7 @@ const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 const TestController = require('../api/v1/controllers/TestController');
 const UserController = require('../api/v1/controllers/UserController');
 const PostController = require('../api/v1/controllers/PostController');
+const CommentController = require('../api/v1/controllers/CommentController');
 const VersionController = require('../api/v1/controllers/VersionController');
 
 const api = express.Router();
@@ -58,6 +59,13 @@ const routes = () => {
   api.get('/posts', Policies.isLoggedIn, PostController.findAll);
   api.post('/post', Policies.isLoggedIn, UploadImage.single('image'), PostController.create);
   api.put('/post/:id', Policies.isLoggedIn, UploadImage.single('image'), PostController.updateOne);
+
+  /**
+   * @description Comments API CRUD operation.
+   */
+  api.get('/postcomment/:type/:id', CommentController.findOne);
+  api.get('/postcomments/:type', CommentController.findAll);
+  api.post('/postcomment', CommentController.create);
 
   return api;
 };
