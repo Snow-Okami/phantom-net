@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const fs = require('fs');
 const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
@@ -88,6 +89,7 @@ const Models = {
         description: { type: String, required: true },
         tags: { type: String },
         publish: { type: Boolean, required: true, default: false },
+        comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
         image: { type: String, default: '' },
         createdAt: { type: Date, required: true }
       });
@@ -98,7 +100,8 @@ const Models = {
       let schema = new mongoose.Schema({
         id: { type: String, required: true, unique: true },
         text: { type: String, required: true },
-        createdFor: { type: String, required: true },
+        createdFor: { type: Schema.Types.ObjectId, ref: 'Post' },
+        replies: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
         createdBy: { type: String, required: true },
         createdAt: { type: Date, required: true }
       });
@@ -109,7 +112,7 @@ const Models = {
       let schema = new mongoose.Schema({
         id: { type: String, required: true, unique: true },
         text: { type: String, required: true },
-        createdFor: { type: String, required: true },
+        createdFor: { type: Schema.Types.ObjectId, ref: 'Comment' },
         createdBy: { type: String, required: true },
         createdAt: { type: Date, required: true }
       });
@@ -258,7 +261,7 @@ const Models = {
        */
       findOne: async (param) => {
         let p;
-        try { p = await Post.findOne(param); }
+        try { p = await Post.findOne(param).populate('comments'); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
@@ -269,7 +272,7 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
+        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate('comments'); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
@@ -280,7 +283,7 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Post.find(param); }
+        try { r = await Post.find(param).populate('comments'); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
