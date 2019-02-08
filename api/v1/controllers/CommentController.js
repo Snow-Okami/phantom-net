@@ -8,7 +8,7 @@ const CommentController = {
     let t = ['comment', 'reply'];
     if(!_.includes(t, req.params.type)) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'type is either comment or reply.' }); }
 
-    const p = await Models.post.findOne(req.params);
+    const p = await Models.comment.findOne(req.params);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
   },
@@ -42,7 +42,7 @@ const CommentController = {
     /**
      * @description SET id property for Admin.
      */
-    req.body.id = id.data.post;
+    req.body.id = id.data.comment;
 
     const p = await Models.comment.create(req.body);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }

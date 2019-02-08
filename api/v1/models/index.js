@@ -343,6 +343,7 @@ const Models = {
         let r; let Item = param.type === 'comment' ? Comment : Reply;
         try { r = await Item.find(param).sort({ updatedAt: -1 }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no ' + param.type + ' found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
