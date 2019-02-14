@@ -43,6 +43,12 @@ const CommentController = {
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
 
     return res.status(200).send(c);
+  },
+
+  updateOne: async (req, res) => {
+    const p = await Models.comment.updateOne(req.params, req.body, {});
+    if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    return res.status(200).send(p);
   }
 };
 
