@@ -261,7 +261,7 @@ const Models = {
        */
       findOne: async (param) => {
         let p;
-        try { p = await Post.findOne(param).populate('comments'); }
+        try { p = await Post.findOne(param).populate({ path: 'comments', populate: { path: 'replies' } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
@@ -272,7 +272,7 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate('comments'); }
+        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({ path: 'comments', populate: { path: 'replies' } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
@@ -283,7 +283,7 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Post.find(param).populate('comments'); }
+        try { r = await Post.find(param).populate({ path: 'comments', populate: { path: 'replies' } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
@@ -332,10 +332,9 @@ const Models = {
        * @description finds one chat only with matching parameter.
        */
       findOne: async (param) => {
-        let p; let Item = param.type === 'comment' ? Comment : Reply;
-        try { p = await Item.findOne(param); }
+        try { p = await Comment.findOne(param).populate(['createdFor', 'replies']); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!p) { return { error: { type: 'error', text: param.type + ' doesn\'t exists!' } }; }
+        if(!p) { return { error: { type: 'error', text: 'comment doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
       },
 
@@ -343,10 +342,9 @@ const Models = {
        * @description finds all the available chats in the Mlab database.
        */
       findAll: async (param) => {
-        let r; let Item = param.type === 'comment' ? Comment : Reply;
-        try { r = await Item.find(param).sort({ updatedAt: -1 }); }
+        try { r = await Comment.find(param).sort({ updatedAt: -1 }).populate(['createdFor', 'replies']); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no ' + param.type + ' found!' } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no comment found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -355,13 +353,57 @@ const Models = {
        * @param param 
        */
       create: async (param) => {
-        let Item = param.type === 'comment' ? Comment : Reply;
-
         let r, time = new Date().getTime(), ext = { createdAt: time };
         Object.assign(param, ext);
-        try { r = await Item.create(param); }
+        try { r = await Comment.create(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r) { return { error: { type: 'error', text: 'can\'t create ' + param.type + '!' } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create comment!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description updates only one comment at a time.
+       */
+      updateOne: async (query, param, option) => {
+        let r;
+        try { r = await Comment.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'comment doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+    },
+
+    reply: {
+      /**
+       * @description finds one chat only with matching parameter.
+       */
+      findOne: async (param) => {
+        try { p = await Reply.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!p) { return { error: { type: 'error', text: 'reply doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: p };
+      },
+
+      /**
+       * @description finds all the available chats in the Mlab database.
+       */
+      findAll: async (param) => {
+        try { r = await Reply.find(param).sort({ updatedAt: -1 }); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no reply found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description posts an update with required parameters.
+       * @param param 
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try { r = await Reply.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create reply!' } }; }
         return { message: { type: 'success' }, data: r };
       },
     },

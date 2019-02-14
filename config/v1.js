@@ -15,6 +15,7 @@ const TestController = require('../api/v1/controllers/TestController');
 const UserController = require('../api/v1/controllers/UserController');
 const PostController = require('../api/v1/controllers/PostController');
 const CommentController = require('../api/v1/controllers/CommentController');
+const ReplyController = require('../api/v1/controllers/ReplyController');
 const VersionController = require('../api/v1/controllers/VersionController');
 
 const api = express.Router();
@@ -63,9 +64,16 @@ const routes = () => {
   /**
    * @description Comments API CRUD operation.
    */
-  api.get('/postcomment/:type/:id', CommentController.findOne);
-  api.get('/postcomments/:type', CommentController.findAll);
+  api.get('/postcomment/:id', CommentController.findOne);
+  api.get('/postcomments', CommentController.findAll);
   api.post('/postcomment', CommentController.create);
+
+  /**
+   * @descaription Reply CRUD API operation.
+   */
+  api.get('/commentreply/:id', ReplyController.create);
+  api.get('/commentreplies', ReplyController.create);
+  api.post('/commentreply', ReplyController.create);
 
   return api;
 };
