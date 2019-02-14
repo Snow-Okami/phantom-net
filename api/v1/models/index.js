@@ -261,7 +261,7 @@ const Models = {
        */
       findOne: async (param) => {
         let p;
-        try { p = await Post.findOne(param).populate({ path: 'comments', populate: { path: 'replies' } }); }
+        try { p = await Post.findOne(param).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies' } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
@@ -272,7 +272,7 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({ path: 'comments', populate: { path: 'replies' } }); }
+        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies' } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
@@ -283,7 +283,7 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Post.find(param).populate({ path: 'comments', populate: { path: 'replies' } }); }
+        try { r = await Post.find(param).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies' } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
