@@ -8,6 +8,34 @@ const policies = {
     next();
   },
 
+  isAdmin: async (req, res, next) => {
+    if(!req.headers.authorization) { return res.status(404).set('Content-Type', 'application/json').send({ error: { type: 'error', text: 'please include authorization in header' } }); }
+    /**
+     * @description Decode and Authenticate JWT token.
+     */
+    const token = await jwt.decode(req.headers.authorization);
+    if(token.error) {
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
+    }
+
+    /**
+     * @description If the user has a role he must have the email in request params.
+     * The email must match the authorization token.
+     */
+    if(token.capability < 2) {
+      return res.status(400).set('Content-Type', 'application/json').send({ type: 'error', text: 'access denied' });
+    }
+
+    const u = await Models.user.findOne(
+      _.pick(token, ['email', 'jwtValidatedAt', 'capability'])
+    );
+    if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+
+    req.query.capability = u.data.capability;
+
+    next();
+  },
+
   isLoggedIn: async (req, res, next) => {
     if(!req.headers.authorization) { return res.status(404).set('Content-Type', 'application/json').send({ error: { type: 'error', text: 'please include authorization in header' } }); }
     /**
@@ -18,8 +46,17 @@ const policies = {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
     }
 
+    /**
+     * @description If the user has a role he must have the email in request params.
+     * The email must match the authorization token.
+     */
+    if(token.capability < 1) {
+      if(!req.params.email) { return res.status(400).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include email in params' }); }
+      if(req.params.email !== token.email) { return res.status(400).set('Content-Type', 'application/json').send({ type: 'error', text: 'invalid email in params' }); }
+    }
+
     const u = await Models.user.findOne(
-      _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
+      _.pick(token, ['email', 'jwtValidatedAt', 'capability'])
     );
     if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
@@ -40,7 +77,7 @@ const policies = {
       }
 
       const u = await Models.user.findOne(
-        _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
+        _.pick(token, ['email', 'jwtValidatedAt', 'capability'])
       );
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 

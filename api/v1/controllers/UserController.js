@@ -27,6 +27,17 @@ const UserController = {
   },
 
   create: async (req, res) => {
+    /**
+     * @description Users are allowed to register with role 0 & 1.
+     */
+    req.body.capability = isNaN(req.body.capability) ? 0 : parseInt(req.body.capability);
+    if(req.body.capability > 1) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0 & 1' }); }
+
+    /**
+     * @description removes emailValidated, allowedToAccess properties from update object.
+     */
+    req.body = _.omit(req.body, ['emailValidated', 'allowedToAccess']);
+
     const id = await Models.id.findOne({});
     if(id.error) { return res.status(404).set('Content-Type', 'application/json').send(id.error); }
 
@@ -46,6 +57,11 @@ const UserController = {
   },
 
   updateOne: async (req, res) => {
+    /**
+     * @description removes email, password and role properties from update object.
+     */
+    req.body = _.omit(req.body, ['email', 'capability', 'emailValidated', 'allowedToAccess']);
+
     if(req.file) { req.body.avatar = req.file.filename; }
     const a = await Models.user.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
@@ -89,7 +105,7 @@ const UserController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
+      _.pick(a.data, ['email', 'jwtValidatedAt', 'capability'])
     );
 
     /**
@@ -119,7 +135,7 @@ const UserController = {
 
     let time = new Date().getTime();
     const a = await Models.user.updateOne(
-      _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
+      _.pick(token, ['email', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
     );
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 

@@ -37,7 +37,7 @@ const routes = () => {
    * @description Admin API CRUD operation.
    */
   api.get('/admin/:email', Policies.isLoggedIn, UserController.findOne);
-  api.get('/admins', Policies.isLoggedIn, UserController.findAll);
+  api.get('/admins', Policies.isAdmin, UserController.findAll);
   api.post('/admin', UserController.create);
   api.post('/admin/login', UserController.login);
   api.post('/admin/logout', UserController.logout);
@@ -45,7 +45,7 @@ const routes = () => {
    * @description Request Body can contain Form-Data or Raw JSON data.
    */
   api.put('/admin/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
-  api.delete('/admin/:email', Policies.isLoggedIn, UserController.deleteOne);
+  api.delete('/admin/:email', Policies.isAdmin, UserController.deleteOne);
 
   /**
    * @description Post API CRUD operation.
@@ -57,9 +57,9 @@ const routes = () => {
    * @param limit: Only POSITIVE Numbers. Default is 10. OPTIONAL Query Parameter.
    */
   api.get('/post', Policies.allowPublic, PostController.findLimited);
-  api.get('/posts', Policies.isLoggedIn, PostController.findAll);
-  api.post('/post', Policies.isLoggedIn, UploadImage.single('image'), PostController.create);
-  api.put('/post/:id', Policies.isLoggedIn, UploadImage.single('image'), PostController.updateOne);
+  api.get('/posts', Policies.isAdmin, PostController.findAll);
+  api.post('/post', Policies.isAdmin, UploadImage.single('image'), PostController.create);
+  api.put('/post/:id', Policies.isAdmin, UploadImage.single('image'), PostController.updateOne);
 
   /**
    * @description Comments API CRUD operation.

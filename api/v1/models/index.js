@@ -69,13 +69,14 @@ const Models = {
         fullName: { type: String },
         email: { type: String, unique: true, required: true },
         password: { type: String, required: true },
-        createdAt: { type: Date },
-        jwtValidatedAt: { type: Date },
+        createdAt: { type: Date, required: true },
+        updatedAt: { type: Date, required: true },
+        jwtValidatedAt: { type: Date, required: true },
         emailValidated: { type: Boolean, default: false },
         allowedToAccess: { type: Boolean, default: false },
         isMale: { type: Boolean, required: true },
-        avatar: { type: String, default: 'user.jpg' },
-        capability: { type: Number, default: 2 },
+        avatar: { type: String, default: '' },
+        capability: { type: Number, default: 1 },
         online: { type: Boolean, default: false },
         id: { type: String, required: true }, 
       });
@@ -217,7 +218,7 @@ const Models = {
        * @param param looks like {firstName: String, lastName: String, email: String, password: String, id: String, avatar: String}.
        */
       create: async (param) => {
-        let r, time = new Date().getTime(), ext = { createdAt: time, jwtValidatedAt: time };
+        let r, time = new Date().getTime(), ext = { createdAt: time, updatedAt: time, jwtValidatedAt: time };
         Object.assign(param, ext);
         try {
           if(param.password) { param.password = await bycript.hash(param.password); }
@@ -248,6 +249,7 @@ const Models = {
             Object.assign(param, ext);
             param.password = await bycript.hash(param.password);
           }
+          Object.assign(param, { updatedAt: time });
           r = await User.updateOne(query, param, option);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
