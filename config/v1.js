@@ -36,16 +36,16 @@ const routes = () => {
   /**
    * @description Admin API CRUD operation.
    */
-  api.get('/admin/:email', Policies.isLoggedIn, UserController.findOne);
-  api.get('/admins', Policies.isAdmin, UserController.findAll);
-  api.post('/admin', UserController.create);
-  api.post('/admin/login', UserController.login);
-  api.post('/admin/logout', UserController.logout);
+  api.get('/user/:email', Policies.isLoggedIn, UserController.findOne);
+  api.get('/users', Policies.isAdmin, UserController.findAll);
+  api.post('/user', UserController.create);
+  api.post('/user/login', UserController.login);
+  api.post('/user/logout', UserController.logout);
   /**
    * @description Request Body can contain Form-Data or Raw JSON data.
    */
-  api.put('/admin/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
-  api.delete('/admin/:email', Policies.isAdmin, UserController.deleteOne);
+  api.put('/user/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
+  api.delete('/user/:email', Policies.isAdmin, UserController.deleteOne);
 
   /**
    * @description Post API CRUD operation.

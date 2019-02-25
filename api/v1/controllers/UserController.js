@@ -31,7 +31,7 @@ const UserController = {
      * @description Users are allowed to register with role 0 & 1.
      */
     req.body.capability = isNaN(req.body.capability) ? 0 : parseInt(req.body.capability);
-    if(req.body.capability > 1) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0 & 1' }); }
+    if(req.body.capability > 1 || req.body.capability < 0) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0 & 1' }); }
 
     /**
      * @description removes emailValidated, allowedToAccess properties from update object.
