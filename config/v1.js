@@ -37,6 +37,7 @@ const routes = () => {
    * @description Admin API CRUD operation.
    */
   api.get('/user/:email', Policies.isLoggedIn, UserController.findOne);
+  api.get('/user', Policies.isAdmin, UserController.findLimited);
   api.get('/users', Policies.isAdmin, UserController.findAll);
   api.post('/user', UserController.create);
   api.post('/user/login', UserController.login);

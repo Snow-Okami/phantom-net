@@ -7,6 +7,7 @@ const UserController = {
   findOne: async (req, res) => {
     const a = await Models.user.findOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
     return res.status(200).send(a);
   },
 
