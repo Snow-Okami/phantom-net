@@ -90,6 +90,8 @@ const UserController = {
     delete req.body.password;
     const a = await Models.user.findOne(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    if(!a.data.emailValidated) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please validate the email!' }); }
+    if(!a.data.allowedToAccess) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'user is not allowed to access!' }); }
 
     /**
      * @description Compare password provided by User.
