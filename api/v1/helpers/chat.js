@@ -27,7 +27,7 @@ const chat = {
       if(token.error) { return token; }
   
       const u = await Models.user.findOne(
-        _.pick(token, ['email', 'createdAt', 'jwtValidatedAt', 'capability'])
+        _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability'])
       );
       if(u.error) { return u; }
   

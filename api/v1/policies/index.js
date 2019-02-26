@@ -27,7 +27,7 @@ const policies = {
     }
 
     const u = await Models.user.findOne(
-      _.pick(token, ['email', 'jwtValidatedAt', 'capability'])
+      _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability'])
     );
     if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
@@ -56,7 +56,7 @@ const policies = {
     }
 
     const u = await Models.user.findOne(
-      _.pick(token, ['email', 'jwtValidatedAt', 'capability'])
+      _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability'])
     );
     if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
@@ -77,7 +77,7 @@ const policies = {
       }
 
       const u = await Models.user.findOne(
-        _.pick(token, ['email', 'jwtValidatedAt', 'capability'])
+        _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability'])
       );
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 

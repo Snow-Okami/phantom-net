@@ -32,7 +32,7 @@ const UserController = {
      * @description Users are allowed to register with role 0 & 1.
      */
     req.body.capability = isNaN(req.body.capability) ? 0 : parseInt(req.body.capability);
-    if(req.body.capability > 1 || req.body.capability < 0) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0 & 1' }); }
+    if(req.body.capability > 2 || req.body.capability < 0) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0, 1 & 2' }); }
 
     /**
      * @description removes emailValidated, allowedToAccess properties from update object.
@@ -53,7 +53,7 @@ const UserController = {
     req.body.id = id.data.user;
     const a = await Models.user.create(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-
+    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
     return res.status(200).send(a);
   },
 
@@ -108,7 +108,7 @@ const UserController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'jwtValidatedAt', 'capability'])
+      _.pick(a.data, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability'])
     );
 
     /**
@@ -138,7 +138,7 @@ const UserController = {
 
     let time = new Date().getTime();
     const a = await Models.user.updateOne(
-      _.pick(token, ['email', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
+      _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
     );
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
