@@ -146,6 +146,13 @@ const UserController = {
      * @description Return Logged Out Successful Response.
      */
     return res.status(200).set('Content-Type', 'application/json').send(a);
+  },
+
+  findName: async (req, res) => {
+    const a = await Models.user.findOne(req.params);
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    a.data = _.pick(a.data, ['email', 'firstName', 'lastName', 'isMale', 'fullName']);
+    return res.status(200).send(a);
   }
 };
 

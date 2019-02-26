@@ -47,7 +47,10 @@ const routes = () => {
    */
   api.put('/user/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
   api.delete('/user/:email', Policies.isAdmin, UserController.deleteOne);
-
+  /**
+   * @description get user's firstName, lastName and fullName
+   */
+  api.get('/username/:email', UserController.findName);
   /**
    * @description Post API CRUD operation.
    */
