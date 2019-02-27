@@ -26,9 +26,9 @@ const env = {
   ],
 
   ver: {
-    server: '1.4.3',
-    clientLatest: '3.0.3',
-    clientCurrent: '3.0.2',
+    server: '1.4.7',
+    clientLatest: '3.0.6',
+    clientCurrent: '3.0.5',
   }
 };
 

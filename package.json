@@ -1,6 +1,6 @@
 {
   "name": "psynapsus-server",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Node JS server contains API's for different platform.",
   "main": "index.js",
   "scripts": {
