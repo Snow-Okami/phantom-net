@@ -263,7 +263,7 @@ const Models = {
        */
       findOne: async (param) => {
         let p;
-        try { p = await Post.findOne(param).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies' } }); }
+        try { p = await Post.findOne(param).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies', options: { limit: 4 } } }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
