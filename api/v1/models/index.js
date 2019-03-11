@@ -571,8 +571,8 @@ const Models = {
        * @description sends email from configured gmail account.
        */
       send: async (param) => {
+        const path = process.env.DEVELOPMENT ? `http://localhost:4004/email-verify` : 'https://psynapsus.netlify.com/email-verify';
         let Gmail = nodemailer.createTransport(env_g);
-        const path = 'https://localhost:5000/email-verify';
         let r, option = {
           from: env_g.auth.user,
           to: param.user,

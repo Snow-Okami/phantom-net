@@ -36,7 +36,7 @@ const env = {
     port: 465,
     secure: true,
     auth: {
-      user: '',
+      user: 'abhisek.dutta.507@gmail.com',
       pass: ''
     }
   },
