@@ -572,6 +572,7 @@ const Models = {
        */
       send: async (param) => {
         let Gmail = nodemailer.createTransport(env_g);
+        const path = 'https://localhost:5000/email-verify';
         let r, option = {
           from: env_g.auth.user,
           to: param.user,
@@ -589,8 +590,8 @@ const Models = {
             font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
           "> Please confirm that ${param.user} is your e-mail address by clicking on the button below or use this link <a style="
             color: #a93647;
-          " href="https://psynapsus.herokuapp.com/api/v1/user/verify/${param.token}"> https://psynapsus.herokuapp.com/api/v1/user/verify/${param.token} </a> within 48 hours. </p>
-          <a type="button" href="http://localhost:5000/api/v1/user/verify/${param.token}" style="
+          " href="${path}/${param.token}"> ${path}/${param.token} </a> within 48 hours. </p>
+          <a type="button" href="${path}/${param.token}" style="
             font-size: 12px;
             font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
             padding: 12px;

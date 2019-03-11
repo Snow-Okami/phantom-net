@@ -54,7 +54,7 @@ const routes = () => {
   /**
    * @description verify user email address
    */
-  api.get('/user/verify/:_id', UserController.verify);
+  api.put('/user/verify/:_id', UserController.verify);
   /**
    * @description Post API CRUD operation.
    */
