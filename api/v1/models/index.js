@@ -5,9 +5,11 @@ const fs = require('fs');
 const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
 const cloudinary = require('cloudinary');
+const nodemailer = require('nodemailer');
 const env_c = require('../../../environment/').cloudinary;
 const env_m = require('../../../environment/').Mlab;
 const env_v = require('../../../environment').ver;
+const env_g = require('../../../environment/').Google;
 
 var Id, User, Post, Comment, Reply, Chat, Message, Version;
 
@@ -501,6 +503,31 @@ const Models = {
         return { message: { type: 'success' }, data: r };
       },
     },
+
+    gmail: {
+      /**
+       * @description sends email from configured gmail account.
+       */
+      send: async (param) => {
+        let Gmail = nodemailer.createTransport(env_g);
+        let r, option = {
+          from: env_g.auth.user,
+          to: param.user,
+          subject: 'Confirm your email address',
+          html: `
+          <p> Verify your e-mail address to finish signing up for Psynapsus </p>
+          <p> Thank you for choosing Psynapsus </p>
+          <p> Please confirm that ${param.user} is your e-mail address by clicking on the button below or use this link <a href="https://psynapsus.netlify.com/api/v1/user/verify/${param.token}"> https://psynapsus.netlify.com/api/v1/user/verify/${param.token} </a> within 48 hours. </p>
+          <button type="button" href="https://psynapsus.netlify.com/api/v1/user/verify/${param.token}"> VERIFY </button>
+          `
+        };
+        try {
+          r = await Gmail.sendMail(option);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        return { message: { type: 'success' }, data: r };
+      }
+
+    },    
 
     id: {
       /**

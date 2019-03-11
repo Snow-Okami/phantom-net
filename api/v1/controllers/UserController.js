@@ -29,7 +29,7 @@ const UserController = {
 
   create: async (req, res) => {
     /**
-     * @description Users are allowed to register with role 0 & 1.
+     * @description Users are allowed to register with role 0, 1 & 2.
      */
     req.body.capability = isNaN(req.body.capability) ? 0 : parseInt(req.body.capability);
     if(req.body.capability > 2 || req.body.capability < 0) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0, 1 & 2' }); }
@@ -37,7 +37,8 @@ const UserController = {
     /**
      * @description removes emailValidated, allowedToAccess properties from update object.
      */
-    req.body = _.omit(req.body, ['emailValidated', 'allowedToAccess']);
+    // req.body = _.omit(req.body, ['emailValidated']);
+    Object.assign(req.body, { emailValidated: false, allowedToAccess: req.body.capability != 2 });
 
     const id = await Models.id.findOne({});
     if(id.error) { return res.status(404).set('Content-Type', 'application/json').send(id.error); }

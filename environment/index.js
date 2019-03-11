@@ -26,10 +26,20 @@ const env = {
   ],
 
   ver: {
-    server: '1.4.7',
-    clientLatest: '3.0.6',
-    clientCurrent: '3.0.5',
-  }
+    server: '1.5.0',
+    clientLatest: '3.1.0',
+    clientCurrent: '3.1.0',
+  },
+
+  Google: {
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: '',
+      pass: ''
+    }
+  },
 };
 
 module.exports = env;
