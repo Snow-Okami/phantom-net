@@ -577,10 +577,32 @@ const Models = {
           to: param.user,
           subject: 'Confirm your email address',
           html: `
-          <p> Verify your e-mail address to finish signing up for Psynapsus </p>
-          <p> Thank you for choosing Psynapsus </p>
-          <p> Please confirm that ${param.user} is your e-mail address by clicking on the button below or use this link <a href="https://psynapsus.netlify.com/api/v1/user/verify/${param.token}"> https://psynapsus.netlify.com/api/v1/user/verify/${param.token} </a> within 48 hours. </p>
-          <button type="button" href="https://psynapsus.netlify.com/api/v1/user/verify/${param.token}"> VERIFY </button>
+          <p style="
+            font-size: 20px;
+            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+          "> Verify your e-mail address to finish signing up for Psynapsus </p>
+          <p style="
+            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+          "> Thank you for choosing Psynapsus </p>
+          <p style="
+            font-size: 15px;
+            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+          "> Please confirm that ${param.user} is your e-mail address by clicking on the button below or use this link <a style="
+            color: #a93647;
+          " href="https://psynapsus.herokuapp.com/api/v1/user/verify/${param.token}"> https://psynapsus.herokuapp.com/api/v1/user/verify/${param.token} </a> within 48 hours. </p>
+          <a type="button" href="http://localhost:5000/api/v1/user/verify/${param.token}" style="
+            font-size: 12px;
+            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+            background: #a93647;
+            color: #fff;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+          "> VERIFY </a>
           `
         };
         try {

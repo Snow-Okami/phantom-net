@@ -52,6 +52,10 @@ const routes = () => {
    */
   api.get('/username/:email', UserController.findName);
   /**
+   * @description verify user email address
+   */
+  api.get('/user/verify/:_id', UserController.verify);
+  /**
    * @description Post API CRUD operation.
    */
   api.get('/post/:id', Policies.allowPublic, PostController.findOne);

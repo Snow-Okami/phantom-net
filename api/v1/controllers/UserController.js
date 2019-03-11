@@ -161,6 +161,19 @@ const UserController = {
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     a.data = _.pick(a.data, ['email', 'firstName', 'lastName', 'isMale', 'fullName']);
     return res.status(200).send(a);
+  },
+
+  verify: async (req, res) => {
+    let c = await Models.vcode.findOne(req.params);
+    if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
+
+    const u = await Models.user.updateOne({ email: c.data.user.email }, { emailValidated: true }, {});
+    if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+
+    c = await Models.vcode.deleteMany({ user: c.data.user._id });
+    if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
+
+    return res.status(200).set('Content-Type', 'application/json').send(u);
   }
 };
 
