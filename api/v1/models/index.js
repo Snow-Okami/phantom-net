@@ -11,7 +11,7 @@ const env_m = require('../../../environment/').Mlab;
 const env_v = require('../../../environment').ver;
 const env_g = require('../../../environment/').Google;
 
-var Id, User, Post, Comment, Reply, Chat, Message, Version;
+var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode;
 
 const Models = {
   connect: async () => {
@@ -29,6 +29,7 @@ const Models = {
       Models.create.chat();
       Models.create.message();
       Models.create.version();
+      Models.create.vcode();
     });
   },
 
@@ -80,9 +81,21 @@ const Models = {
         avatar: { type: String, default: '' },
         capability: { type: Number, default: 1 },
         online: { type: Boolean, default: false },
-        id: { type: String, required: true }, 
+        id: { type: String, required: true },
+        verificationCodes: [{ type: Schema.Types.ObjectId, ref: 'Vcode' }]
       });
       User = mongoose.model('User', schema);
+    },
+
+    /**
+     * @description Reset codes for password reset.
+     */
+    vcode: async () => {
+      let schema = new mongoose.Schema({
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        createdAt: { type: Date, required: true }
+      });
+      Vcode = mongoose.model('Vcode', schema);
     },
 
     post: async () => {
@@ -257,6 +270,55 @@ const Models = {
         if(!r.n) { return { error: { type: 'error', text: 'email doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
+    },
+
+    vcode: {
+      /**
+       * @description finds one user only with matching parameter.
+       */
+      findOne: async (param) => {
+        let r;
+        try { r = await Vcode.findOne(param).populate('user'); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'vcode doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description creates one user with required parameters.
+       * @param param looks like 
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try {
+          r = await Vcode.create(param);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create vcode!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description deletes only one user matching the parameters from Mlab database.
+       */
+      deleteOne: async (param) => {
+        let r;
+        try { r = await Vcode.deleteOne(param); }
+        catch(e) {  return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'vcode doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description deletes many records after matching only user with the parameters from Mlab database.
+       */
+      deleteMany: async (param) => {
+        let r;
+        try { r = await Vcode.deleteMany(param); }
+        catch(e) {  return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'vcode doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
     },
 
     post: {

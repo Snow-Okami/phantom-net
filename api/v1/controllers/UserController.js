@@ -54,6 +54,13 @@ const UserController = {
     req.body.id = id.data.user;
     const a = await Models.user.create(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+
+    const c = await Models.vcode.create({ user: a.data._id });
+    if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
+
+    const m = await Models.gmail.send({ user: a.data.email, token: c.data._id });
+    if(m.error) { return res.status(404).set('Content-Type', 'application/json').send(m.error); }
+    
     a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
     return res.status(200).send(a);
   },
