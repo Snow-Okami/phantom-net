@@ -34,6 +34,9 @@ const UserController = {
     req.body.capability = isNaN(req.body.capability) ? 0 : parseInt(req.body.capability);
     if(req.body.capability > 2 || req.body.capability < 0) { return res.status(404).send({ type: 'error', text: 'please include capability in body eg. 0, 1 & 2' }); }
 
+    let tu = await Models.user.findOne({ 'username': req.body.username });
+    if(!tu.error) { return res.status(404).send({ type: 'error', text: 'username already exists!' }); };
+
     /**
      * @description removes emailValidated, allowedToAccess properties from update object.
      */
