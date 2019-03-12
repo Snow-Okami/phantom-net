@@ -50,7 +50,7 @@ const policies = {
      * @description If the user has a role he must have the email in request params.
      * The email must match the authorization token.
      */
-    if(token.capability < 1) {
+    if(token.capability < 2) {
       if(!req.params.email) { return res.status(400).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include email in params' }); }
       if(req.params.email !== token.email) { return res.status(400).set('Content-Type', 'application/json').send({ type: 'error', text: 'invalid email in params' }); }
     }

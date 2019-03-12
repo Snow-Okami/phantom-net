@@ -7,7 +7,7 @@ const UserController = {
   findOne: async (req, res) => {
     const a = await Models.user.findOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
+    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'username', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
     return res.status(200).send(a);
   },
 
@@ -61,7 +61,7 @@ const UserController = {
     const m = await Models.gmail.send({ user: a.data.email, token: c.data._id });
     if(m.error) { return res.status(404).set('Content-Type', 'application/json').send(m.error); }
     
-    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
+    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'username', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
     return res.status(200).send(a);
   },
 
@@ -159,7 +159,14 @@ const UserController = {
   findName: async (req, res) => {
     const a = await Models.user.findOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-    a.data = _.pick(a.data, ['email', 'firstName', 'lastName', 'isMale', 'fullName']);
+    a.data = _.pick(a.data, ['username', 'email', 'isMale']);
+    return res.status(200).send(a);
+  },
+
+  hasUser: async (req, res) => {
+    const a = await Models.user.findOne(req.params);
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    a.data = _.pick(a.data, ['username', 'email', 'isMale']);
     return res.status(200).send(a);
   },
 

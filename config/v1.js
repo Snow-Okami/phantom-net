@@ -51,6 +51,10 @@ const routes = () => {
    * @description get user's firstName, lastName and fullName
    */
   api.get('/username/:email', UserController.findName);
+    /**
+   * @description get user's firstName, lastName and fullName
+   */
+  api.get('/hasuser/:username', UserController.hasUser);
   /**
    * @description verify user email address
    */
