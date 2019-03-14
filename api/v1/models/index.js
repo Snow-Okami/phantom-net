@@ -145,12 +145,14 @@ const Models = {
         createdAt: { type: Date },
         updatedAt: { type: Date },
         admin: {
+          username: { type: String },
           email: { type: String, required: true },
           fullName: { type: String, required: true }
         },
         lastMessage: {
           text: { type: String, default: '' },
           createdBy: {
+            username: { type: String },
             email: { type: String },
             fullName: { type: String }
           },
@@ -168,6 +170,7 @@ const Models = {
         cid: { type: String, required: true },
         text: { type: String, required: true },
         createdBy: {
+          username: { type: String },
           email: { type: String, required: true },
           fullName: { type: String, required: true }
         },

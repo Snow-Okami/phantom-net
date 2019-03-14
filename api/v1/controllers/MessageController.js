@@ -37,7 +37,7 @@ const MessageController = {
         /**
          * @description Pass the user info 
          */
-        io.to(Socket.id).emit('user', _.pick(u, ['email', 'firstName', 'lastName', 'fullName', 'emailValidated', 'avatar', 'online']));
+        io.to(Socket.id).emit('user', _.pick(u, ['username', 'email', 'firstName', 'lastName', 'fullName', 'emailValidated', 'avatar', 'online']));
 
         const ch = await Models.chat.findAll({ "users.email": u.email });
         if(ch.error) { return ch; }
@@ -126,7 +126,7 @@ const MessageController = {
          */
         if(!p.error) {
           _.remove(p.data, (t_u) => { return t_u.email === u.email });
-          p.data = _.map(p.data, (t_u) => { return _.pick(t_u, ['email', 'fullName', 'id', 'online', 'avatar']) });
+          p.data = _.map(p.data, (t_u) => { return _.pick(t_u, ['username', 'email', 'fullName', 'id', 'online', 'avatar']) });
           /**
            * @description when no user exists in data.
            */
@@ -153,7 +153,7 @@ const MessageController = {
          */
         await Models.id.updateOne({'chat': id.data.chat}, {'chat': Number(id.data.chat) + 1}, {});
 
-        const au = _.pick(u, ['email', 'fullName']);
+        const au = _.pick(u, ['username', 'email', 'fullName']);
         /**
          * @description bind the admin with the chat.
          */
