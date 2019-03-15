@@ -1,7 +1,8 @@
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ejs = require('ejs');
 const fs = require('fs');
+const path = require('path');
 const _ = require('lodash');
 const bycript   = require('../helpers/bcrypt');
 const cloudinary = require('cloudinary');
@@ -575,40 +576,16 @@ const Models = {
        * @description sends email from configured gmail account.
        */
       send: async (param) => {
-        const path = process.env.DEVELOPMENT ? `http://localhost:4004/email-verify` : 'https://psynapsus.netlify.com/email-verify';
+        const file = path.join(__dirname, '../', 'templates', 'verifyuser.ejs');
+        const url = process.env.DEVELOPMENT ? `http://localhost:4004/email-verify` : 'https://psynapsus.netlify.com/email-verify';
+        let template = await ejs.renderFile(file, Object.assign({url: url}), {});
+
         let Gmail = nodemailer.createTransport(env_g);
         let r, option = {
           from: env_g.auth.user,
           to: param.user,
           subject: 'Confirm your email address',
-          html: `
-          <p style="
-            font-size: 20px;
-            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
-          "> Verify your e-mail address to finish signing up for Psynapsus </p>
-          <p style="
-            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
-          "> Thank you for choosing Psynapsus </p>
-          <p style="
-            font-size: 15px;
-            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
-          "> Please confirm that ${param.user} is your e-mail address by clicking on the button below or use this link <a style="
-            color: #a93647;
-          " href="${path}/${param.token}"> ${path}/${param.token} </a> within 48 hours. </p>
-          <a type="button" href="${path}/${param.token}" style="
-            font-size: 12px;
-            font-family: 'Google Sans',Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            outline: none;
-            background: #a93647;
-            color: #fff;
-            display: block;
-            text-align: center;
-            text-decoration: none;
-          "> VERIFY </a>
-          `
+          html: template
         };
         try {
           r = await Gmail.sendMail(option);
