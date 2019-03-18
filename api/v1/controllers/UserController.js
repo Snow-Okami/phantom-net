@@ -49,27 +49,34 @@ const UserController = {
     /**
      * @description Increment id field with 1.
      */
-    // remove comment
-    // await Models.id.updateOne({'user': id.data.user}, {'user': Number(id.data.user) + 1}, {});
+    await Models.id.updateOne({'user': id.data.user}, {'user': Number(id.data.user) + 1}, {});
 
     /**
      * @description SET id property for User.
      */
     req.body.id = id.data.user;
-    // remove comment
-    // const a = await Models.user.create(req.body);
-    // if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    const a = await Models.user.create(req.body);
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
-    // const c = await Models.vcode.create({ user: a.data._id });
-    // if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
+    /**
+     * @description generate verification code here.
+     */
+    const c = await Models.vcode.create({ user: a.data._id });
+    if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
 
-    // const m = await Models.gmail.send({ user: a.data.email, token: c.data._id });
-    const m = await Models.gmail.send({ user: req.body.email, token: '1234567890' });
-    if(m.error) { return res.status(404).set('Content-Type', 'application/json').send(m.error); }
+    const vurl = process.env.DEVELOPMENT ? `http://localhost:4004/email-verify` : 'https://psynapsus.netlify.com/email-verify';
+    /**
+     * @description generate verification email template here.
+     */
+    const tem = await Models.template.create({template: 'verifyuser'}, Object.assign(req.body, { url: vurl, token: c.data._id }));
+    if(tem.error) { return res.status(404).set('Content-Type', 'application/json').send(tem.error); }
+    /**
+     * @description send email but not wait for response.
+     */
+    Models.gmail.send({ user: a.data.email, subject: 'Confirm your email address', html: tem.data });
     
-    // remove comment
-    // a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'username', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
-    return res.status(200).send(m);
+    a.data = _.pick(a.data, ['allowedToAccess', 'avatar', 'capability', 'createdAt', 'email', 'emailValidated', 'firstName', 'lastName', 'id', 'isMale', 'fullName', 'username', 'updatedAt', 'jwtValidatedAt', 'online', '_id']);
+    return res.status(200).send(a);
   },
 
   updateOne: async (req, res) => {
@@ -105,7 +112,26 @@ const UserController = {
     delete req.body.password;
     const a = await Models.user.findOne(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-    if(!a.data.emailValidated) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please validate the email!' }); }
+    if(!a.data.emailValidated) {
+      /**
+       * @description generate verification code here.
+       */
+      const c = await Models.vcode.create({ user: a.data._id });
+      if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
+
+      const vurl = process.env.DEVELOPMENT ? `http://localhost:4004/email-verify` : 'https://psynapsus.netlify.com/email-verify';
+      /**
+       * @description generate verification email template here.
+       */
+      const tem = await Models.template.create({template: 'verifyuser'}, Object.assign(req.body, { url: vurl, token: c.data._id }));
+      if(tem.error) { return res.status(404).set('Content-Type', 'application/json').send(tem.error); }
+      /**
+       * @description send email but not wait for response.
+       */
+      Models.gmail.send({ user: a.data.email, subject: 'Confirm your email address', html: tem.data });
+
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please validate the email!' });
+    }
     if(!a.data.allowedToAccess) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'user is not allowed to access!' }); }
 
     /**

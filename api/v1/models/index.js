@@ -576,16 +576,12 @@ const Models = {
        * @description sends email from configured gmail account.
        */
       send: async (param) => {
-        const file = path.join(__dirname, '../', 'templates', 'verifyuser.ejs');
-        const url = process.env.DEVELOPMENT ? `http://localhost:4004/email-verify` : 'https://psynapsus.netlify.com/email-verify';
-        let template = await ejs.renderFile(file, Object.assign({url: url}), {});
-
         let Gmail = nodemailer.createTransport(env_g);
         let r, option = {
           from: env_g.auth.user,
           to: param.user,
-          subject: 'Confirm your email address',
-          html: template
+          subject: param.subject,
+          html: param.html
         };
         try {
           r = await Gmail.sendMail(option);
@@ -593,7 +589,20 @@ const Models = {
         return { message: { type: 'success' }, data: r };
       }
 
-    },    
+    },
+    
+    
+    template: {
+
+      create: async (params, query) => {
+        const file = path.join(__dirname, '../', 'templates', params.template + '.ejs');
+        let r;
+        try {
+          r = await ejs.renderFile(file, query, {});
+        } catch (e) { return { error: { type: 'error', text: e.message } }; }
+        return { message: { type: 'success' }, data: r };
+      }
+    },
 
     id: {
       /**
