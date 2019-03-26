@@ -17,7 +17,10 @@ const policies = {
     if(token.error) {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
     }
-
+    /**
+     * @description Check user is allowed or not.
+     */
+    if(!token.allowedToAccess) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'user is not allowed to access!' }); }
     /**
      * @description If the user has a role he must have the email in request params.
      * The email must match the authorization token.
@@ -45,7 +48,10 @@ const policies = {
     if(token.error) {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
     }
-
+    /**
+     * @description Check user is allowed or not.
+     */
+    if(!token.allowedToAccess) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'user is not allowed to access!' }); }
     /**
      * @description If the user has a role he must have the email in request params.
      * The email must match the authorization token.

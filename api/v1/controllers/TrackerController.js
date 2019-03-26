@@ -8,7 +8,7 @@ const TrackerController = {
     /**
      * @description removes email, password and role properties from update object.
      */
-    req.body = _.pick(req.body, ['emailValidated', 'allowedToAccess']);
+    req.body = _.pick(req.body, ['capability', 'emailValidated', 'allowedToAccess']);
 
     const a = await Models.user.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
