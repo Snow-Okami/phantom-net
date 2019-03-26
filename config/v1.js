@@ -13,6 +13,7 @@ const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 
 const TestController = require('../api/v1/controllers/TestController');
 const UserController = require('../api/v1/controllers/UserController');
+const TrackerController = require('../api/v1/controllers/TrackerController');
 const PostController = require('../api/v1/controllers/PostController');
 const CommentController = require('../api/v1/controllers/CommentController');
 const ReplyController = require('../api/v1/controllers/ReplyController');
@@ -86,6 +87,11 @@ const routes = () => {
   api.get('/commentreply/:id', ReplyController.create);
   api.get('/commentreplies', ReplyController.create);
   api.post('/commentreply', ReplyController.create);
+
+  /**
+   * @descaription Change users permissions from client end.
+   */
+  api.put('/permission/:email', Policies.isAdmin, TrackerController.updatePermission);
 
   return api;
 };
