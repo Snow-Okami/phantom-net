@@ -189,7 +189,7 @@ const UserController = {
     /**
      * @description Return Logged Out Successful Response.
      */
-    return res.status(200).set('Content-Type', 'application/json').send(a);
+    return res.status(200).set('Content-Type', 'application/json').send({ message: { type: 'success' }, data: 'You have successfully logged out!' });
   },
 
   findName: async (req, res) => {
