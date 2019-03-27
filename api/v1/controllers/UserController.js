@@ -149,7 +149,7 @@ const UserController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { expiresIn: '2h' }
+      _.pick(a.data, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { expiresIn: '10h' }
     );
 
     /**
