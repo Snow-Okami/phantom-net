@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const env = require('../../../environment/').JWT;
 
 const jwthelper = {
-  sign: async (payload) => {
-    return await jwt.sign(payload, env.key);
+  sign: async (payload, option) => {
+    return await jwt.sign(payload, env.key, option);
   },
 
   decode: async (token) => {
