@@ -177,11 +177,14 @@ const UserController = {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: token.error });    
     }
 
-    let time = new Date().getTime();
-    const a = await Models.user.updateOne(
-      _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
-    );
-    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    /**
+     * @description Disable the login token for all devices.
+     */
+    // let time = new Date().getTime();
+    // const a = await Models.user.updateOne(
+    //   _.pick(token, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { jwtValidatedAt: time }, {}
+    // );
+    // if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
     /**
      * @description Return Logged Out Successful Response.
