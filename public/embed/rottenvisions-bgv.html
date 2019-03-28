@@ -15,9 +15,79 @@
   </head>
 
   <body>
-    <video name="media" autoplay loop>
+    <video name="media" preload="none" muted autoplay loop id="video">
       <source src="../video/rottenvisions-movie.mp4" type="video/mp4">
     </video>
+
+    <script>
+      var js = {
+        fn: {
+          init: async function() {
+            js.data.video = document.getElementById('video');
+            /**
+             * @description binding all events here
+             */
+            js.fn.attachEvents();
+            /**
+            * @description load the video here
+            */
+           try {
+            // await js.fn.wait(500);
+            // console.log('0.5 second(s) passed.');
+
+            await js.fn.load();
+           } catch(e) {
+
+           }
+          },
+          attachEvents: function() {
+            js.data.video.addEventListener('loadeddata', js.fn.onloadeddata);
+          },
+          onloadeddata: async function() {
+            try {
+              await js.fn.play();
+            } catch(e) {
+
+            }
+          },
+          play: async function() {
+            return new Promise(async function(resolve, reject) {
+              var video = js.data.video;
+              try {
+                var r = await video.play(); resolve(r);
+              } catch(e) { console.log('video play failed', e); reject(e); }
+            });
+          },
+          load: async function() {
+            return new Promise(async function(resolve, reject) {
+              var video = js.data.video;
+              try {
+                var r = await video.load(); resolve(r);
+              } catch(e) { console.log('video load failed', e); reject(e); }
+            });
+          },
+          pause: async function() {
+            return new Promise(async function(resolve, reject) {
+              var video = js.data.video;
+              try {
+                var r = await video.pause(); resolve(r);
+              } catch(e) { console.log('video pause failed', e); reject(e); }
+            });
+          },
+          /**
+           * @param duration is number and unit is second
+           */
+          wait: async function(duration) {
+            return new Promise(async function(resolve, reject) { setTimeout(function() { resolve('Ok'); }, duration); });
+          }
+        },
+        data: {
+          video: undefined
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', js.fn.init);
+    </script>
   </body>
 
 </html>
