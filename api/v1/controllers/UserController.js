@@ -83,12 +83,50 @@ const UserController = {
     /**
      * @description removes email, password and role properties from update object.
      */
-    req.body = _.omit(req.body, ['email', 'capability', 'emailValidated', 'allowedToAccess']);
+    req.body = _.omit(req.body, ['email', 'capability', 'emailValidated', 'allowedToAccess', 'password', 'currentPassword']);
 
     if(req.file) { req.body.avatar = req.file.filename; }
     const a = await Models.user.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
+  },
+
+  updatePassword: async (req, res) => {
+    let a = req.auth.user;
+
+    const cp = _.pick(req.body, ['currentPassword']);
+    if(!cp.currentPassword) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include currentPassword in body' }); }
+    /**
+     * @description removes email and password properties from update object.
+     */
+    req.body = _.pick(req.body, ['password']);
+    if(!req.body.password) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include password in body' }); }
+
+    /**
+     * @description Compare password provided by User.
+     */
+    const vp = await bycript.compare(cp.currentPassword, a.data.password);
+    if(vp.error) {
+      return res.status(404).set('Content-Type', 'application/json').send(vp.error);
+    }
+    if(!vp) {
+      return res.status(404).send({ type: 'error', text: 'invalid currentPassword!' });
+    }
+
+    const u = await Models.user.updateOne(req.params, req.body, {});
+    if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+
+    a = await Models.user.findOne(req.params);
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    /**
+     * @description Generate JWT token.
+     */
+    const token = await jwt.sign(
+      _.pick(a.data, ['email', 'jwtValidatedAt', 'role']), { expiresIn: '2h' }
+    );
+    Object.assign(u.data, { token: 'Bearer ' + token });
+
+    return res.status(200).send(u);
   },
 
   deleteOne: async (req, res) => {

@@ -49,6 +49,10 @@ const routes = () => {
   api.put('/user/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
   api.delete('/user/:email', Policies.isAdmin, UserController.deleteOne);
   /**
+   * @description update user's password
+   */
+  api.put('/userpassword/:email', Policies.isLoggedIn, UserController.updatePassword);
+  /**
    * @description get user's firstName, lastName and fullName
    */
   api.get('/username/:email', UserController.findName);

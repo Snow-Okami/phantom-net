@@ -67,6 +67,7 @@ const policies = {
     if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
     req.query.capability = u.data.capability;
+    req.auth = { user: u };
 
     next();
   },
