@@ -84,8 +84,14 @@ const UserController = {
      * @description removes email, password and role properties from update object.
      */
     req.body = _.omit(req.body, ['email', 'capability', 'emailValidated', 'allowedToAccess', 'password', 'currentPassword']);
-
-    if(req.file) { req.body.avatar = req.file.filename; }
+    /**
+     * @description UPLOADS the image file on Cloudinary.
+     */
+    if(req.file) {
+      let URL = (process.env.DEVELOPMENT ? `http://localhost:${process.env.PORT}/image/avatar/` : 'https://psynapsus.herokuapp.com/image/avatar/') + req.file.filename;
+      const i = await Models.post.uploadImage(req.file.path);
+      req.body.avatar = i.error ? URL : i['data']['secure_url'];
+    }
     const a = await Models.user.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
