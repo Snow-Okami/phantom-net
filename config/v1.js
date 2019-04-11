@@ -88,8 +88,8 @@ const routes = () => {
   /**
    * @descaription Reply CRUD API operation.
    */
-  api.get('/commentreply/:id', ReplyController.create);
-  api.get('/commentreplies', ReplyController.create);
+  api.get('/commentreply/:id', ReplyController.findOne);
+  api.get('/commentreplies', ReplyController.findAll);
   api.post('/commentreply', ReplyController.create);
 
   /**

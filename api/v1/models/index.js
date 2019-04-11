@@ -15,6 +15,11 @@ const env_g = require('../../../environment/').Google;
 var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode;
 
 const Models = {
+
+  data: {
+    comRepCreatedBy: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id']
+  },
+
   connect: async () => {
     let mongoUrl = `mongodb://${env_m.username}:${env_m.password}@${env_m.host}:${env_m.port}/${env_m.database}`;
     mongoose.connect(mongoUrl, { useNewUrlParser: true });
@@ -109,6 +114,7 @@ const Models = {
         publish: { type: Boolean, required: true, default: false },
         comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
         image: { type: String, default: '' },
+        createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
         createdAt: { type: Date, required: true }
       });
       Post = mongoose.model('Post', schema);
@@ -120,7 +126,7 @@ const Models = {
         text: { type: String, required: true },
         createdFor: { type: Schema.Types.ObjectId, ref: 'Post' },
         replies: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
-        createdBy: { type: String, required: true },
+        createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         createdAt: { type: Date, required: true }
       });
       Comment = mongoose.model('Comment', schema);
@@ -131,7 +137,7 @@ const Models = {
         id: { type: String, required: true, unique: true },
         text: { type: String, required: true },
         createdFor: { type: Schema.Types.ObjectId, ref: 'Comment' },
-        createdBy: { type: String, required: true },
+        createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         createdAt: { type: Date, required: true }
       });
       Reply = mongoose.model('Reply', schema);
@@ -332,8 +338,15 @@ const Models = {
        */
       findOne: async (param) => {
         let p;
-        try { p = await Post.findOne(param).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies', options: { limit: 4 } } }); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          p = await Post.findOne(param).populate({
+            path: 'comments', options: { sort: { createdAt: -1 } },
+            populate: [
+              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+              { path: 'createdBy', select: Models.data.comRepCreatedBy }
+            ]
+          });
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
       },
@@ -343,8 +356,15 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Post.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies', options: { limit: 4 } } }); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          r = await Post.find(query).sort({createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({
+            path: 'comments', options: { sort: { createdAt: -1 } },
+            populate: [
+              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+              { path: 'createdBy', select: Models.data.comRepCreatedBy }
+            ]
+          });
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
@@ -354,8 +374,15 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Post.find(param).populate({ path: 'comments', options: { sort: { createdAt: -1 } }, populate: { path: 'replies', options: { limit: 4 } } }); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          r = await Post.find(param).populate({
+            path: 'comments', options: { sort: { createdAt: -1 } },
+            populate: [
+              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+              { path: 'createdBy', select: Models.data.comRepCreatedBy}
+            ]
+          });
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
@@ -403,8 +430,13 @@ const Models = {
        * @description finds one chat only with matching parameter.
        */
       findOne: async (param) => {
-        try { p = await Comment.findOne(param).populate(['createdFor', 'replies']); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          p = await Comment.findOne(param).populate([
+            { path: 'createdBy', select: Models.data.comRepCreatedBy },
+            { path: 'replies', populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+            { path: 'createdFor' }
+          ]);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'comment doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
       },
@@ -413,8 +445,13 @@ const Models = {
        * @description finds all the available chats in the Mlab database.
        */
       findAll: async (param) => {
-        try { r = await Comment.find(param).sort({ updatedAt: -1 }).populate(['createdFor', 'replies']); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          r = await Comment.find(param).sort({ updatedAt: -1 }).populate([
+            { path: 'createdBy', select: Models.data.comRepCreatedBy },
+            { path: 'replies', populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+            { path: 'createdFor' }
+          ]);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no comment found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
@@ -449,8 +486,12 @@ const Models = {
        * @description finds one chat only with matching parameter.
        */
       findOne: async (param) => {
-        try { p = await Reply.findOne(param); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          p = await Reply.findOne(param).populate([
+            { path: 'createdBy', select: Models.data.comRepCreatedBy },
+            { path: 'createdFor' }
+          ]);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'reply doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
       },
@@ -459,7 +500,12 @@ const Models = {
        * @description finds all the available chats in the Mlab database.
        */
       findAll: async (param) => {
-        try { r = await Reply.find(param).sort({ updatedAt: -1 }); }
+        try {
+          r = await Reply.find(param).sort({ updatedAt: -1 }).populate([
+            { path: 'createdBy', select: Models.data.comRepCreatedBy },
+            { path: 'createdFor' }
+          ]);
+        }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no reply found!' } }; }
         return { message: { type: 'success' }, data: r };

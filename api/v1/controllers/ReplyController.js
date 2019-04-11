@@ -3,6 +3,18 @@ const _ = require('../models/')._;
 
 const ReplyController = {
 
+  findOne: async (req, res) => {
+    const p = await Models.reply.findOne(req.params);
+    if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    return res.status(200).send(p);
+  },
+
+  findAll: async (req, res) => {
+    const p = await Models.reply.findAll({});
+    if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    return res.status(200).send(p);
+  },
+
   create: async (req, res) => {
 
     if(!req.body.commentId || !req.body.createdFor) { return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include commentId & createdFor in body.' }); }
