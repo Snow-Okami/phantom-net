@@ -38,11 +38,14 @@ const CommentController = {
     const c = await Models.comment.create(req.body);
     if(c.error) { return res.status(404).set('Content-Type', 'application/json').send(c.error); }
 
+    const cp = await Models.comment.findOne({id: c.data.id});
+    if(cp.error) { return res.status(404).set('Content-Type', 'application/json').send(cp.error); }
+
     let cid = _.map(p.data.comments, '_id').concat(c.data._id);
     p = await Models.post.updateOne({'id': req.body.postId}, {'comments': cid}, {});
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
 
-    return res.status(200).send(c);
+    return res.status(200).send(cp);
   },
 
   updateOne: async (req, res) => {
