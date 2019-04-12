@@ -239,7 +239,7 @@ const UserController = {
   findName: async (req, res) => {
     const a = await Models.user.findOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
-    a.data = _.pick(a.data, ['username', 'email', 'isMale']);
+    a.data = _.pick(a.data, ['_id', 'username', 'email', 'isMale']);
     return res.status(200).send(a);
   },
 
