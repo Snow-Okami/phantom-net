@@ -23,6 +23,7 @@ const env = {
     , 'https://rottenvisions.netlify.com'
     , 'http://localhost:4004'
     , 'http://localhost:4005'
+    , 'http://localhost:4006'
   ],
 
   ver: {
