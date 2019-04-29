@@ -8,7 +8,8 @@ const MessageController = {
 
   data: {
     users: {},
-    initCRId: '_croom_'
+    initCRId: '_croom_',
+    comRepCreatedBy: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id', '_id']
   },
 
   connect: async (server) => {
@@ -37,7 +38,7 @@ const MessageController = {
         /**
          * @description Pass the user info 
          */
-        io.to(Socket.id).emit('user', _.pick(u, ['username', 'email', 'firstName', 'lastName', 'fullName', 'emailValidated', 'avatar', 'online']));
+        io.to(Socket.id).emit('user', _.pick(u, ['username', 'email', 'firstName', 'lastName', 'fullName', 'emailValidated', 'avatar', 'online', '_id']));
 
         const ch = await Models.chat.findAll({ "users.email": u.email });
         if(ch.error) { return ch; }
@@ -102,14 +103,21 @@ const MessageController = {
         if(p.error) { return p; }
 
         /**
+         * @description generate a fresh response object.
+         */
+        let fp = { message: {}, data: {} };
+        Object.assign(fp.data, _.pick(p.data, ['_id', 'id', 'cid', 'text', 'createdAt']), { createdBy: _.pick(u, MessageController.data.comRepCreatedBy) });
+        Object.assign(fp.message, p.message);
+
+        /**
          * @description Update the time of last message.
          */
         let time = new Date().getTime();
-        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'createdAt']), updatedAt: time }, {});
+        const nu = await Models.chat.updateOne({ id: param.message.query.cid }, { lastMessage: fp.data, updatedAt: time }, {});
         if(nu.error) { return nu; }
 
         // emit in the chat room.
-        io.to(MessageController.data.initCRId + param.message.query.cid).emit('texted', { lastMessage: _.pick(p.data, ['cid', 'text', 'createdBy', 'id', 'createdAt']) });
+        io.to(MessageController.data.initCRId + param.message.query.cid).emit('texted', { lastMessage: fp.data });
       });
 
       Socket.on('search', async (param) => {

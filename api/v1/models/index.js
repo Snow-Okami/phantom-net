@@ -17,7 +17,7 @@ var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode;
 const Models = {
 
   data: {
-    comRepCreatedBy: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id']
+    comRepCreatedBy: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id', '_id']
   },
 
   connect: async () => {
@@ -176,11 +176,7 @@ const Models = {
         id: { type: String, unique: true, required: true },
         cid: { type: String, required: true },
         text: { type: String, required: true },
-        createdBy: {
-          username: { type: String },
-          email: { type: String, required: true },
-          fullName: { type: String, required: true }
-        },
+        createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
         createdAt: { type: Date, required: true }
       });
       Message = mongoose.model('Message', schema);
@@ -599,7 +595,10 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Message.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit); }
+        try { r = await Message.find(query).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).populate([
+            { path: 'createdBy', select: Models.data.comRepCreatedBy }
+          ]);
+        }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         return { message: { type: 'success' }, data: _.reverse(r) };
       },
