@@ -635,8 +635,7 @@ const Models = {
       }
 
     },
-    
-    
+
     template: {
 
       create: async (params, query) => {
