@@ -161,7 +161,7 @@ const MessageController = {
          */
         await Models.id.updateOne({'chat': id.data.chat}, {'chat': Number(id.data.chat) + 1}, {});
 
-        const au = _.pick(u, ['username', 'email', 'fullName']);
+        const au = _.pick(u, ['username', 'email', 'fullName', 'id', 'online', 'avatar', 'selected']);
         /**
          * @description bind the admin with the chat.
          */
