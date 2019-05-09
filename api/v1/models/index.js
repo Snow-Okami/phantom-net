@@ -148,7 +148,7 @@ const Models = {
         id: { type: String, unique: true, required: true },
         type: { type: Number, default: 0 },
         fullName: { type: String, default: '' },
-        users: { type: [], default: [] },
+        users: [{ type: Schema.Types.ObjectId, ref: 'User'}],
         createdAt: { type: Date },
         updatedAt: { type: Date },
         admin: { type: Schema.Types.ObjectId, ref: 'User'},
@@ -525,6 +525,7 @@ const Models = {
         let p;
         try {
           p = await Chat.findOne(param).populate([
+            { path: 'users', select: Models.data.comRepCreatedBy },
             { path: 'admin', select: Models.data.comRepCreatedBy }
           ]);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
@@ -539,6 +540,7 @@ const Models = {
         let r;
         try {
           r = await Chat.find(query).sort({ updatedAt: option.sort }).skip(option.skip).limit(option.limit).populate([
+            { path: 'users', select: Models.data.comRepCreatedBy },
             { path: 'admin', select: Models.data.comRepCreatedBy }
           ]);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
@@ -552,6 +554,7 @@ const Models = {
         let r;
         try {
           r = await Chat.find(param).sort({ updatedAt: -1 }).populate([
+            { path: 'users', select: Models.data.comRepCreatedBy },
             { path: 'admin', select: Models.data.comRepCreatedBy }
           ]);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }

@@ -40,7 +40,7 @@ const MessageController = {
          */
         io.to(Socket.id).emit('user', _.pick(u, ['username', 'email', 'firstName', 'lastName', 'fullName', 'emailValidated', 'avatar', 'online', '_id']));
 
-        const ch = await Models.chat.findAll({ "users.email": u.email });
+        const ch = await Models.chat.findAll({ 'users': u._id });
         if(ch.error) { return ch; }
 
         /**
@@ -165,7 +165,7 @@ const MessageController = {
         /**
          * @description bind the admin with the chat.
          */
-        param.message.query.users.push(au);
+        param.message.query.users.push(au._id);
         Object.assign(param.message.query, { admin: au._id, messages: [], type: param.message.query.users.length > 2 ? 1 : 0, id: id.data.chat });
 
         let c = await Models.chat.create(param.message.query);
