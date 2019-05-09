@@ -134,7 +134,7 @@ const MessageController = {
          */
         if(!p.error) {
           _.remove(p.data, (t_u) => { return t_u.email === u.email });
-          p.data = _.map(p.data, (t_u) => { return _.pick(t_u, ['username', 'email', 'fullName', 'id', 'online', 'avatar']) });
+          p.data = _.map(p.data, (t_u) => { return _.pick(t_u, ['_id', 'username', 'email', 'fullName', 'id', 'online', 'avatar']) });
           /**
            * @description when no user exists in data.
            */
@@ -161,14 +161,17 @@ const MessageController = {
          */
         await Models.id.updateOne({'chat': id.data.chat}, {'chat': Number(id.data.chat) + 1}, {});
 
-        const au = _.pick(u, ['username', 'email', 'fullName', 'id', 'online', 'avatar', 'selected']);
+        const au = _.pick(u, ['_id', 'username', 'email', 'fullName', 'id', 'online', 'avatar', 'selected']);
         /**
          * @description bind the admin with the chat.
          */
         param.message.query.users.push(au);
-        Object.assign(param.message.query, { admin: au, messages: [], type: param.message.query.users.length > 2 ? 1 : 0, id: id.data.chat });
+        Object.assign(param.message.query, { admin: au._id, messages: [], type: param.message.query.users.length > 2 ? 1 : 0, id: id.data.chat });
 
-        const c = await Models.chat.create(param.message.query);
+        let c = await Models.chat.create(param.message.query);
+        if(c.error) { return c; }
+
+        c = await Models.chat.findOne({ _id: c.data._id });
         if(c.error) { return c; }
 
         let room = MessageController.data.initCRId + c.data.id;

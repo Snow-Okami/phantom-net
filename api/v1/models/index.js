@@ -151,11 +151,7 @@ const Models = {
         users: { type: [], default: [] },
         createdAt: { type: Date },
         updatedAt: { type: Date },
-        admin: {
-          username: { type: String },
-          email: { type: String, required: true },
-          fullName: { type: String, required: true }
-        },
+        admin: { type: Schema.Types.ObjectId, ref: 'User'},
         lastMessage: {
           text: { type: String, default: '' },
           createdBy: {
@@ -527,8 +523,11 @@ const Models = {
        */
       findOne: async (param) => {
         let p;
-        try { p = await Chat.findOne(param); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          p = await Chat.findOne(param).populate([
+            { path: 'admin' }
+          ]);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'chat doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
       },
@@ -538,8 +537,11 @@ const Models = {
        */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Chat.find(query).sort({ updatedAt: option.sort }).skip(option.skip).limit(option.limit); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          r = await Chat.find(query).sort({ updatedAt: option.sort }).skip(option.skip).limit(option.limit).populate([
+            { path: 'admin' }
+          ]);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         return { message: { type: 'success' }, data: r };
       },
 
@@ -548,8 +550,11 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Chat.find(param).sort({ updatedAt: -1 }); }
-        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        try {
+          r = await Chat.find(param).sort({ updatedAt: -1 }).populate([
+            { path: 'admin' }
+          ]);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
         return { message: { type: 'success' }, data: r };
       },
 
