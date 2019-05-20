@@ -101,8 +101,11 @@ const routes = () => {
   /**
    * @descaription Achievement API operations from client end.
    */
-  api.put('/achievement/:id', Policies.isLoggedIn, AchievementController.findOne);
-  api.put('/achievements', Policies.isLoggedIn, AchievementController.findAll);
+  api.get('/achievement/:_id', Policies.isLoggedIn, AchievementController.findOne);
+  api.get('/achievements', Policies.isLoggedIn, AchievementController.findAll);
+  api.post('/achievement', Policies.isAdmin, AchievementController.create);
+  api.put('/achievement/:_id', Policies.isAdmin, AchievementController.updateOne);
+  api.delete('/achievement/:_id', Policies.isAdmin, AchievementController.deleteOne);
 
   return api;
 };

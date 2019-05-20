@@ -97,7 +97,12 @@ const Models = {
 
     achievement: async() => {
       let schema = new mongoose.Schema({
-        users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+        title: { type: String, required: true },
+        description: { type: String, required: true },
+        thumbnail: { type: String, default: '' },
+        users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        createdAt: { type: Date, required: true },
+        updatedAt: { type: Date, required: true }
       });
       Achievement = mongoose.model('Achievement', schema);
     },
@@ -352,6 +357,27 @@ const Models = {
         try { r = await Achievement.find(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no achievement found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description creates one achievement with required parameters.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time, updatedAt: time };
+        Object.assign(param, ext);
+        try {
+          r = await Achievement.create(param);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create achievement!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      deleteOne: async (param) => {
+        let r;
+        try { r = await Achievement.deleteOne(param); }
+        catch(e) {  return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'achievement doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       },
     },
