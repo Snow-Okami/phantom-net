@@ -222,6 +222,13 @@ const Models = {
   objects: {
 
     user: {
+      countAll: async (param) => {
+        let u;
+        try { u = await User.countDocuments(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!u) { return { error: { type: 'error', text: 'user doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: u };
+      },
       /**
        * @description finds one user only with matching parameter.
        */

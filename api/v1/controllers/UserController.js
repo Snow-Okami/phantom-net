@@ -4,6 +4,12 @@ const _ = require('../models')._;
 const jwt = require('../helpers/jwt');
 
 const UserController = {
+  countAll: async (req, res) => {
+    const u = await Models.user.countAll({});
+    if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+    return res.status(200).send(u);
+  },
+
   findOne: async (req, res) => {
     const a = await Models.user.findOne(req.params);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }

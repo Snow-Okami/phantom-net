@@ -50,6 +50,10 @@ const routes = () => {
   api.put('/user/:email', Policies.isLoggedIn, UploadAvatar.single('avatar'), UserController.updateOne);
   api.delete('/user/:email', Policies.isAdmin, UserController.deleteOne);
   /**
+   * @description Count API's for user.
+   */
+  api.get('/users/countAll', Policies.isLoggedIn, UserController.countAll);
+  /**
    * @description update user's password
    */
   api.put('/userpassword/:email', Policies.isLoggedIn, UserController.updatePassword);
