@@ -373,6 +373,15 @@ const Models = {
         return { message: { type: 'success' }, data: r };
       },
 
+      updateOne: async (query, param, option) => {
+        let r, time = new Date().getTime(), ext = { updatedAt: time };
+        Object.assign(param, ext);
+        try { r = await Achievement.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'achievement doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
       deleteOne: async (param) => {
         let r;
         try { r = await Achievement.deleteOne(param); }

@@ -22,9 +22,9 @@ const AchievementController = {
   },
 
   updateOne: async (req, res) => {
-    
-
-    return res.status(200).send({status: 'working on!'});
+    const a = await Models.achievement.updateOne(req.params, req.body, {});
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    return res.status(200).send(a);
   },
 
   deleteOne: async (req, res) => {
