@@ -18,6 +18,7 @@ const PostController = require('../api/v1/controllers/PostController');
 const CommentController = require('../api/v1/controllers/CommentController');
 const ReplyController = require('../api/v1/controllers/ReplyController');
 const VersionController = require('../api/v1/controllers/VersionController');
+const AchievementController = require('../api/v1/controllers/AchievementController');
 
 const api = express.Router();
 
@@ -96,6 +97,12 @@ const routes = () => {
    * @descaription Change users permissions from client end.
    */
   api.put('/permission/:email', Policies.isAdmin, TrackerController.updatePermission);
+
+  /**
+   * @descaription Achievement API operations from client end.
+   */
+  api.put('/achievement/:id', Policies.isLoggedIn, AchievementController.findOne);
+  api.put('/achievements', Policies.isLoggedIn, AchievementController.findAll);
 
   return api;
 };

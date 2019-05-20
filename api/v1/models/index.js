@@ -12,7 +12,7 @@ const env_m = require('../../../environment/').Mlab;
 const env_v = require('../../../environment').ver;
 const env_g = require('../../../environment/').Google;
 
-var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode;
+var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode, Achievement;
 
 const Models = {
 
@@ -36,6 +36,7 @@ const Models = {
       Models.create.message();
       Models.create.version();
       Models.create.vcode();
+      Models.create.achievement();
     });
   },
 
@@ -92,6 +93,13 @@ const Models = {
         verificationCodes: [{ type: Schema.Types.ObjectId, ref: 'Vcode' }]
       });
       User = mongoose.model('User', schema);
+    },
+
+    achievement: async() => {
+      let schema = new mongoose.Schema({
+        users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+      });
+      Achievement = mongoose.model('Achievement', schema);
     },
 
     /**
@@ -320,6 +328,30 @@ const Models = {
         try { r = await Vcode.deleteMany(param); }
         catch(e) {  return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'vcode doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+    },
+
+    achievement: {
+      /**
+       * @description finds one achievement only with matching parameter.
+       */
+      findOne: async (param) => {
+        let r;
+        try { r = await Achievement.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'achievement doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description finds all the available achievements in the Mlab database.
+       */
+      findAll: async (param) => {
+        let r;
+        try { r = await Achievement.find(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no achievement found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
     },
