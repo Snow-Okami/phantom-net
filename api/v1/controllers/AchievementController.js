@@ -1,3 +1,4 @@
+const ObjectId = require('../models/').ObjectId;
 const Models = require('../models/').objects;
 const _ = require('../models/')._;
 
@@ -22,6 +23,27 @@ const AchievementController = {
   },
 
   updateOne: async (req, res) => {
+    const a = await Models.achievement.updateOne(req.params, req.body, {});
+    if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    return res.status(200).send(a);
+  },
+
+  updateOneByEmail: async (req, res) => {
+    const p = await Models.achievement.findOne(req.params);
+    if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    /**
+     * @description remove users array to get rid of data loss
+     */
+    req.body = _.omit(req.body, ['users']);
+    /**
+     * @description generate users array from email field
+     */
+    if(req.body.email) {
+      const u = await Models.user.findOne(_.pick(req.body, ['email']));
+      if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+      req.body.users = _.uniq(_.concat(_.map(p.data.users, uid => new ObjectId(uid).toString()), new ObjectId(u.data._id).toString()));
+    }
+
     const a = await Models.achievement.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);

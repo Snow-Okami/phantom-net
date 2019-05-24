@@ -110,6 +110,10 @@ const routes = () => {
   api.post('/achievement', Policies.isAdmin, AchievementController.create);
   api.put('/achievement/:_id', Policies.isAdmin, AchievementController.updateOne);
   api.delete('/achievement/:_id', Policies.isAdmin, AchievementController.deleteOne);
+  /**
+   * @description Update achievement using user email.
+   */
+  api.put('/achievementByEmail/:_id', Policies.isAdmin, AchievementController.updateOneByEmail);
 
   return api;
 };

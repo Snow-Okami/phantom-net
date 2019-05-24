@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = mongoose.Types.ObjectId;
 const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
@@ -214,6 +215,8 @@ const Models = {
     },
 
   },
+
+  ObjectId: ObjectId,
 
   bycript: bycript,
 
