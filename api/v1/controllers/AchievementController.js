@@ -28,7 +28,7 @@ const AchievementController = {
     return res.status(200).send(a);
   },
 
-  updateOneByEmail: async (req, res) => {
+  updateOneByCustomAPI: async (req, res) => {
     const p = await Models.achievement.findOne(req.params);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     /**
@@ -38,10 +38,12 @@ const AchievementController = {
     /**
      * @description generate users array from email field
      */
-    if(req.body.email) {
-      const u = await Models.user.findOne(_.pick(req.body, ['email']));
+    if(req.body.id || req.body._id || req.body.email || req.body.username) {
+      const u = await Models.user.findOne(_.pick(req.body, ['_id', 'id', 'email', 'username']));
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
       req.body.users = _.uniq(_.concat(_.map(p.data.users, uid => new ObjectId(uid).toString()), new ObjectId(u.data._id).toString()));
+    } else {
+      return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include user\'s _id or id or email or username!' });
     }
 
     const a = await Models.achievement.updateOne(req.params, req.body, {});
