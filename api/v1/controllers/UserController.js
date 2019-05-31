@@ -89,7 +89,7 @@ const UserController = {
     /**
      * @description removes email, password and role properties from update object.
      */
-    req.body = _.omit(req.body, ['email', 'capability', 'emailValidated', 'allowedToAccess', 'password', 'currentPassword']);
+    req.body = _.omit(req.body, ['id', 'username', 'email', 'capability', 'emailValidated', 'allowedToAccess', 'password', 'currentPassword', 'createdAt', 'updatedAt', 'jwtValidatedAt', 'avatar', 'online', 'verificationCodes']);
     /**
      * @description UPLOADS the image file on Cloudinary.
      */
