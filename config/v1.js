@@ -113,7 +113,8 @@ const routes = () => {
   /**
    * @description Update achievement using user email.
    */
-  api.put('/achievementByCustomAPI/:_id', Policies.isAdmin, AchievementController.updateOneByCustomAPI);
+  api.put('/updateUsersInAchievement/:_id', Policies.isAdmin, AchievementController.updateUsersInAchievement);
+  api.put('/deleteUserFromAchievement/:_id', Policies.isAdmin, AchievementController.deleteUserFromAchievement);
 
   return api;
 };
