@@ -11,6 +11,9 @@ const UploadAvatar = multer({ storage: storage, fileFilter: FileHelper.filter })
 storage = multer.diskStorage({ destination: './public/image/post/', filename: FileHelper.getName });
 const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 
+storage = multer.diskStorage({ destination: './public/image/achievement/', filename: FileHelper.getName });
+const UploadThumbnail = multer({ storage: storage, fileFilter: FileHelper.filter });
+
 const TestController = require('../api/v1/controllers/TestController');
 const UserController = require('../api/v1/controllers/UserController');
 const TrackerController = require('../api/v1/controllers/TrackerController');
@@ -107,8 +110,8 @@ const routes = () => {
    */
   api.get('/achievement/:_id', Policies.isLoggedIn, AchievementController.findOne);
   api.get('/achievements', Policies.isLoggedIn, AchievementController.findAll);
-  api.post('/achievement', Policies.isAdmin, AchievementController.create);
-  api.put('/achievement/:_id', Policies.isAdmin, AchievementController.updateOne);
+  api.post('/achievement', Policies.isAdmin, UploadThumbnail.single('thumbnail'), AchievementController.create);
+  api.put('/achievement/:_id', Policies.isAdmin, UploadThumbnail.single('thumbnail'), AchievementController.updateOne);
   api.delete('/achievement/:_id', Policies.isAdmin, AchievementController.deleteOne);
   /**
    * @description Update achievement using user email.
