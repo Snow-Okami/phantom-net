@@ -31,6 +31,14 @@ const AchievementController = {
   },
 
   updateOne: async (req, res) => {
+    /**
+     * @description UPLOADS the image file on Cloudinary.
+     */
+    if(req.file) {
+      let URL = (process.env.DEVELOPMENT ? `http://localhost:${process.env.PORT}/image/achievement/` : 'https://psynapsus.herokuapp.com/image/achievement/') + req.file.filename;
+      const i = await Models.post.uploadImage(req.file.path);
+      req.body.thumbnail = i.error ? URL : i['data']['secure_url'];
+    }
     const a = await Models.achievement.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
