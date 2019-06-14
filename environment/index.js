@@ -28,8 +28,8 @@ const env = {
 
   ver: {
     server: '1.6.0',
-    clientLatest: '1.2.5',
-    clientCurrent: '1.2.4',
+    clientLatest: '1.2.6',
+    clientCurrent: '1.2.5',
   },
 
   Google: {
