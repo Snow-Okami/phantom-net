@@ -63,7 +63,7 @@ const AchievementController = {
     if(req.body.id || req.body._id || req.body.email || req.body.username) {
       const u = await Models.user.findOne(_.pick(req.body, ['_id', 'id', 'email', 'username']));
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
-      req.body.users = _.uniq(_.concat(_.map(p.data.users, uid => new ObjectId(uid).toString()), new ObjectId(u.data._id).toString()));
+      req.body.users = _.uniq(_.concat(_.map(p.data.users, ur => new ObjectId(ur._id).toString()), new ObjectId(u.data._id).toString()));
     } else {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include user\'s _id or id or email or username!' });
     }
@@ -90,7 +90,7 @@ const AchievementController = {
     if(req.body.id || req.body._id || req.body.email || req.body.username) {
       const u = await Models.user.findOne(_.pick(req.body, ['_id', 'id', 'email', 'username']));
       if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
-      req.body.users = _.uniq(_.pull(_.map(p.data.users, uid => new ObjectId(uid).toString()), new ObjectId(u.data._id).toString()));
+      req.body.users = _.uniq(_.pull(_.map(p.data.users, ur => new ObjectId(ur._id).toString()), new ObjectId(u.data._id).toString()));
     } else {
       return res.status(404).set('Content-Type', 'application/json').send({ type: 'error', text: 'please include user\'s _id or id or email or username!' });
     }

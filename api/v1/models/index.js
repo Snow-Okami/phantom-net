@@ -353,7 +353,7 @@ const Models = {
        */
       findOne: async (param) => {
         let r;
-        try { r = await Achievement.findOne(param); }
+        try { r = await Achievement.findOne(param).populate({ path: 'users', select: Models.data.comRepCreatedBy }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r) { return { error: { type: 'error', text: 'achievement doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
@@ -364,7 +364,7 @@ const Models = {
        */
       findAll: async (param) => {
         let r;
-        try { r = await Achievement.find(param); }
+        try { r = await Achievement.find(param).populate({ path: 'users', select: Models.data.comRepCreatedBy }); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no achievement found!' } }; }
         return { message: { type: 'success' }, data: r };
