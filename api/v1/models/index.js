@@ -13,7 +13,7 @@ const env_m = require('../../../environment/').Mlab;
 const env_v = require('../../../environment').ver;
 const env_g = require('../../../environment/').Google;
 
-var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode, Achievement;
+var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode, Achievement, News;
 
 const Models = {
 
@@ -399,6 +399,82 @@ const Models = {
         if(!r.n) { return { error: { type: 'error', text: 'achievement doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       },
+    },
+
+    news: {
+      /**
+       * @description finds one news only with matching parameter.
+       */
+      findOne: async (param) => {
+        let n;
+        try { n = await News.findOne(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!n) { return { error: { type: 'error', text: 'news doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: n };
+      },
+
+      /**
+       * @description finds limited of the available posts in the Mlab database.
+       */
+      findLimited: async (query, option) => {
+        let r;
+        try {
+          r = await Post.find(query).sort({createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({
+            path: 'comments', options: { sort: { createdAt: -1 } },
+            populate: [
+              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+              { path: 'createdBy', select: Models.data.comRepCreatedBy }
+            ]
+          });
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description finds all the available posts in the Mlab database.
+       */
+      findAll: async (param) => {
+        let r;
+        try {
+          r = await Post.find(param).populate({
+            path: 'comments', options: { sort: { createdAt: -1 } },
+            populate: [
+              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+              { path: 'createdBy', select: Models.data.comRepCreatedBy}
+            ]
+          });
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description posts an update with required parameters.
+       * @param param looks like {title: String, description: String, publish: Boolean, id: String, image: String}.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time };
+        Object.assign(param, ext);
+        try {
+          r = await Post.create(param);
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description updates only one user at a time. If parameter contains password it updates jwtValidatedAt.
+       */
+      updateOne: async (query, param, option) => {
+        let r;
+        try { r = await Post.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      }
+
+
     },
 
     post: {
