@@ -53,6 +53,14 @@ const NewsController = {
   },
 
   createHTML: async (req, res) => {
+    /**
+     * @description create the news
+     */
+    const p = await Models.news.create(req.body);
+    if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    /**
+     * @description bind data with the template & return
+     */
     const r = await Models.template.create({ template: 'news' }, req.body);
     if(r.error) { return res.status(404).set('Content-Type', 'application/json').send(r.error); }
     return res.status(200).set('Content-Type', 'text/html').send(r.data);
