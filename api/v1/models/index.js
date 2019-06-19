@@ -134,6 +134,16 @@ const Models = {
       Post = mongoose.model('Post', schema);
     },
 
+    news: async () => {
+      let schema = new mongoose.Schema({
+        headline: { type: String, required: true },
+        content: { type: String, required: true },
+        createdAt: { type: Date, required: true },
+        updatedAt: { type: Date, required: true },
+      });
+      News = mongoose.model('News', schema);
+    },
+
     comment: async () => {
       let schema = new mongoose.Schema({
         id: { type: String, required: true, unique: true },
@@ -414,66 +424,59 @@ const Models = {
       },
 
       /**
-       * @description finds limited of the available posts in the Mlab database.
+       * @description finds limited of the available newses in the Mlab database.
        */
       findLimited: async (query, option) => {
         let r;
-        try {
-          r = await Post.find(query).sort({createdAt: option.sort }).skip(option.skip).limit(option.limit).populate({
-            path: 'comments', options: { sort: { createdAt: -1 } },
-            populate: [
-              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
-              { path: 'createdBy', select: Models.data.comRepCreatedBy }
-            ]
-          });
-        } catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        try { r = await News.find(query).sort({createdAt: option.sort }).skip(option.skip).limit(option.limit); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no news found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
       /**
-       * @description finds all the available posts in the Mlab database.
+       * @description finds all the available newses in the Mlab database.
        */
       findAll: async (param) => {
         let r;
-        try {
-          r = await Post.find(param).populate({
-            path: 'comments', options: { sort: { createdAt: -1 } },
-            populate: [
-              { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
-              { path: 'createdBy', select: Models.data.comRepCreatedBy}
-            ]
-          });
-        } catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        try { r = await News.find(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no news found!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
       /**
-       * @description posts an update with required parameters.
-       * @param param looks like {title: String, description: String, publish: Boolean, id: String, image: String}.
+       * @description creates a news with required parameters.
+       * @param param looks like {headline: String, content: String}.
        */
       create: async (param) => {
-        let r, time = new Date().getTime(), ext = { createdAt: time };
+        let r, time = new Date().getTime(), ext = { createdAt: time, updatedAt: time };
         Object.assign(param, ext);
-        try {
-          r = await Post.create(param);
-        } catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r) { return { error: { type: 'error', text: 'can\'t post update!' } }; }
+        try { r = await News.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create news!' } }; }
         return { message: { type: 'success' }, data: r };
       },
 
       /**
-       * @description updates only one user at a time. If parameter contains password it updates jwtValidatedAt.
+       * @description updates only one news at a time.
        */
       updateOne: async (query, param, option) => {
-        let r;
-        try { r = await Post.updateOne(query, param, option); }
+        let r, time = new Date().getTime(), ext = { updatedAt: time };
+        Object.assign(param, ext);
+        try { r = await News.updateOne(query, param, option); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
-        if(!r.n) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'news doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      deleteOne: async (param) => {
+        let r;
+        try { r = await News.deleteOne(param); }
+        catch(e) {  return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'news doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       }
-
 
     },
 
