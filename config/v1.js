@@ -123,7 +123,7 @@ const routes = () => {
   /**
    * @description Post API CRUD operation.
    */
-  api.get('/news/:id', Policies.allowPublic, NewsController.findOne);
+  api.get('/news/:_id', Policies.allowPublic, NewsController.findOne);
   /**
    * @param sort: -1 (Descending) (Default) & 1 (Ascending). OPTIONAL Query Parameter.
    * @param skip: Only POSITIVE Numbers. Default is 0. OPTIONAL Query Parameter.
@@ -132,8 +132,8 @@ const routes = () => {
   api.get('/news', Policies.allowPublic, NewsController.findLimited);
   api.get('/newses', Policies.allowPublic, NewsController.findAll);
   api.post('/news', Policies.isAdmin, NewsController.create);
-  api.put('/news/:id', Policies.isAdmin, NewsController.updateOne);
-  api.delete('/news/:id', Policies.isAdmin, NewsController.deleteOne);
+  api.put('/news/:_id', Policies.isAdmin, NewsController.updateOne);
+  api.delete('/news/:_id', Policies.isAdmin, NewsController.deleteOne);
 
   return api;
 };
