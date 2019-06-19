@@ -137,7 +137,7 @@ const Models = {
 
     news: async () => {
       let schema = new mongoose.Schema({
-        headline: { type: String, required: true },
+        title: { type: String, required: true },
         content: { type: String, required: true },
         createdAt: { type: Date, required: true },
         updatedAt: { type: Date, required: true },
