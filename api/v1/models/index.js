@@ -38,6 +38,7 @@ const Models = {
       Models.create.version();
       Models.create.vcode();
       Models.create.achievement();
+      Models.create.news();
     });
   },
 
