@@ -135,6 +135,8 @@ const routes = () => {
   api.put('/news/:_id', Policies.isAdmin, NewsController.updateOne);
   api.delete('/news/:_id', Policies.isAdmin, NewsController.deleteOne);
 
+  api.post('/newsHtml', Policies.isAdmin, NewsController.createHTML);
+
   return api;
 };
 

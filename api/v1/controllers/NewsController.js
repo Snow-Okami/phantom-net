@@ -50,7 +50,13 @@ const NewsController = {
     const p = await Models.news.deleteOne(req.params);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
-  }
+  },
+
+  createHTML: async (req, res) => {
+    const r = await Models.template.create({ template: 'news' }, req.body);
+    if(r.error) { return res.status(404).set('Content-Type', 'application/json').send(r.error); }
+    return res.status(200).set('Content-Type', 'text/html').send(r.data);
+  },
 
 };
 
