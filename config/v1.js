@@ -22,6 +22,7 @@ const CommentController = require('../api/v1/controllers/CommentController');
 const ReplyController = require('../api/v1/controllers/ReplyController');
 const VersionController = require('../api/v1/controllers/VersionController');
 const AchievementController = require('../api/v1/controllers/AchievementController');
+const NewsController = require('../api/v1/controllers/NewsController');
 
 const api = express.Router();
 
@@ -118,6 +119,21 @@ const routes = () => {
    */
   api.put('/updateUsersInAchievement/:_id', Policies.isAdmin, AchievementController.updateUsersInAchievement);
   api.put('/deleteUserFromAchievement/:_id', Policies.isAdmin, AchievementController.deleteUserFromAchievement);
+
+  /**
+   * @description Post API CRUD operation.
+   */
+  api.get('/news/:id', Policies.allowPublic, NewsController.findOne);
+  /**
+   * @param sort: -1 (Descending) (Default) & 1 (Ascending). OPTIONAL Query Parameter.
+   * @param skip: Only POSITIVE Numbers. Default is 0. OPTIONAL Query Parameter.
+   * @param limit: Only POSITIVE Numbers. Default is 10. OPTIONAL Query Parameter.
+   */
+  api.get('/news', Policies.allowPublic, NewsController.findLimited);
+  api.get('/newses', Policies.allowPublic, NewsController.findAll);
+  api.post('/news', Policies.isAdmin, NewsController.create);
+  api.put('/news/:id', Policies.isAdmin, NewsController.updateOne);
+  api.delete('/news/:id', Policies.isAdmin, NewsController.deleteOne);
 
   return api;
 };
