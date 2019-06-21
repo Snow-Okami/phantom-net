@@ -130,7 +130,7 @@ const routes = () => {
    * @param limit: Only POSITIVE Numbers. Default is 10. OPTIONAL Query Parameter.
    */
   api.get('/news', Policies.allowPublic, NewsController.findLimited);
-  api.get('/newses', Policies.allowPublic, NewsController.findAll);
+  api.get('/allnews', Policies.allowPublic, NewsController.findAll);
   api.post('/news', Policies.isAdmin, NewsController.create);
   api.put('/news/:_id', Policies.isAdmin, NewsController.updateOne);
   api.delete('/news/:_id', Policies.isAdmin, NewsController.deleteOne);
