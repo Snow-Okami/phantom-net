@@ -29,7 +29,15 @@ const NewsController = {
   },
 
   findAll: async (req, res) => {
-    const p = await Models.news.findAll({});
+    const params = req.query;
+    /**
+     * @description Convert String to Number.
+     */
+    const option = {
+      sort: Number(params.sort) || -1,
+    };
+
+    const p = await Models.news.findAll({}, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
   },

@@ -438,9 +438,9 @@ const Models = {
       /**
        * @description finds all the available newses in the Mlab database.
        */
-      findAll: async (param) => {
+      findAll: async (query, option) => {
         let r;
-        try { r = await News.find(param); }
+        try { r = await News.find(query).sort({createdAt: option.sort}); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no news found!' } }; }
         return { message: { type: 'success' }, data: r };
