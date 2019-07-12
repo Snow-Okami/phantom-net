@@ -13,7 +13,7 @@ const env_m = require('../../../environment/').Mlab;
 const env_v = require('../../../environment').ver;
 const env_g = require('../../../environment/').Google;
 
-var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode, Achievement, News;
+var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode, Achievement, News, Game;
 
 const Models = {
 
@@ -37,6 +37,7 @@ const Models = {
       Models.create.message();
       Models.create.version();
       Models.create.vcode();
+      Models.create.game();
       Models.create.achievement();
       Models.create.news();
     });
@@ -95,6 +96,17 @@ const Models = {
         verificationCodes: [{ type: Schema.Types.ObjectId, ref: 'Vcode' }]
       });
       User = mongoose.model('User', schema);
+    },
+
+    game: async () => {
+      let schema = new mongoose.Schema({
+        title: { type: String, required: true },
+        subtitle: { type: String, required: true },
+        banner: { type: String, default: '' },
+        createdAt: { type: Date, required: true },
+        updatedAt: { type: Date, required: true }
+      });
+      Game = mongoose.model('Game', schema);
     },
 
     achievement: async() => {
@@ -408,6 +420,43 @@ const Models = {
         try { r = await Achievement.deleteOne(param); }
         catch(e) {  return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'achievement doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+    },
+
+    game: {
+      /**
+       * @description finds one news only with matching parameter.
+       */
+      findOne: async (param, option) => {
+        let n;
+        try { n = await Game.findOne(param).select(option.select).populate(option.populate); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!n) { return { error: { type: 'error', text: 'game doesn\'t exists!' } }; }
+        return { message: { type: 'success' }, data: n };
+      },
+
+      /**
+       * @description finds limited of the available games in the Mlab database.
+       */
+      findLimited: async (query, option) => {
+        let r;
+        try { r = await Game.find(query).sort(option.sort).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no game found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description creates a game with required parameters.
+       * @param param looks like {title: String, subtitle: String, banner: String}.
+       */
+      create: async (param) => {
+        let r, time = new Date().getTime(), ext = { createdAt: time, updatedAt: time };
+        Object.assign(param, ext);
+        try { r = await Game.create(param); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r) { return { error: { type: 'error', text: 'can\'t create game!' } }; }
         return { message: { type: 'success' }, data: r };
       },
     },
