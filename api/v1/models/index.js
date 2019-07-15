@@ -430,7 +430,7 @@ const Models = {
        */
       findOne: async (param, option) => {
         let n;
-        try { n = await Game.findOne(param).select(option.select).populate(option.populate); }
+        try { n = await Game.findOne(param).select(option.select).populate(option.populate || []); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!n) { return { error: { type: 'error', text: 'game doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: n };
@@ -439,9 +439,17 @@ const Models = {
       /**
        * @description finds limited of the available games in the Mlab database.
        */
+      /** @description options: {
+       *  sort: { createdAt: -1 } // -1 is desc, 1 is asc in order.
+       *  skip: Number // 0, 1, 2 ..., n
+       *  limit: Number // 0, 1, 2 ..., n
+       *  select: Array<String>
+       *  populate: Array<Object>
+       * }
+       * */
       findLimited: async (query, option) => {
         let r;
-        try { r = await Game.find(query).sort(option.sort).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate); }
+        try { r = await Game.find(query).sort(option.sort).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate || []); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no game found!' } }; }
         return { message: { type: 'success' }, data: r };

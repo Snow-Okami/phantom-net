@@ -23,6 +23,7 @@ const ReplyController = require('../api/v1/controllers/ReplyController');
 const VersionController = require('../api/v1/controllers/VersionController');
 const AchievementController = require('../api/v1/controllers/AchievementController');
 const NewsController = require('../api/v1/controllers/NewsController');
+const GameController = require('../api/v1/controllers/GameController');
 
 const api = express.Router();
 
@@ -136,6 +137,13 @@ const routes = () => {
   api.delete('/news/:_id', Policies.isAdmin, NewsController.deleteOne);
 
   api.post('/newsHtml', Policies.isAdmin, NewsController.createHTML);
+
+  /**
+   * @descaription Reply CRUD API operation.
+   */
+  api.get('/game/:_id', GameController.findOne);
+  api.get('/games', GameController.findLimited);
+  api.post('/game', Policies.isAdmin, GameController.create);
 
   return api;
 };
