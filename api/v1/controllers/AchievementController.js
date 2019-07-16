@@ -27,6 +27,8 @@ const AchievementController = {
     }
     const a = await Models.achievement.create(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+
+    
     return res.status(200).send(a);
   },
 

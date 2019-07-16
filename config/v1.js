@@ -14,6 +14,9 @@ const UploadImage = multer({ storage: storage, fileFilter: FileHelper.filter });
 storage = multer.diskStorage({ destination: './public/image/achievement/', filename: FileHelper.getName });
 const UploadThumbnail = multer({ storage: storage, fileFilter: FileHelper.filter });
 
+storage = multer.diskStorage({ destination: './public/image/banner/', filename: FileHelper.getName });
+const UploadBanner = multer({ storage: storage, fileFilter: FileHelper.filter });
+
 const TestController = require('../api/v1/controllers/TestController');
 const UserController = require('../api/v1/controllers/UserController');
 const TrackerController = require('../api/v1/controllers/TrackerController');
@@ -143,7 +146,8 @@ const routes = () => {
    */
   api.get('/game/:_id', GameController.findOne);
   api.get('/games', GameController.findLimited);
-  api.post('/game', Policies.isAdmin, GameController.create);
+  api.post('/game', Policies.isAdmin, UploadBanner.single('banner'), GameController.create);
+  api.put('/game/:_id', Policies.isAdmin, UploadBanner.single('banner'), GameController.updateOne);
 
   return api;
 };
