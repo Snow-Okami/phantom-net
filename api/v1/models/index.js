@@ -471,7 +471,7 @@ const Models = {
       },
 
       /**
-       * @description updates only one news at a time.
+       * @description updates only one game at a time.
        */
       updateOne: async (query, param, option) => {
         let r, time = new Date().getTime(), ext = { updatedAt: time };
