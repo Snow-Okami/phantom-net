@@ -103,6 +103,7 @@ const Models = {
         title: { type: String, required: true },
         subtitle: { type: String, required: true },
         banner: { type: String, default: '' },
+        achievements: [{ type: Schema.Types.ObjectId, ref: 'Achievement' }],
         createdAt: { type: Date, required: true },
         updatedAt: { type: Date, required: true }
       });
@@ -114,6 +115,7 @@ const Models = {
         title: { type: String, required: true },
         description: { type: String, required: true },
         thumbnail: { type: String, default: '' },
+        game: { type: Schema.Types.ObjectId, ref: 'Game' },
         users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         createdAt: { type: Date, required: true },
         updatedAt: { type: Date, required: true }
