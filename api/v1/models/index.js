@@ -115,7 +115,7 @@ const Models = {
         title: { type: String, required: true },
         description: { type: String, required: true },
         thumbnail: { type: String, default: '' },
-        game: { type: Schema.Types.ObjectId, ref: 'Game' },
+        game: { type: Schema.Types.ObjectId, ref: 'Game', required: true },
         users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         createdAt: { type: Date, required: true },
         updatedAt: { type: Date, required: true }
@@ -467,6 +467,18 @@ const Models = {
         try { r = await Game.create(param); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r) { return { error: { type: 'error', text: 'can\'t create game!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description updates only one news at a time.
+       */
+      updateOne: async (query, param, option) => {
+        let r, time = new Date().getTime(), ext = { updatedAt: time };
+        Object.assign(param, ext);
+        try { r = await Game.updateOne(query, param, option); }
+        catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.n) { return { error: { type: 'error', text: 'game doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
       },
     },

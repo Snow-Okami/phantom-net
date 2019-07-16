@@ -17,6 +17,11 @@ const AchievementController = {
   },
 
   create: async (req, res) => {
+    const option = {
+      select: ['achievements'],
+    };
+    const r = await Models.game.findOne({ _id: req.body.game }, option);
+    if(r.error) { return res.status(404).set('Content-Type', 'application/json').send(r.error); }
     /**
      * @description UPLOADS the image file on Cloudinary.
      */
@@ -28,7 +33,11 @@ const AchievementController = {
     const a = await Models.achievement.create(req.body);
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
 
-    
+    let acv = _.uniq(_.concat(_.map(r.data.achievements, ur => new ObjectId(ur).toString()), new ObjectId(a.data._id).toString()));
+
+    const g = await Models.game.updateOne({ _id: req.body.game }, { achievements: acv }, {});
+    if(g.error) { return res.status(404).set('Content-Type', 'application/json').send(g.error); }
+
     return res.status(200).send(a);
   },
 
