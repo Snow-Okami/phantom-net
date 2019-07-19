@@ -50,8 +50,33 @@ const AchievementController = {
       const i = await Models.post.uploadImage(req.file.path);
       req.body.thumbnail = i.error ? URL : i['data']['secure_url'];
     }
+
+    /** @description UPDATE the achievement */
     const a = await Models.achievement.updateOne(req.params, req.body, {});
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+
+    /** @description Find game which has the achievement */
+    const r = await Models.game.findOne({achievements: {$in: [ObjectId(req.params._id)]}}, {});
+    if(r.error) { return res.status(404).set('Content-Type', 'application/json').send(r.error); }
+
+    /** @description Remove the achievement from the list */
+    _.remove(r.data.achievements, n => ObjectId(n).toString() === req.params._id);
+
+    /** @description Update the same with the game data */
+    const g = await Models.game.updateOne(_.pick(r.data, ['_id']), _.pick(r.data, ['achievements']), {});
+    if(g.error) { return res.status(404).set('Content-Type', 'application/json').send(g.error); }
+
+    /** @description Finds the new game where it is to be updated */
+    const t = await Models.game.findOne({_id: req.body.game}, {});
+    if(t.error) { return res.status(404).set('Content-Type', 'application/json').send(t.error); }
+
+    /** @description Append the achievement _id with the games achievement _ids */
+    let acv = _.uniq(_.concat(_.map(t.data.achievements, ur => ObjectId(ur).toString()), req.params._id));
+
+    /** @description Update the same with the game data */
+    const u = await Models.game.updateOne({ _id: req.body.game }, { achievements: acv }, {});
+    if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+
     return res.status(200).send(a);
   },
 
