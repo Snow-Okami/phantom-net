@@ -11,7 +11,8 @@ const AchievementController = {
   },
 
   findAll: async (req, res) => {
-    const p = await Models.achievement.findAll({});
+    let q = req.query.users ? {users: {$in: req.query.users.split(',')}} : {};
+    const p = await Models.achievement.findAll(q);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
   },
