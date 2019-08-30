@@ -134,7 +134,7 @@ const UserController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'jwtValidatedAt', 'role']), { expiresIn: '2h' }
+      _.pick(a.data, ['email', 'jwtValidatedAt', 'role']), { expiresIn: '50h' }
     );
     Object.assign(u.data, { token: 'Bearer ' + token });
 
@@ -199,7 +199,7 @@ const UserController = {
      * @description Generate JWT token.
      */
     const token = await jwt.sign(
-      _.pick(a.data, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { expiresIn: '10h' }
+      _.pick(a.data, ['email', 'allowedToAccess', 'jwtValidatedAt', 'capability']), { expiresIn: '50h' }
     );
 
     /**
