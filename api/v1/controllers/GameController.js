@@ -58,6 +58,28 @@ const GameController = {
     if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
     return res.status(200).send(a);
   },
+
+  findForAUser: async (req, res) => {
+    Object.assign(req.params, {});
+
+    const params = req.query;
+    const option = {
+      sort: {},
+      skip: Number(params.skip) || 0,
+      limit: Number(params.limit) || 100,
+      select: params.select ? params.select.split(',') : [],
+      populate: params.populate ? params.populate.split(',') : []
+    };
+    option.sort[params.sortedBy || 'createdAt'] = Number(params.sort) || 1;
+
+    console.log(req.params, option);
+
+    // const a = await Models.game.findLimited(req.params, option);
+    // if(a.error) { return res.status(404).set('Content-Type', 'application/json').send(a.error); }
+    // return res.status(200).send(a);
+
+    return res.status(200).send({ status: 'working on...' });
+  },
 };
 
 module.exports = GameController;
