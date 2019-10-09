@@ -148,8 +148,6 @@ const routes = () => {
   api.get('/games', GameController.findLimited);
   api.post('/game', Policies.isAdmin, UploadBanner.single('banner'), GameController.create);
   api.put('/game/:_id', Policies.isAdmin, UploadBanner.single('banner'), GameController.updateOne);
-  
-  api.get('/games/user/:_id', Policies.isLoggedIn, GameController.findForAUser);
 
   return api;
 };

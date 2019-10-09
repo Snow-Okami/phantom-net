@@ -7,7 +7,7 @@ const env = {
     password: 'password123'
   },
   JWT: {
-    key: '45gH8pt'
+    key: 'RS256ALGORITHM45gH8pt'
   },
   cloudinary: {
     cloud_name: 'imagebag',
