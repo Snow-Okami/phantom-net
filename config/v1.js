@@ -35,7 +35,12 @@ const api = express.Router();
  */
 const routes = () => {
   api.get('/test', TestController.findAll);
-
+  /**
+   * @description JWT decode pluging is used for testing.
+   */
+  api.post('/test/jwt-decode', TestController.jwtDecode);
+  api.post('/test/jwt/sign', TestController.jwtSign);
+  api.post('/test/jwt/verify', TestController.jwtVerify);
   /**
    * @description Version controller CRUD operations.
    */

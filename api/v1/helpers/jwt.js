@@ -3,7 +3,7 @@ const env = require('../../../environment/').JWT;
 
 const jwthelper = {
   sign: async (payload, option) => {
-    return await jwt.sign(payload, env.key, option);
+    return await jwt.sign(payload, env.key || 'abc', option);
   },
 
   decode: async (token) => {
@@ -19,10 +19,10 @@ const jwthelper = {
      * Remove the Bearer text from token.
      */
     token = token.replace('Bearer ', '');
-    
+
     let r;
     try {
-      r = await jwt.verify(token, env.key);
+      r = await jwt.verify(token, env.key || 'abc');
     } catch(e) {
       return { error: e.message };
     }
