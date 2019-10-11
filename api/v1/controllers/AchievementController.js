@@ -1,5 +1,6 @@
 const ObjectId = require('../models/').ObjectId;
 const Models = require('../models/').objects;
+const Selector = require('../models/').data.selector;
 const _ = require('../models/')._;
 
 const AchievementController = {
@@ -11,8 +12,18 @@ const AchievementController = {
   },
 
   findAll: async (req, res) => {
-    let q = req.query.users ? {users: {$in: req.query.users.split(',')}} : {};
-    const p = await Models.achievement.findAll(q);
+    const params = req.query;
+    const option = {
+      sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
+      skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
+      limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 100,
+      select: params.select ? params.select.split(',') : [],
+      populate: params.populate ? JSON.parse(params.populate).map(pi => {return {path: pi.path, select: pi.select || Selector[pi.path] || []}}) : [],
+    };
+
+    let q = params.users ? {users: {$in: params.users.split(',')}} : {};
+
+    const p = await Models.achievement.findAll(q, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
     return res.status(200).send(p);
   },

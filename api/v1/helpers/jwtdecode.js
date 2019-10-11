@@ -5,10 +5,10 @@ const jwtdecodehelper = {
     /**
      * @description token must start with Bearer text.
      */
-    let regex = /^(Bearer\s)/gm;
-    if(!regex.test(token)) {
-      return { error: 'invalid token' };
-    }
+    // let regex = /^(Bearer\s)/gm;
+    // if(!regex.test(token)) {
+    //   return { error: 'invalid token' };
+    // }
     
     let r;
     try {

@@ -18,7 +18,11 @@ var Id, User, Post, Comment, Reply, Chat, Message, Version, Vcode, Achievement, 
 const Models = {
 
   data: {
-    comRepCreatedBy: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id', '_id']
+    comRepCreatedBy: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id', '_id'],
+    
+    selector: {
+      users: ['avatar', 'capability', 'firstName', 'lastName', 'username', 'email', 'fullName', 'id', '_id']
+    }
   },
 
   connect: async () => {
@@ -387,9 +391,9 @@ const Models = {
       /**
        * @description finds all the available achievements in the Mlab database.
        */
-      findAll: async (param) => {
+      findAll: async (param, option) => {
         let r;
-        try { r = await Achievement.find(param).populate({ path: 'users', select: Models.data.comRepCreatedBy }); }
+        try { r = await Achievement.find(param).sort({ createdAt: option.sort }).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no achievement found!' } }; }
         return { message: { type: 'success' }, data: r };
