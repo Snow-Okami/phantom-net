@@ -13,13 +13,19 @@ const AchievementController = {
 
   findAll: async (req, res) => {
     const params = req.query;
+    const next = params.populate ? JSON.parse(params.populate) : {};
     const option = {
       sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
       skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
       limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 100,
       select: params.select ? params.select.split(',') : [],
-      populate: params.populate ? JSON.parse(params.populate).map(pi => {return {path: pi.path, select: pi.select || Selector[pi.path] || []}}) : [],
+      // populate: params.populate ? JSON.parse(params.populate).map(pi => {return {path: pi.path, select: pi.select || Selector[pi.path] || []}}) : [],
+      populate: next ? Object.keys(next).map(path => { console.log(next[path]); return {path: path, select: next[path] || Selector[next[path]]};}) : []
     };
+
+    console.log(option);
+
+    return res.status(200).send({ status: 'work in progress...', data: option, selector: Selector });
 
     let q = params.users ? {users: {$in: params.users.split(',')}} : {};
 
