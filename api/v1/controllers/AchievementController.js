@@ -22,6 +22,8 @@ const AchievementController = {
       populate: next ? Object.keys(next).map(path => { return {path: path, select: next[path].length ? next[path].split(',') : Selector[path]}; }) : []
     };
 
+    console.log(option);
+
     let q = params.users ? {users: {$in: params.users.split(',')}} : {};
     const p = await Models.achievement.findAll(q, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
@@ -29,7 +31,7 @@ const AchievementController = {
     /**
      * modify the API response.
      */
-    params.group === 'true' && (p.data = _.groupBy(p.data, it => it.game._id));
+    params.group === 'true' && (p.data = _.groupBy(p.data, it => it.game.title), p.data = Object.keys(p.data).map(function(k) { return {game: k, data: p.data[k]}; }));
     return res.status(200).send(p);
   },
 
