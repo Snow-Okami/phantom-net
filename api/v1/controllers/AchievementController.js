@@ -22,8 +22,6 @@ const AchievementController = {
       populate: next ? Object.keys(next).map(path => { return {path: path, select: next[path].length ? next[path].split(',') : Selector[path]}; }) : []
     };
 
-    console.log(option);
-
     let q = params.users ? {users: {$in: params.users.split(',')}} : {};
     const p = await Models.achievement.findAll(q, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
