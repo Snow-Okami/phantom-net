@@ -119,7 +119,7 @@ const routes = () => {
    * @descaription Achievement API operations from client end.
    */
   api.get('/achievement/:_id', Policies.isLoggedIn, AchievementController.findOne);
-  api.get('/achievements', Policies.isLoggedIn, AchievementController.findAll);
+  api.get('/achievements', Policies.isLoggedIn, AchievementController.findLimited);
   api.post('/achievement', Policies.isAdmin, UploadThumbnail.single('thumbnail'), AchievementController.create);
   api.put('/achievement/:_id', Policies.isAdmin, UploadThumbnail.single('thumbnail'), AchievementController.updateOne);
   api.delete('/achievement/:_id', Policies.isAdmin, AchievementController.deleteOne);

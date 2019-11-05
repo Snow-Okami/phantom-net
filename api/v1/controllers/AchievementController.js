@@ -11,7 +11,7 @@ const AchievementController = {
     return res.status(200).send(p);
   },
 
-  findAll: async (req, res) => {
+  findLimited: async (req, res) => {
     const params = req.query;
     const next = params.populate ? JSON.parse(params.populate) : {};
     const option = {
@@ -25,9 +25,11 @@ const AchievementController = {
     let q = params.users ? {users: {$in: params.users.split(',')}} : {};
     const p = await Models.achievement.findAll(q, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
-    
-    // modify the API response
-    p.data = _.groupBy(p.data, it => it.game._id);
+
+    /**
+     * modify the API response.
+     */
+    params.group === 'true' && (p.data = _.groupBy(p.data, it => it.game._id));
     return res.status(200).send(p);
   },
 
