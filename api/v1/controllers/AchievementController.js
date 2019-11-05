@@ -19,18 +19,15 @@ const AchievementController = {
       skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
       limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 100,
       select: params.select ? params.select.split(',') : [],
-      // populate: params.populate ? JSON.parse(params.populate).map(pi => {return {path: pi.path, select: pi.select || Selector[pi.path] || []}}) : [],
-      populate: next ? Object.keys(next).map(path => { console.log(next[path]); return {path: path, select: next[path] || Selector[next[path]]};}) : []
+      populate: next ? Object.keys(next).map(path => { return {path: path, select: next[path].length ? next[path].split(',') : Selector[path]}; }) : []
     };
 
-    console.log(option);
-
-    return res.status(200).send({ status: 'work in progress...', data: option, selector: Selector });
-
     let q = params.users ? {users: {$in: params.users.split(',')}} : {};
-
     const p = await Models.achievement.findAll(q, option);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    
+    // modify the API response
+    p.data = _.groupBy(p.data, it => it.game._id);
     return res.status(200).send(p);
   },
 
