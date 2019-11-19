@@ -144,6 +144,7 @@ const Models = {
         title: { type: String, required: true },
         description: { type: String, required: true },
         tags: { type: String },
+        views: { type: Number, default: 0 },
         publish: { type: Boolean, required: true, default: false },
         comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
         image: { type: String, default: '' },
@@ -570,6 +571,11 @@ const Models = {
               { path: 'createdBy', select: Models.data.comRepCreatedBy }
             ]
           });
+
+          /**
+           * @description update the number of views.
+           */
+          await Post.updateOne(param, { views: p.views + 1 });
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
@@ -588,6 +594,34 @@ const Models = {
               { path: 'createdBy', select: Models.data.comRepCreatedBy }
             ]
           });
+        } catch(e) { return { error: { type: 'error', text: e.message } }; }
+        if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
+        return { message: { type: 'success' }, data: r };
+      },
+
+      /**
+       * @description finds limited of the available posts in the Mlab database. also includes powerful sorting method.
+       */
+      /** @description options: {
+       *  sort: { createdAt: -1 } // -1 is desc, 1 is asc in order.
+       *  skip: Number // 0, 1, 2 ..., n
+       *  limit: Number // 0, 1, 2 ..., n
+       *  select: Array<String>
+       *  populate: Array<Object>
+       * }
+       * */
+      findLimitedToExtreme: async (query, option) => {
+        let r;
+        try {
+          // r = await Post.find(query).sort(option.sort || {createdAt: -1}).skip(option.skip).limit(option.limit).populate({
+          //   path: 'comments', options: { sort: { createdAt: -1 } },
+          //   populate: [
+          //     { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
+          //     { path: 'createdBy', select: Models.data.comRepCreatedBy }
+          //   ]
+          // });
+
+          r = await Post.find(query).sort(option.sort || {createdAt: -1}).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };

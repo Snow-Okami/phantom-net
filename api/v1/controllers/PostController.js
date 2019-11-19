@@ -43,6 +43,10 @@ const PostController = {
     return res.status(200).send(p);
   },
 
+  findLimitedToExtreme: async (req, res) => {
+    return res.status(200).send({ status: 'working on...' });
+  },
+
   create: async (req, res) => {
     const id = await Models.id.findOne({});
     if(id.error) { return res.status(404).set('Content-Type', 'application/json').send(id.error); }

@@ -95,6 +95,10 @@ const routes = () => {
   api.get('/posts', Policies.isAdmin, PostController.findAll);
   api.post('/post', Policies.isAdmin, UploadImage.single('image'), PostController.create);
   api.put('/post/:id', Policies.isAdmin, UploadImage.single('image'), PostController.updateOne);
+  /**
+   * @description update get posts API.
+   */
+  api.get('/postsfeatured', Policies.isLoggedIn, PostController.findLimitedToExtreme);
 
   /**
    * @description Comments API CRUD operation.
