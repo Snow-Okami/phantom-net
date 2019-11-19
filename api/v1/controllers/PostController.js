@@ -44,7 +44,33 @@ const PostController = {
   },
 
   findLimitedToExtreme: async (req, res) => {
-    return res.status(200).send({ status: 'working on...' });
+    // return res.status(200).send({ status: 'working on...' });
+
+    let params = req.query;
+    const option = {
+      sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
+      skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
+      limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 10,
+      select: params.select ? params.select.split(',') : [],
+      populate: params.populate ? params.populate.split(',') : []
+    };
+
+    params = req.query.search ? { $or: [
+      {name: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
+      {gender: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
+      {email: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
+      {phoneNumber: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
+      {department: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }}
+    ] } : {};
+
+    const u = await Models.post.findLimitedToExtreme(req.params.email && req.params || params, option);
+    if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
+
+    const l = await Models.post.countDocuments(req.params.email && req.params || params, option);
+    u.available = l.data;
+
+    if(req.params.email) { u.data = u.data[0]; }
+    return res.status(200).send(u);
   },
 
   create: async (req, res) => {
