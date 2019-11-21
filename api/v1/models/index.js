@@ -625,7 +625,7 @@ const Models = {
       findLimitedToExtreme: async (query, option) => {
         let r;
         try {
-          r = await Post.find(query).sort(option.sort || {createdAt: -1}).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate);
+          r = await Post.find(query).sort(option.sort).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }
         return { message: { type: 'success' }, data: r };

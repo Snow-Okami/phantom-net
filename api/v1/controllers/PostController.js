@@ -48,7 +48,7 @@ const PostController = {
 
     let params = req.query;
     const option = {
-      sort: params.sort || {},
+      sort: params.sort ? JSON.parse(params.sort) : {createdAt: -1},
       // sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
       skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
       limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 10,
