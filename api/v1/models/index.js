@@ -558,7 +558,6 @@ const Models = {
     },
 
     post: {
-
       /**
        * @description Count total number of available documents.
        */
@@ -568,7 +567,6 @@ const Models = {
         catch(e) { return { error: { message: { type: 'error', text: e.message } } }; }
         return { message: { type: 'success' }, data: r || 0 };
       },
-
       
       /**
        * @description finds one post only with matching parameter.
