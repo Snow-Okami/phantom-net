@@ -558,6 +558,18 @@ const Models = {
     },
 
     post: {
+
+      /**
+       * @description Count total number of available documents.
+       */
+      countDocuments: async (query, option) => {
+        let r;
+        try { r = await Post.countDocuments(query); }
+        catch(e) { return { error: { message: { type: 'error', text: e.message } } }; }
+        return { message: { type: 'success' }, data: r || 0 };
+      },
+
+      
       /**
        * @description finds one post only with matching parameter.
        */
@@ -613,14 +625,6 @@ const Models = {
       findLimitedToExtreme: async (query, option) => {
         let r;
         try {
-          // r = await Post.find(query).sort(option.sort || {createdAt: -1}).skip(option.skip).limit(option.limit).populate({
-          //   path: 'comments', options: { sort: { createdAt: -1 } },
-          //   populate: [
-          //     { path: 'replies', options: { limit: 4 }, populate: [{ path: 'createdBy', select: Models.data.comRepCreatedBy }, { path: 'createdFor' }] },
-          //     { path: 'createdBy', select: Models.data.comRepCreatedBy }
-          //   ]
-          // });
-
           r = await Post.find(query).sort(option.sort || {createdAt: -1}).skip(option.skip).limit(option.limit).select(option.select).populate(option.populate);
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.length) { return { error: { type: 'error', text: 'no post found!' } }; }

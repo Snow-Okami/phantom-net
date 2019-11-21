@@ -48,7 +48,8 @@ const PostController = {
 
     let params = req.query;
     const option = {
-      sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
+      sort: params.sort || {},
+      // sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
       skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
       limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 10,
       select: params.select ? params.select.split(',') : [],
@@ -56,11 +57,8 @@ const PostController = {
     };
 
     params = req.query.search ? { $or: [
-      {name: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
-      {gender: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
-      {email: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
-      {phoneNumber: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
-      {department: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }}
+      {title: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }},
+      {description: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }}
     ] } : {};
 
     const u = await Models.post.findLimitedToExtreme(req.params.email && req.params || params, option);
