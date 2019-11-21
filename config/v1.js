@@ -98,7 +98,7 @@ const routes = () => {
   /**
    * @description update get posts API.
    */
-  api.get('/postsfeatured', Policies.isLoggedIn, PostController.findLimitedToExtreme);
+  api.get('/postspopular', Policies.isLoggedIn, PostController.findLimitedToExtreme);
 
   /**
    * @description Comments API CRUD operation.
