@@ -11,6 +11,10 @@ const PostController = {
 
     const p = await Models.post.findOne(req.params);
     if(p.error) { return res.status(404).set('Content-Type', 'application/json').send(p.error); }
+    /**
+     * @description update the number of views.
+     */
+    await Models.post.updateOne(req.params, { views: p.data.views + 1 });
     return res.status(200).send(p);
   },
 
@@ -44,12 +48,9 @@ const PostController = {
   },
 
   findLimitedToExtreme: async (req, res) => {
-    // return res.status(200).send({ status: 'working on...' });
-
     let params = req.query;
     const option = {
       sort: params.sort ? JSON.parse(params.sort) : {createdAt: -1},
-      // sort: !isNaN(Number(params.sort)) ? Number(params.sort) : -1,
       skip: !isNaN(Number(params.skip)) ? Number(params.skip) : 0,
       limit: !isNaN(Number(params.limit)) ? Number(params.limit) : 10,
       select: params.select ? params.select.split(',') : [],

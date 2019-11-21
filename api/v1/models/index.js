@@ -583,11 +583,6 @@ const Models = {
               { path: 'createdBy', select: Models.data.comRepCreatedBy }
             ]
           });
-
-          /**
-           * @description update the number of views.
-           */
-          await Post.updateOne(param, { views: p.views + 1 });
         } catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!p) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: p };
