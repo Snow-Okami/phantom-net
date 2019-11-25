@@ -62,6 +62,11 @@ const PostController = {
       {description: { $regex: RegExp(`${req.query.search}`), $options: 'gi' }}
     ] } : {};
 
+    if(req.query.capability < 2) {
+      Object.assign(params, { 'publish': true });
+      Object.assign(req.params, { 'publish': true });
+    }
+
     const u = await Models.post.findLimitedToExtreme(req.params.email && req.params || params, option);
     if(u.error) { return res.status(404).set('Content-Type', 'application/json').send(u.error); }
 
