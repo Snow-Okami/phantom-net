@@ -149,7 +149,8 @@ const Models = {
         comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
         image: { type: String, default: '' },
         createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
-        createdAt: { type: Date, required: true }
+        createdAt: { type: Date, required: true },
+        updatedAt: { type: Date, required: true }
       });
       Post = mongoose.model('Post', schema);
     },
@@ -660,8 +661,8 @@ const Models = {
        * @description updates only one user at a time. If parameter contains password it updates jwtValidatedAt.
        */
       updateOne: async (query, param, option) => {
-        let r;
-        try { r = await Post.updateOne(query, param, option); }
+        let r, time = new Date().getTime(), ext = { updatedAt: time };
+        try { r = await Post.updateOne(query, Object.assign(param, ext), option); }
         catch(e) { return { error: { type: 'error', text: e.message } }; }
         if(!r.n) { return { error: { type: 'error', text: 'post doesn\'t exists!' } }; }
         return { message: { type: 'success' }, data: r };
