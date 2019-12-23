@@ -150,7 +150,7 @@ const Models = {
         image: { type: String, default: '' },
         createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
         createdAt: { type: Date, required: true },
-        updatedAt: { type: Date, required: true }
+        updatedAt: { type: Date }
       });
       Post = mongoose.model('Post', schema);
     },
